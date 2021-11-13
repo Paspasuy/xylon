@@ -96,6 +96,14 @@ public:
     void dec_vol() {
         set_vol(std::max(0., vol - 0.05));
     }
+
+    void backward_5() {
+        songs[ptr] -> backward_5();
+    }
+
+    void forward_5() {
+        songs[ptr] -> forward_5();
+    }
 };
 
 #endif

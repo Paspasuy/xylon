@@ -53,6 +53,19 @@ public:
         return sf::microseconds(int64_t(time * 1000 * 1000));
     }
 
+    void backward_5() {
+        QWORD len = BASS_ChannelGetPosition(channel, BASS_POS_BYTE); // the length in bytes
+        double time = BASS_ChannelBytes2Seconds(channel, len); // the length in seconds
+        time = std::max(0., time - 5);
+        BASS_ChannelSetPosition(channel, BASS_ChannelSeconds2Bytes(channel, time), BASS_POS_BYTE);
+    }
+
+    void forward_5() {
+        QWORD len = BASS_ChannelGetPosition(channel, BASS_POS_BYTE); // the length in bytes
+        double time = BASS_ChannelBytes2Seconds(channel, len); // the length in seconds
+        time = std::min(double(getDuration().asSeconds()), time + 5);
+        BASS_ChannelSetPosition(channel, BASS_ChannelSeconds2Bytes(channel, time), BASS_POS_BYTE);
+    }
 
 };
 

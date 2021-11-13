@@ -27,20 +27,27 @@ int main() {
             p->next();
         }
         sf::Event event;
-        std::cerr << "C" << std::endl;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
-//            if (event.type == sf::Event::Resized) {
-//                std::cout << "new width: " << event.size.width << std::endl;
-//                std::cout << "new height: " << event.size.height << std::endl;
-//            }
+            if (event.type == sf::Event::Resized) {
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                window.setView(sf::View(visibleArea));
+            }
             else if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
                     if (songs.get_click_index(event.mouseWheelScroll.x, event.mouseWheelScroll.y) != -1) {
-//                        std::cerr << "A" << std::endl;
-                        songs.scroll(event.mouseWheelScroll.delta);
-//                        std::cerr << "B" << std::endl;
+                        int delta = event.mouseWheelScroll.delta;
+//                        std::cout << "the escape key was pressed" << std::endl;
+//                        std::cout << "control:" << event.key.control << std::endl;
+//                        std::cout << "alt:" << event.key.alt << std::endl;
+//                        std::cout << "shift:" << event.key.shift << std::endl;
+//                        std::cout << "system:" << event.key.system << std::endl;
+                        //TODO: fix shift scroll
+                        if (event.key.shift) {
+                            delta *= 5;
+                        }
+                        songs.scroll(delta);
                     } else {
                         if (event.mouseWheelScroll.delta == 1) {
                             p->add_vol();
@@ -61,6 +68,10 @@ int main() {
                     } else {
                         p->play();
                     }
+                } else if (event.key.code == sf::Keyboard::Left) {
+                    p -> backward_5();
+                } else if (event.key.code == sf::Keyboard::Right) {
+                    p -> forward_5();
                 }
                 int idx = songs.get_click_index(event.mouseButton.x, event.mouseButton.y);
                 if (idx != -1) {
@@ -68,7 +79,6 @@ int main() {
                 }
             }
         }
-        std::cerr << "E" << std::endl;
         window.clear();
         songs.render(window, font);
         window.display();
@@ -76,3 +86,8 @@ int main() {
 
     return 0;
 }
+
+// TODO: add time counter
+// TODO: add player
+// TODO: sort by artist
+// TODO: album view
