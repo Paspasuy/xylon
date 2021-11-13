@@ -19,7 +19,6 @@ public:
             std::cerr << "CHANNEL: " << channel << std::endl;
             std::cerr << "SONG: " << path << std::endl;
         }
-//        music.setVolume(100.f);
     }
 
     void play() {

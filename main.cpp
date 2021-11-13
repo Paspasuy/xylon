@@ -29,7 +29,7 @@ int main() {
                 window.close();
             if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-                    if (songs.get_click_index(event.mouseButton.x, event.mouseButton.y) != -1) {
+                    if (songs.get_click_index(event.mouseWheelScroll.x, event.mouseWheelScroll.y) != -1) {
                         songs.scroll(event.mouseWheelScroll.delta);
                     } else {
                         if (event.mouseWheelScroll.delta == 1) {
