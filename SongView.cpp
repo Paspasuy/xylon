@@ -25,12 +25,24 @@ public:
         sf::RectangleShape sh;
         winsz = window.getSize();
         sh.setSize(sf::Vector2f(Tile::W, Tile::H));
-        for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
+        int tmp = -1;
+        int low = get_low_tile();
+        int up = get_up_tile(winsz.y);
+        for (int i = low; i <= up; ++i) {
+            if (i == up) {
+                i = tmp;
+                tmp = -2;
+            }
             int x = 300;
             sh.setOutlineColor(sf::Color(sf::Color::Green));
             if (i == pl->current_index()) {
-                x -= 50;
-                sh.setOutlineColor(sf::Color(sf::Color::Blue));
+                if (tmp == -1) {
+                    tmp = i;
+                    continue;
+                } else {
+                    x -= 50;
+                    sh.setOutlineColor(sf::Color(sf::Color::Blue));
+                }
             }
             tiles[i]->position = sf::Vector2i(x, shift + i * Tile::H);
             sh.setPosition(tiles[i]->position.x, tiles[i]->position.y);
@@ -43,6 +55,9 @@ public:
             window.draw(sh);
             window.draw(title_text);
             window.draw(artist_text);
+            if (tmp == -2) {
+                break;
+            }
         }
     }
 
