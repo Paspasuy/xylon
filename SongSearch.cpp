@@ -10,15 +10,12 @@ public:
     }
 
     Player* add_char(wchar_t c) {
-        if (size(text) == 0) {
-//            swap(p, p2);
-        }
+        if (size(text) == 0) {}
         text += c;
         std::vector<Song*>::iterator iter = p->songs.begin();
         std::vector<std::vector<Song*>::iterator> v;
         while (iter != p->songs.end()) {
             if ((*iter) -> matches(text)) {
-                std::cerr << "OKAY: " << text << std::endl;
                 v.push_back(iter);
             }
             ++iter;
@@ -32,9 +29,6 @@ public:
         p2 = new Player(p);
         for (auto it: v) {
             p2->songs.push_back(*it);
-            if (p->ptr == it - p->songs.begin()) {
-                p2->ptr = int(p2->songs.size()) - 1;
-            }
         }
         return p2;
     }
@@ -42,14 +36,13 @@ public:
         if (text.size() != 0) {
             text.pop_back();
         }
-        if (text.empty() == 0) {
+        if (text.empty()) {
             return p;
         }
         std::vector<Song*>::iterator iter = p->songs.begin();
         std::vector<std::vector<Song*>::iterator> v;
         while (iter != p->songs.end()) {
             if ((*iter) -> matches(text)) {
-                std::cerr << "OKAY: " << text << std::endl;
                 v.push_back(iter);
             }
             ++iter;
@@ -63,9 +56,6 @@ public:
         p2 = new Player(p);
         for (auto it: v) {
             p2->songs.push_back(*it);
-            if (p->ptr == it - p->songs.begin()) {
-                p2->ptr = int(p2->songs.size()) - 1;
-            }
         }
         return p2;
     }

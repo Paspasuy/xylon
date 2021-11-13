@@ -89,8 +89,6 @@ int main() {
                     std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' ' << event.text.unicode << std::endl;
                     cpl = songSearch->add_char(event.text.unicode);
                     songs.init(cpl);
-                } else {
-                    std::cout << "NON ascii: " << event.text.unicode << std::endl;
                 }
             }
         }
@@ -110,3 +108,4 @@ int main() {
 // TODO: make progress slider interactive
 // TODO: up/down arrows to change song
 // TODO: inertial scrolling
+// TODO: small case for search
