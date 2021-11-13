@@ -22,9 +22,13 @@ public:
 
     std::vector<Song *> songs;
 
+    void upd_expire() {
+        expire = c->getElapsedTime() + songs[ptr]->getDuration() - songs[ptr]->getPlayingOffset();
+    }
+
     void play() {
         state = 1;
-        expire = c->getElapsedTime() + songs[ptr]->getDuration() - songs[ptr]->getPlayingOffset();
+        upd_expire();
         songs[ptr]->set_vol(vol);
         songs[ptr]->play();
     }
@@ -101,10 +105,12 @@ public:
 
     void backward_5() {
         songs[ptr] -> backward_5();
+        upd_expire();
     }
 
     void forward_5() {
         songs[ptr] -> forward_5();
+        upd_expire();
     }
 };
 

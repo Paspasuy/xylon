@@ -13,7 +13,7 @@ int main() {
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode(800, 600), "xylon", sf::Style::Default, settings);
+    sf::RenderWindow window(sf::VideoMode(1024, 768), "xylon", sf::Style::Default, settings);
     window.setVerticalSyncEnabled(true);
     SongView songs;
     songs.init(p);
@@ -23,7 +23,7 @@ int main() {
         std::cerr << "FONTS BROKEN\n";
     }
     while (window.isOpen()) {
-        if (clock->getElapsedTime() > p->expire) {
+        if (clock->getElapsedTime() > p->expire && p->is_playing()) {
             p->next();
         }
         sf::Event event;
@@ -84,3 +84,6 @@ int main() {
 // TODO: add player
 // TODO: sort by artist
 // TODO: album view
+// added: add album picture support
+// TODO: implement song filter (vector of matching indices, subPlayer)
+// fixed: fix bug with expired time and pause

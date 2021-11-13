@@ -23,7 +23,7 @@ public:
     void render(sf::RenderWindow &window, sf::Font &font) {
         sf::RectangleShape sh;
         winsz = window.getSize();
-        sh.setSize(sf::Vector2f(Tile::W, Tile::H));
+        sh.setSize(sf::Vector2f(Tile::W, Tile::H - 2));
         int low = get_low_tile();
         int up = get_up_tile(winsz.y);
         int cur = pl->current_index();
@@ -33,13 +33,13 @@ public:
                 continue;
             }
             tiles[i]->position = sf::Vector2i(winsz.x - Tile::W, shift + i * Tile::H);
-            tiles[i]->render(window, font, sh);
+            tiles[i]->render(window, font, sh, 0);
         }
-        if (low <= cur && cur < up) {
+//        if (low <= cur && cur < up) {
             sh.setOutlineColor(sf::Color(sf::Color::Blue));
             tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
-            tiles[cur]->render(window, font, sh);
-        }
+            tiles[cur]->render(window, font, sh, 1);
+//        }
     }
 
     void init(Player *p) {
@@ -47,7 +47,7 @@ public:
         for (auto &it: p->songs) {
             tiles.push_back(new Tile(it));
         }
-        std::cerr << "SIZE: " << tiles.size() << '\n';
+        std::cout << "SIZE: " << tiles.size() << '\n';
     }
 
     void scroll(int delta) {
