@@ -1,2 +1,3 @@
 # xylon
-Beautiful music player inspired by osu!
+ Beautifu (not yet) music player inspired by osu!
+ 
