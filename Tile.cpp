@@ -54,13 +54,15 @@ public:
             auto *pic = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(l.front());
             texture.loadFromMemory((const uchar *) pic->picture().data(), pic->picture().size(), sf::IntRect(0, 0, 1200, 1200));
 //            texture.loadFromFile("/home/pavel/Music/amonger.png");
+            texture.setSmooth(true);
             sprite.setTexture(texture);
             sprite.setScale({0.25, 0.25});
         }
     }
 
     void render_pic(sf::RenderWindow &window) {
-        margin = std::max(0, int(window.getSize().x - Tile::W - PIC)) / 2;
+        margin = std::min(std::max(0, int(window.getSize().x - Tile::W - PIC)) / 2,
+                          std::max(0, int(window.getSize().y - PIC)));
         sprite.setPosition(margin, margin / 2);
 //            sprite.setPosition(position.x + Tile::W - 100, position.y);
         window.draw(sprite);
@@ -85,11 +87,11 @@ public:
             render_pic(window);
             int w = 10;
             int sw = margin + (PIC - w * title.getSize()) / 2;
-            title_text.setPosition(sw, PIC + margin * 0.75);
+            title_text.setPosition(sw, PIC + margin * 0.5 + 12);
             window.draw(title_text);
             w = 8;
             sw = margin + (PIC - w * artist.getSize()) / 2;
-            artist_text.setPosition(sw, PIC + margin * 0.75 + 20);
+            artist_text.setPosition(sw, PIC + margin * 0.5 + 20 + 12);
             window.draw(artist_text);
         }
     }

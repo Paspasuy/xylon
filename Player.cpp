@@ -12,6 +12,7 @@ class Player {
     bool state;
     double vol = 1.;
 public:
+    double progress;
     bool loop = 0;
 
     sf::Time expire;
@@ -111,6 +112,13 @@ public:
     void forward_5() {
         songs[ptr] -> forward_5();
         upd_expire();
+    }
+    sf::Time getDuration() {
+        return songs[ptr] -> getDuration();
+    }
+
+    sf::Time getPlayingOffset() {
+        return songs[ptr] -> getPlayingOffset();
     }
 };
 

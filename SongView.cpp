@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include "Tile.cpp"
 #include "Player.cpp"
+#include "ProgressBarView.cpp" //TODO: .h file
 
 class SongView {
     std::vector<Tile *> tiles;
@@ -18,6 +19,7 @@ class SongView {
         return std::min(int(tiles.size()), (-shift + winh) / Tile::H + 1);
     }
     const int CUR_SHIFT = 50;
+    ProgressBarView bar;
 public:
     sf::Vector2<unsigned int> winsz;
     void render(sf::RenderWindow &window, sf::Font &font) {
@@ -40,6 +42,9 @@ public:
             tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
             tiles[cur]->render(window, font, sh, 1);
 //        }
+        int margin = tiles[cur]->margin;
+        bar.update(pl);
+        bar.render(window, font, margin, Tile::PIC + 57 + margin / 2);
     }
 
     void init(Player *p) {

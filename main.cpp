@@ -80,10 +80,8 @@ int main() {
     return 0;
 }
 
-// TODO: add time counter
-// TODO: add player
 // TODO: sort by artist
 // TODO: album view
-// added: add album picture support
 // TODO: implement song filter (vector of matching indices, subPlayer)
-// fixed: fix bug with expired time and pause
+// TODO: maybe add second margin (oy)
+// TODO: make progress slider interactive
