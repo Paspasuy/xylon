@@ -25,39 +25,21 @@ public:
         sf::RectangleShape sh;
         winsz = window.getSize();
         sh.setSize(sf::Vector2f(Tile::W, Tile::H));
-        int tmp = -1;
         int low = get_low_tile();
         int up = get_up_tile(winsz.y);
-        for (int i = low; i <= up; ++i) {
-            if (i == up) {
-                i = tmp;
-                tmp = -2;
+        int cur = pl->current_index();
+        sh.setOutlineColor(sf::Color(sf::Color::Green));
+        for (int i = low; i < up; ++i) {
+            if (i == cur) {
+                continue;
             }
-            int x = 300;
-            sh.setOutlineColor(sf::Color(sf::Color::Green));
-            if (i == pl->current_index()) {
-                if (tmp == -1) {
-                    tmp = i;
-                    continue;
-                } else {
-                    x -= 50;
-                    sh.setOutlineColor(sf::Color(sf::Color::Blue));
-                }
-            }
-            tiles[i]->position = sf::Vector2i(x, shift + i * Tile::H);
-            sh.setPosition(tiles[i]->position.x, tiles[i]->position.y);
-            sh.setOutlineThickness(2.f);
-            sh.setFillColor(sf::Color(sf::Color::Black));
-            sf::Text title_text(tiles[i]->title, font, 16);
-            sf::Text artist_text(tiles[i]->artist, font, 14);
-            title_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 2);
-            artist_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 20);
-            window.draw(sh);
-            window.draw(title_text);
-            window.draw(artist_text);
-            if (tmp == -2) {
-                break;
-            }
+            tiles[i]->position = sf::Vector2i(300, shift + i * Tile::H);
+            tiles[i]->render(window, font, sh);
+        }
+        if (low <= cur && cur < up) {
+            sh.setOutlineColor(sf::Color(sf::Color::Blue));
+            tiles[cur]->position = sf::Vector2i(250, shift + cur * Tile::H);
+            tiles[cur]->render(window, font, sh);
         }
     }
 
@@ -70,9 +52,9 @@ public:
     }
 
     void scroll(int delta) {
+        shift += delta * 30;
         shift = std::min(shift, 30);
         shift = std::max(shift, -int(tiles.size() * Tile::H) - 30 + int(winsz.y));
-        shift += delta * 30;
     }
 
     int get_click_index(int x, int y) {

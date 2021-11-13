@@ -25,7 +25,7 @@ public:
     void play() {
         state = 1;
         expire = c->getElapsedTime() + songs[ptr]->getDuration() - songs[ptr]->getPlayingOffset();
-        songs[ptr] -> set_vol(vol);
+        songs[ptr]->set_vol(vol);
         songs[ptr]->play();
     }
 
@@ -81,7 +81,7 @@ public:
     void set_vol(double x) {
         vol = x;
         if (state) {
-            songs[ptr] -> set_vol(x);
+            songs[ptr]->set_vol(x);
         }
     }
 
