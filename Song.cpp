@@ -35,9 +35,7 @@ public:
     }
 
     void set_vol(double x) {
-        std::cerr << x << std::endl;
         BASS_ChannelSetAttribute(channel, BASS_ATTRIB_VOL, x);
-        std::cerr << BASS_ErrorGetCode() << std::endl;
     }
 
     sf::Time getDuration() {

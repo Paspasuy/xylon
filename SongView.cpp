@@ -9,9 +9,7 @@
 class SongView {
     std::vector<Tile *> tiles;
     int shift = 0;
-    sf::Vector2<unsigned int> winsz;
     Player *pl;
-
     int get_low_tile() {
         return std::max(0, (-shift) / Tile::W);
     }
@@ -19,8 +17,9 @@ class SongView {
     int get_up_tile(int winh) {
         return std::min(int(tiles.size()), (-shift + winh) / Tile::H + 1);
     }
-
+    const int CUR_SHIFT = 50;
 public:
+    sf::Vector2<unsigned int> winsz;
     void render(sf::RenderWindow &window, sf::Font &font) {
         sf::RectangleShape sh;
         winsz = window.getSize();
@@ -33,12 +32,12 @@ public:
             if (i == cur) {
                 continue;
             }
-            tiles[i]->position = sf::Vector2i(300, shift + i * Tile::H);
+            tiles[i]->position = sf::Vector2i(winsz.x - Tile::W, shift + i * Tile::H);
             tiles[i]->render(window, font, sh);
         }
         if (low <= cur && cur < up) {
             sh.setOutlineColor(sf::Color(sf::Color::Blue));
-            tiles[cur]->position = sf::Vector2i(250, shift + cur * Tile::H);
+            tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
             tiles[cur]->render(window, font, sh);
         }
     }

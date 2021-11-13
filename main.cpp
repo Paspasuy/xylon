@@ -10,7 +10,7 @@ int main() {
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
     p->add_folder("/home/pavel/Music/");
-//    p -> add_song("amogus2.wav");
+//    p -> add_song("/home/pavel/Music/amogus2.wav");
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode(800, 600), "xylon", sf::Style::Default, settings);
@@ -33,18 +33,13 @@ int main() {
             if (event.type == sf::Event::Resized) {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
+                songs.winsz = window.getSize();
             }
             else if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
                     if (songs.get_click_index(event.mouseWheelScroll.x, event.mouseWheelScroll.y) != -1) {
                         int delta = event.mouseWheelScroll.delta;
-//                        std::cout << "the escape key was pressed" << std::endl;
-//                        std::cout << "control:" << event.key.control << std::endl;
-//                        std::cout << "alt:" << event.key.alt << std::endl;
-//                        std::cout << "shift:" << event.key.shift << std::endl;
-//                        std::cout << "system:" << event.key.system << std::endl;
-                        //TODO: fix shift scroll
-                        if (event.key.shift) {
+                        if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
                             delta *= 5;
                         }
                         songs.scroll(delta);
@@ -72,10 +67,8 @@ int main() {
                     p -> backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
                     p -> forward_5();
-                }
-                int idx = songs.get_click_index(event.mouseButton.x, event.mouseButton.y);
-                if (idx != -1) {
-                    p->play_ind(idx);
+                } else if (event.key.code == sf::Keyboard::R && event.key.control) {
+                    p -> loop ^= 1;
                 }
             }
         }

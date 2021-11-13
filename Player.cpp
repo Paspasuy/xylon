@@ -11,8 +11,8 @@ class Player {
     int ptr = 0;
     bool state;
     double vol = 1.;
-
 public:
+    bool loop = 0;
 
     sf::Time expire;
 
@@ -41,7 +41,9 @@ public:
 
     void next() {
         stop();
-        ++ptr;
+        if (!loop) {
+            ++ptr;
+        }
         ptr %= songs.size();
         play();
     }
