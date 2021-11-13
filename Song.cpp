@@ -13,8 +13,10 @@ public:
     sf::String title = "Title";
     sf::String artist = "John Doe";
     sf::String album = "Default Album";
+    uint64_t id;
 
     Song(const std::string &_path) {
+        id = rand();
         path = _path;
         channel = BASS_StreamCreateFile(FALSE, path.c_str(), 0, 0, 0);
         int err = BASS_ErrorGetCode();
@@ -67,6 +69,13 @@ public:
         double time = BASS_ChannelBytes2Seconds(channel, len); // the length in seconds
         time = std::min(double(getDuration().asSeconds()), time + 5);
         BASS_ChannelSetPosition(channel, BASS_ChannelSeconds2Bytes(channel, time), BASS_POS_BYTE);
+    }
+
+    bool matches(std::wstring text) {
+        if (title.find(text) != std::string::npos) return 1;
+        if (artist.find(text) != std::string::npos) return 1;
+        if (album.find(text) != std::string::npos) return 1;
+        return 0;
     }
 
 };

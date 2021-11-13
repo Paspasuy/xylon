@@ -4,12 +4,18 @@
 #include <SFML/Graphics.hpp>
 #include "SongView.cpp"
 #include "bass.h"
+#include "SongSearch.cpp"
 
 int main() {
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
     p->add_folder("/home/pavel/Music/");
+    for (auto &it: p->songs) {
+        Tile::add_meta(it);
+    }
+    auto *cpl = p;
+    std::sort(p -> songs.begin(), p -> songs.end(), [&](Song* i, Song* j) { return i -> artist < j -> artist; });
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -23,6 +29,7 @@ int main() {
     if (!font.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf")) {
         std::cerr << "FONTS BROKEN\n";
     }
+    auto songSearch = new SongSearch(p);
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
             p->next();
@@ -36,10 +43,9 @@ int main() {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 songs.winsz = window.getSize();
-            }
-            else if (event.type == sf::Event::MouseWheelScrolled) {
+            } else if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-                    if (songs.get_click_index(event.mouseWheelScroll.x, event.mouseWheelScroll.y) != -1) {
+                    if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y) != -1) {
                         int delta = event.mouseWheelScroll.delta;
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
                             delta *= 5;
@@ -54,9 +60,9 @@ int main() {
                     }
                 }
             } else if (event.type == sf::Event::MouseButtonPressed) {
-                int idx = songs.get_click_index(event.mouseButton.x, event.mouseButton.y);
-                if (idx != -1) {
-                    p->play_ind(idx);
+                int id = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
+                if (id != -1) {
+                    p->play_id(id);
                 }
             } else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Space) {
@@ -66,16 +72,31 @@ int main() {
                         p->play();
                     }
                 } else if (event.key.code == sf::Keyboard::Left) {
-                    p -> backward_5();
+                    p->backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
-                    p -> forward_5();
+                    p->forward_5();
                 } else if (event.key.code == sf::Keyboard::R && event.key.control) {
-                    p -> loop ^= 1;
+                    p->loop ^= 1;
+                } else if (event.key.code == sf::Keyboard::Escape) {
+                    cpl = songSearch->clear();
+                    songs.init(cpl);
+                } else if (event.key.code == sf::Keyboard::BackSpace) {
+                    cpl = songSearch->pop_char();
+                    songs.init(cpl);
+                }
+            } else if (event.type == sf::Event::TextEntered) {
+                if (event.text.unicode != 27 && event.text.unicode != 8) {
+                    std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' ' << event.text.unicode << std::endl;
+                    cpl = songSearch->add_char(event.text.unicode);
+                    songs.init(cpl);
+                } else {
+                    std::cout << "NON ascii: " << event.text.unicode << std::endl;
                 }
             }
         }
         window.clear();
         songs.render(window, font);
+        songSearch->render(window, font);
         window.display();
     }
 
@@ -84,7 +105,8 @@ int main() {
 
 // done: sort by artist
 // TODO: album view
-// TODO: implement song filter (vector of matching indices, subPlayer)
+// done: implement song filter
 // TODO: maybe add second margin (oy)
 // TODO: make progress slider interactive
 // TODO: up/down arrows to change song
+// TODO: inertial scrolling

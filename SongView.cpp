@@ -49,13 +49,15 @@ public:
 
     void init(Player *p) {
         pl = p;
-        for (auto &it: p->songs) {
-            Tile::add_meta(it);
-        }
-        std::sort(p -> songs.begin(), p -> songs.end(), [&](Song* i, Song* j) { return i -> artist < j -> artist; });
+//        for (auto &it: p->songs) {
+//            Tile::add_meta(it);
+//        }
+// MOVED TO MAIN!
+        tiles.clear();
         for (auto &it: p->songs) {
             tiles.push_back(new Tile(it));
         }
+        shift = -pl->ptr * Tile::H;
         std::cout << "SIZE: " << tiles.size() << '\n';
     }
 
@@ -64,12 +66,22 @@ public:
         shift = std::min(shift, 30);
         shift = std::max(shift, -int(tiles.size() * Tile::H) - 30 + int(winsz.y));
     }
-
+/*
     int get_click_index(int x, int y) {
         for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
             if (tiles[i]->position.x <= x && tiles[i]->position.x + Tile::W >= x) {
                 if (tiles[i]->position.y <= y && tiles[i]->position.y + Tile::H >= y) {
                     return i;
+                }
+            }
+        }
+        return -1;
+    }*/
+    int get_click_id(int x, int y) {
+        for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
+            if (tiles[i]->position.x <= x && tiles[i]->position.x + Tile::W >= x) {
+                if (tiles[i]->position.y <= y && tiles[i]->position.y + Tile::H >= y) {
+                    return tiles[i] -> s -> id;
                 }
             }
         }

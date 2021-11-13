@@ -7,11 +7,11 @@
 #define PLAYER
 
 class Player {
-    sf::Clock *c;
+public:
     int ptr = 0;
     bool state;
     double vol = 1.;
-public:
+    sf::Clock *c;
     double progress;
     bool loop = 0;
 
@@ -19,6 +19,23 @@ public:
 
     Player(sf::Clock *_c) {
         c = _c;
+    }
+
+/*    Player(Player *pl) {
+        c = pl->c;
+        state = pl->state;
+        vol = pl->vol;
+        progress = pl->progress;
+        loop = pl->loop;
+    }*/
+
+    Player(Player *pl) {
+        c = pl->c;
+        state = 0;
+        vol = 1;
+        progress = 0;
+        ptr = 0;
+        loop = 0;
     }
 
     std::vector<Song *> songs;
@@ -59,6 +76,15 @@ public:
         play();
     }
 
+    void play_id(int id) {
+        for (int i = 0; i < songs.size(); ++i) {
+            if (songs[i] -> id == id) {
+                play_ind(i);
+                return;
+            }
+        }
+    }
+
     void prev() {
         stop();
         --ptr;
@@ -83,6 +109,7 @@ public:
                 add_song(dirEntry.path());
             }
         }
+
     }
 
     void set_vol(double x) {
