@@ -14,6 +14,7 @@ int main() {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode(1024, 768), "xylon", sf::Style::Default, settings);
+    Tile::W = std::min(int(window.getSize().x) / 2, MIN_W);
     window.setVerticalSyncEnabled(true);
     SongView songs;
     songs.init(p);
@@ -31,6 +32,7 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::Resized) {
+                Tile::W = std::min(int(window.getSize().x) / 2, MIN_W);
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 songs.winsz = window.getSize();
@@ -80,8 +82,9 @@ int main() {
     return 0;
 }
 
-// TODO: sort by artist
+// done: sort by artist
 // TODO: album view
 // TODO: implement song filter (vector of matching indices, subPlayer)
 // TODO: maybe add second margin (oy)
 // TODO: make progress slider interactive
+// TODO: up/down arrows to change song

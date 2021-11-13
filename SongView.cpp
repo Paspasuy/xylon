@@ -50,6 +50,10 @@ public:
     void init(Player *p) {
         pl = p;
         for (auto &it: p->songs) {
+            Tile::add_meta(it);
+        }
+        std::sort(p -> songs.begin(), p -> songs.end(), [&](Song* i, Song* j) { return i -> artist < j -> artist; });
+        for (auto &it: p->songs) {
             tiles.push_back(new Tile(it));
         }
         std::cout << "SIZE: " << tiles.size() << '\n';

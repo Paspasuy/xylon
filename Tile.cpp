@@ -10,15 +10,13 @@
 #include <taglib/mp4tag.h>
 #include <taglib/tag.h>
 typedef unsigned char uchar;
+const int MIN_W = 400;
 
 class Tile {
 public:
     static const int PIC = 300;
-    static const int W = 500;
+    static int W;
     static const int H = 80;
-    sf::String title = "Title";
-    sf::String artist = "John Doe";
-    sf::String album = "Default Album";
     sf::Vector2i position;
     sf::Sprite sprite;
     sf::Texture texture;
@@ -29,19 +27,23 @@ public:
 
     Tile(Song *_s) {
         s = _s;
-        TagLib::FileRef f((s->path).c_str());
-        title = f.tag()->title().toWString();
-        if (title.getSize() == 0) {
-            title = s->path;
-        }
-        artist = f.tag()->artist().toWString();
-        album = f.tag()->artist().toWString();
+
 
 
 //        TagLib::MP4::Tag* tag = ff.tag();
 //        auto itemsListMap = tag->itemListMap();
 //        TagLib::MP4::Item coverItem = itemsListMap["covr"];
 //        TagLib::MP4::CoverArtList coverArtList = coverItem.toCoverArtList();
+    }
+
+    static void add_meta(Song *s) {
+        TagLib::FileRef f((s->path).c_str());
+        s -> title = f.tag()->title().toWString();
+        if (s -> title.getSize() == 0) {
+            s -> title = s->path;
+        }
+        s -> artist = f.tag()->artist().toWString();
+        s -> album = f.tag()->artist().toWString();
     }
 
     void load_pic() {
@@ -76,8 +78,8 @@ public:
         sh.setPosition(position.x, position.y);
         sh.setOutlineThickness(2.f);
         sh.setFillColor(sf::Color(sf::Color::Transparent));
-        sf::Text title_text(title, font, 16);
-        sf::Text artist_text(artist, font, 14);
+        sf::Text title_text(s -> title, font, 16);
+        sf::Text artist_text(s -> artist, font, 14);
         title_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 2);
         artist_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 20);
         window.draw(sh);
@@ -86,15 +88,15 @@ public:
         if (is_cur) {
             render_pic(window);
             int w = 10;
-            int sw = margin + (PIC - w * title.getSize()) / 2;
+            int sw = margin + (PIC - w * s -> title.getSize()) / 2;
             title_text.setPosition(sw, PIC + margin * 0.5 + 12);
             window.draw(title_text);
             w = 8;
-            sw = margin + (PIC - w * artist.getSize()) / 2;
+            sw = margin + (PIC - w * s -> artist.getSize()) / 2;
             artist_text.setPosition(sw, PIC + margin * 0.5 + 20 + 12);
             window.draw(artist_text);
         }
     }
 };
-
+int Tile::W;
 #endif

@@ -2,6 +2,7 @@
 #define SONG
 
 #include <SFML/System/Time.hpp>
+#include <SFML/System/String.hpp>
 #include "bass.h"
 
 class Song {
@@ -9,6 +10,9 @@ class Song {
 
 public:
     std::string path;
+    sf::String title = "Title";
+    sf::String artist = "John Doe";
+    sf::String album = "Default Album";
 
     Song(const std::string &_path) {
         path = _path;
