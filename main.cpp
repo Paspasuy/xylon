@@ -7,6 +7,10 @@
 #include "SongSearch.cpp"
 
 int main() {
+    std::locale::global(std::locale("ru_RU.utf-8"));
+    std::wcin.imbue(std::locale("ru_RU.utf-8"));
+    std::wcout.imbue(std::locale("ru_RU.utf-8"));
+
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
@@ -15,7 +19,7 @@ int main() {
         Tile::add_meta(it);
     }
     auto *cpl = p;
-    std::sort(p -> songs.begin(), p -> songs.end(), [&](Song* i, Song* j) { return i -> artist < j -> artist; });
+    std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) { return i->artist < j->artist; });
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -68,16 +72,18 @@ int main() {
                 }
             } else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Space) {
-                    if (p->is_playing()) {
-                        p->pause();
-                    } else {
-                        p->play();
+                    if (!songSearch->state()) {
+                        if (p->is_playing()) {
+                            p->pause();
+                        } else {
+                            p->play();
+                        }
                     }
                 } else if (event.key.code == sf::Keyboard::Left) {
                     p->backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
                     p->forward_5();
-                }  else if (event.key.code == sf::Keyboard::Up) {
+                } else if (event.key.code == sf::Keyboard::Up) {
                     p->prev();
                     songs.norm_shift_up();
                 } else if (event.key.code == sf::Keyboard::Down) {
@@ -96,10 +102,13 @@ int main() {
                     return 0;
                 }
             } else if (event.type == sf::Event::TextEntered) {
-                if (event.text.unicode != 27 && event.text.unicode != 8) {
-                    std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' ' << event.text.unicode << std::endl;
-                    cpl = songSearch->add_char(event.text.unicode);
-                    songs.init(cpl);
+                if (event.text.unicode != 27 && event.text.unicode != 8 && event.text.unicode != 13) {
+                    std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' '
+                              << event.text.unicode << std::endl;
+                    if (event.text.unicode != 32 || songSearch->state()) {
+                        cpl = songSearch->add_char(event.text.unicode);
+                        songs.init(cpl);
+                    }
                 }
             }
         }

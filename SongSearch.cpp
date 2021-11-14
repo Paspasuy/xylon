@@ -9,13 +9,14 @@ public:
         p = _p;
     }
 
-    Player* add_char(wchar_t c) {
+    Player *add_char(wchar_t c) {
         if (size(text) == 0) {}
-        text += c;
-        std::vector<Song*>::iterator iter = p->songs.begin();
-        std::vector<std::vector<Song*>::iterator> v;
+        std::locale loc = std::wcin.getloc();
+        text += std::use_facet<std::ctype<wchar_t>>(loc).tolower(c);
+        std::vector<Song *>::iterator iter = p->songs.begin();
+        std::vector<std::vector<Song *>::iterator> v;
         while (iter != p->songs.end()) {
-            if ((*iter) -> matches(text)) {
+            if ((*iter)->matches(text)) {
                 v.push_back(iter);
             }
             ++iter;
@@ -32,17 +33,18 @@ public:
         }
         return p2;
     }
-    Player* pop_char() {
+
+    Player *pop_char() {
         if (text.size() != 0) {
             text.pop_back();
         }
         if (text.empty()) {
             return p;
         }
-        std::vector<Song*>::iterator iter = p->songs.begin();
-        std::vector<std::vector<Song*>::iterator> v;
+        std::vector<Song *>::iterator iter = p->songs.begin();
+        std::vector<std::vector<Song *>::iterator> v;
         while (iter != p->songs.end()) {
-            if ((*iter) -> matches(text)) {
+            if ((*iter)->matches(text)) {
                 v.push_back(iter);
             }
             ++iter;
@@ -59,7 +61,8 @@ public:
         }
         return p2;
     }
-    Player* clear() {
+
+    Player *clear() {
 //        if (text.empty())
 //            return p;
         text.clear();
@@ -70,12 +73,17 @@ public:
         return p;
         //TODO: implement
     }
+
 //TODO: implement del char
     void render(sf::RenderWindow &window, sf::Font &font) {
         sf::Text txt(text, font, 20);
-        txt.setPosition(0, window.getSize().y-30);
+        txt.setPosition(0, window.getSize().y - 30);
         window.draw(txt);
 
 //TODO: implement
+    }
+
+    bool state() {
+        return !text.empty();
     }
 };

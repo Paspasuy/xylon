@@ -13,6 +13,9 @@ public:
     sf::String title = "Title";
     sf::String artist = "John Doe";
     sf::String album = "Default Album";
+    std::wstring ltitle = L"title";
+    std::wstring lartist = L"john doe";
+    std::wstring lalbum = L"default album";
     uint64_t id;
 
     Song(const std::string &_path) {
@@ -72,9 +75,9 @@ public:
     }
 
     bool matches(std::wstring text) {
-        if (title.find(text) != std::string::npos) return 1;
-        if (artist.find(text) != std::string::npos) return 1;
-        if (album.find(text) != std::string::npos) return 1;
+        if (ltitle.find(text) != std::string::npos) return 1;
+        if (lartist.find(text) != std::string::npos) return 1;
+        if (lalbum.find(text) != std::string::npos) return 1;
         return 0;
     }
 

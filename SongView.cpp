@@ -11,6 +11,7 @@ class SongView {
     std::vector<Tile *> tiles;
     int shift = 0;
     Player *pl;
+
     int get_low_tile() {
         return std::max(0, (-shift) / Tile::W);
     }
@@ -18,10 +19,12 @@ class SongView {
     int get_up_tile(int winh) {
         return std::min(int(tiles.size()), (-shift + winh) / Tile::H + 1);
     }
+
     const int CUR_SHIFT = 50;
     ProgressBarView bar;
 public:
     sf::Vector2<unsigned int> winsz;
+
     void render(sf::RenderWindow &window, sf::Font &font) {
         sf::RectangleShape sh;
         winsz = window.getSize();
@@ -37,11 +40,9 @@ public:
             tiles[i]->position = sf::Vector2i(winsz.x - Tile::W, shift + i * Tile::H);
             tiles[i]->render(window, font, sh, 0);
         }
-//        if (low <= cur && cur < up) {
-            sh.setOutlineColor(sf::Color(sf::Color::Blue));
-            tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
-            tiles[cur]->render(window, font, sh, 1);
-//        }
+        sh.setOutlineColor(sf::Color(sf::Color::Blue));
+        tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
+        tiles[cur]->render(window, font, sh, 1);
         int margin = tiles[cur]->margin;
         bar.update(pl);
         bar.render(window, font, margin, Tile::PIC + 57 + margin / 2);
@@ -49,25 +50,23 @@ public:
 
     void init(Player *p) {
         pl = p;
-//        for (auto &it: p->songs) {
-//            Tile::add_meta(it);
-//        }
-// MOVED TO MAIN!
         tiles.clear();
         for (auto &it: p->songs) {
             tiles.push_back(new Tile(it));
         }
-        shift = -pl->ptr * Tile::H;
+        shift = (-pl->ptr + 1) * Tile::H;
+        norm_shift();
+        std::cerr << "SHIFT: " << shift << std::endl;
         std::cout << "SIZE: " << tiles.size() << '\n';
     }
 
     void norm_shift() {
-        shift = std::min(shift, 30);
         shift = std::max(shift, -int(tiles.size() * Tile::H) - 30 + int(winsz.y));
+        shift = std::min(shift, 30);
     }
 
     void norm_shift_up() {
-        int up_bound = -(pl->current_index()) * Tile::H;
+        int up_bound = -(pl->current_index() - 1) * Tile::H;
         shift = std::max(shift, up_bound);
     }
 
@@ -80,22 +79,12 @@ public:
         shift += delta * 30;
         norm_shift();
     }
-/*
-    int get_click_index(int x, int y) {
-        for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
-            if (tiles[i]->position.x <= x && tiles[i]->position.x + Tile::W >= x) {
-                if (tiles[i]->position.y <= y && tiles[i]->position.y + Tile::H >= y) {
-                    return i;
-                }
-            }
-        }
-        return -1;
-    }*/
+
     int get_click_id(int x, int y) {
         for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
             if (tiles[i]->position.x <= x && tiles[i]->position.x + Tile::W >= x) {
                 if (tiles[i]->position.y <= y && tiles[i]->position.y + Tile::H >= y) {
-                    return tiles[i] -> s -> id;
+                    return tiles[i]->s->id;
                 }
             }
         }
