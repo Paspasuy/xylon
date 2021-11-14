@@ -83,20 +83,23 @@ public:
 
     }
 
-    void render(sf::RenderWindow &window, sf::Font &font, sf::RectangleShape &sh, bool is_cur) {
+    void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh, bool is_cur) {
         if (is_cur && !pic_loaded) {
             load_pic();
         }
         sh.setPosition(position.x, position.y);
         sh.setOutlineThickness(2.f);
         sh.setFillColor(sf::Color(sf::Color::Transparent));
-        sf::Text title_text(s->title, font, 16);
+        sf::Text title_text(s->title, bold_font, 16);
         sf::Text artist_text(s->artist, font, 14);
+        sf::Text album_text(s->album, font, 14);
         title_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 2);
         artist_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 20);
+        album_text.setPosition(sh.getPosition().x - 4 - s->album.getSize() * 8 + Tile::W, sh.getPosition().y + Tile::H - 20);
         window.draw(sh);
         window.draw(title_text);
         window.draw(artist_text);
+        window.draw(album_text);
         if (is_cur) {
             render_pic(window);
             int w = 10;

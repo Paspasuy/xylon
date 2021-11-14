@@ -33,6 +33,10 @@ int main() {
     if (!font.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf")) {
         std::cerr << "FONTS BROKEN\n";
     }
+    sf::Font bold_font;
+    if (!bold_font.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf")) {
+        std::cerr << "FONTS BROKEN\n";
+    }
     auto songSearch = new SongSearch(p);
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
@@ -113,7 +117,7 @@ int main() {
             }
         }
         window.clear();
-        songs.render(window, font);
+        songs.render(window, font, bold_font);
         songSearch->render(window, font);
         window.display();
     }
@@ -128,5 +132,6 @@ int main() {
 // TODO: make progress slider interactive
 // done: up/down arrows to change song
 // TODO: inertial scrolling
-// TODO: small case for search
+// done: small case for search
 // TODO: add focused song
+// TODO: album cover from real song
