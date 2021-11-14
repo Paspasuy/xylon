@@ -29,7 +29,7 @@ public:
         int low = get_low_tile();
         int up = get_up_tile(winsz.y);
         int cur = pl->current_index();
-        sh.setOutlineColor(sf::Color(sf::Color::Green));
+        sh.setOutlineColor(sf::Color(255, 127, 0));
         for (int i = low; i < up; ++i) {
             if (i == cur) {
                 continue;
@@ -61,10 +61,24 @@ public:
         std::cout << "SIZE: " << tiles.size() << '\n';
     }
 
-    void scroll(int delta) {
-        shift += delta * 30;
+    void norm_shift() {
         shift = std::min(shift, 30);
         shift = std::max(shift, -int(tiles.size() * Tile::H) - 30 + int(winsz.y));
+    }
+
+    void norm_shift_up() {
+        int up_bound = -(pl->current_index()) * Tile::H;
+        shift = std::max(shift, up_bound);
+    }
+
+    void norm_shift_down() {
+        int down_bound = -(pl->current_index() + 2) * Tile::H + winsz.y;
+        shift = std::min(shift, down_bound);
+    }
+
+    void scroll(int delta) {
+        shift += delta * 30;
+        norm_shift();
     }
 /*
     int get_click_index(int x, int y) {

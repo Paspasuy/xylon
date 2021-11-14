@@ -36,8 +36,10 @@ int main() {
         }
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+                return 0;
+            }
             if (event.type == sf::Event::Resized) {
                 Tile::W = std::min(int(window.getSize().x) / 2, MIN_W);
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
@@ -75,6 +77,12 @@ int main() {
                     p->backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
                     p->forward_5();
+                }  else if (event.key.code == sf::Keyboard::Up) {
+                    p->prev();
+                    songs.norm_shift_up();
+                } else if (event.key.code == sf::Keyboard::Down) {
+                    p->next();
+                    songs.norm_shift_down();
                 } else if (event.key.code == sf::Keyboard::R && event.key.control) {
                     p->loop ^= 1;
                 } else if (event.key.code == sf::Keyboard::Escape) {
@@ -83,6 +91,9 @@ int main() {
                 } else if (event.key.code == sf::Keyboard::BackSpace) {
                     cpl = songSearch->pop_char();
                     songs.init(cpl);
+                } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
+                    window.close();
+                    return 0;
                 }
             } else if (event.type == sf::Event::TextEntered) {
                 if (event.text.unicode != 27 && event.text.unicode != 8) {
@@ -102,10 +113,11 @@ int main() {
 }
 
 // done: sort by artist
-// TODO: album view
+// TODO: albums support
 // done: implement song filter
-// TODO: maybe add second margin (oy)
+// TODO: maybe add second margin (Oy)
 // TODO: make progress slider interactive
-// TODO: up/down arrows to change song
+// done: up/down arrows to change song
 // TODO: inertial scrolling
 // TODO: small case for search
+// TODO: add focused song
