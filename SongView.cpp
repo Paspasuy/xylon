@@ -21,8 +21,8 @@ class SongView {
     }
 
     const int CUR_SHIFT = 50;
-    ProgressBarView bar;
 public:
+    ProgressBarView bar;
     sf::Vector2<unsigned int> winsz;
 
     void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font) {
@@ -88,6 +88,8 @@ public:
         }
         return -1;
     }
+
+
 };
 
 #endif

@@ -73,6 +73,21 @@ int main() {
                 int id = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
                 if (id != -1) {
                     p->play_id(id);
+                } else if (songs.bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
+                    songs.bar.holding = 1;
+                    p->pause();
+                    songs.bar.set_position(p, event.mouseButton.x);
+                }
+            } else if (event.type == sf::Event::MouseMoved) {
+                if (songs.bar.holding) {
+                    std::cerr << event.mouseMove.x << std::endl;
+                    songs.bar.set_position(p, event.mouseMove.x);
+                }
+            } else if (event.type == sf::Event::MouseButtonReleased) {
+                if (songs.bar.holding) {
+                    songs.bar.set_position(p, event.mouseButton.x);
+                    songs.bar.holding = 0;
+                    p->play();
                 }
             } else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Space) {
@@ -125,13 +140,10 @@ int main() {
     return 0;
 }
 
-// done: sort by artist
 // TODO: albums support
-// done: implement song filter
 // TODO: maybe add second margin (Oy)
-// TODO: make progress slider interactive
-// done: up/down arrows to change song
+// done: make progress slider interactive
 // TODO: inertial scrolling
-// done: small case for search
 // TODO: add focused song
 // TODO: album cover from real song
+// TODO: create new class for current song displaying

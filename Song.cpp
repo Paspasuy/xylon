@@ -74,6 +74,10 @@ public:
         BASS_ChannelSetPosition(channel, BASS_ChannelSeconds2Bytes(channel, time), BASS_POS_BYTE);
     }
 
+    void set_position(double pos) {
+        BASS_ChannelSetPosition(channel, BASS_ChannelSeconds2Bytes(channel, pos), BASS_POS_BYTE);
+    }
+
     bool matches(std::wstring text) {
         if (ltitle.find(text) != std::string::npos) return 1;
         if (lartist.find(text) != std::string::npos) return 1;

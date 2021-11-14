@@ -78,7 +78,7 @@ public:
 
     void play_id(int id) {
         for (int i = 0; i < songs.size(); ++i) {
-            if (songs[i] -> id == id) {
+            if (songs[i]->id == id) {
                 play_ind(i);
                 return;
             }
@@ -132,21 +132,28 @@ public:
     }
 
     void backward_5() {
-        songs[ptr] -> backward_5();
+        songs[ptr]->backward_5();
         upd_expire();
     }
 
     void forward_5() {
-        songs[ptr] -> forward_5();
+        songs[ptr]->forward_5();
         upd_expire();
     }
+
     sf::Time getDuration() {
-        return songs[ptr] -> getDuration();
+        return songs[ptr]->getDuration();
     }
 
     sf::Time getPlayingOffset() {
-        return songs[ptr] -> getPlayingOffset();
+        return songs[ptr]->getPlayingOffset();
     }
+
+    void set_position(double d) {
+        double t = songs[ptr]->getDuration().asSeconds() * d;
+        songs[ptr]->set_position(t);
+    }
+
 };
 
 #endif

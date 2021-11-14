@@ -11,7 +11,9 @@ public:
     const int height = 3;
     int width;
 public:
+    bool holding = 0;
     int current, duration;
+    sf::RectangleShape cont;
     void update(Player *pl) {
         sf::Time t1 = pl->getPlayingOffset();
         sf::Time t2 = pl->getDuration();
@@ -24,6 +26,7 @@ public:
         line.setPosition(x, y + 5);
         line.setFillColor(sf::Color(127, 127, 127));
         window.draw(line);
+        cont = line;
         line.setSize(sf::Vector2f(int(Tile::PIC * progress), 3.f));
         line.setPosition(x, y + 5);
         line.setFillColor(sf::Color::Green);
@@ -54,8 +57,27 @@ public:
         sf::Text text2(s2, font, 14);
         text2.setPosition(x + Tile::PIC - 8 * s2.size(), y + 10);
         window.draw(text2);
+    }
+    bool in_bar(int x, int y) {
+        int x1 = cont.getPosition().x;
+        int y1 = cont.getPosition().y - 20;
+        int x2 = cont.getPosition().x + cont.getSize().x;
+        int y2 = cont.getPosition().y + cont.getSize().y + 20;
+        if (x1 <= x && x2 >= x) {
+            if (y1 <= y && y2 >= y) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-
+    void set_position(Player *p, int x) {
+        x -= cont.getPosition().x;
+        x = std::max(x, 0);
+        x = std::min(x, int(cont.getSize().x));
+        progress = double(x) / cont.getSize().x;
+        std::cerr << progress << std::endl;
+        p->set_position(progress);
     }
 };
 #endif //XYLON_PROGRESSBARVIEW_H
