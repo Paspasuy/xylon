@@ -98,7 +98,9 @@ int main() {
                     if (songSearch->state()) {
                         cpl->set_index(idx);
                     }
-                    p->play_id(id);
+                    if (id != p->get_current_id()) {
+                        p->play_id(id);
+                    }
                 } else if (display->bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
                     display->bar.holding = 1;
                     p->pause();
