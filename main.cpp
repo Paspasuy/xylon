@@ -130,7 +130,7 @@ int main() {
                     return 0;
                 }
             } else if (event.type == sf::Event::TextEntered) {
-                if (event.text.unicode != 27 && event.text.unicode != 8 && event.text.unicode != 13 && event.text.unicode != 26) {
+                if (event.text.unicode != 27 && event.text.unicode != 18 && event.text.unicode != 8 && event.text.unicode != 13 && event.text.unicode != 26) {
                     std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' '
                               << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {

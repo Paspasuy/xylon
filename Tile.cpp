@@ -64,6 +64,9 @@ public:
             has_pic = 1;
             TagLib::ID3v2::Tag *id3V2Tag = ff.ID3v2Tag();
             auto l = id3V2Tag->frameList("APIC");
+            if (l.size() == 0) {
+                return;
+            }
             auto *pic = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(l.front());
             texture.loadFromMemory((const uchar *) pic->picture().data(), pic->picture().size(),
                                    sf::IntRect(0, 0, 1200, 1200));
