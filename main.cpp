@@ -114,8 +114,15 @@ int main() {
                     cpl = songSearch->clear();
                     songs.init(cpl);
                 } else if (event.key.code == sf::Keyboard::BackSpace) {
-                    cpl = songSearch->pop_char();
-                    songs.init(cpl);
+                    if (songSearch -> state()) {
+                        if (event.key.control) {
+                            cpl = songSearch->pop_word();
+                            songs.init(cpl);
+                        } else {
+                            cpl = songSearch->pop_char();
+                            songs.init(cpl);
+                        }
+                    }
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;
@@ -144,6 +151,10 @@ int main() {
 // TODO: maybe add second margin (Oy)
 // done: make progress slider interactive
 // TODO: inertial scrolling
-// TODO: add focused song
+// TODO: add focused song (not current!)
 // TODO: album cover from real song
 // TODO: create new class for current song displaying
+// TODO: add github token to clion/git/whatever
+// TODO: add volume circle
+// TODO: add background for search
+// TODO: add visualiser
