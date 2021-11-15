@@ -161,7 +161,6 @@ int main() {
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
 // TODO: inertial scrolling
-// done: add github token to clion/git/whatever
 // TODO: add volume circle
 // TODO: add visualiser
 // TODO: settings in config file
