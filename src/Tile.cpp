@@ -10,10 +10,10 @@ Tile::Tile(Song *_s) {
 //        TagLib::MP4::CoverArtList coverArtList = coverItem.toCoverArtList();
 }
 
-void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh, bool is_cur) {
+void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh) {
     sh.setPosition(position.x, position.y);
     sh.setOutlineThickness(2.f);
-    sh.setFillColor(sf::Color(sf::Color::Transparent));
+//    sh.setFillColor(sf::Color(sf::Color::Transparent));
     sf::Text title_text(s->title, bold_font, 16);
     sf::Text artist_text(s->artist, font, 14);
     sf::Text album_text(s->album, font, 14);
