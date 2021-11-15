@@ -1,10 +1,11 @@
 #include <iostream>
-#include "Player.cpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "SongView.cpp"
 #include "bass.h"
-#include "SongSearch.cpp"
+#include "Player.h"
+#include "SongView.h"
+#include "SongSearch.h"
+#include "SongDisplay.h"
 
 int main() {
     std::locale::global(std::locale("ru_RU.utf-8"));
@@ -16,10 +17,13 @@ int main() {
     auto *p = new Player(clock);
     p->add_folder("/home/pavel/Music/");
     for (auto &it: p->songs) {
-        Tile::add_meta(it);
+        it->add_meta();
     }
     auto *cpl = p;
-    std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) { return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist); });
+    auto *display = new SongDisplay(p);
+    std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) {
+        return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist);
+    });
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -73,20 +77,20 @@ int main() {
                 int id = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
                 if (id != -1) {
                     p->play_id(id);
-                } else if (songs.bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
-                    songs.bar.holding = 1;
+                } else if (display->bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
+                    display->bar.holding = 1;
                     p->pause();
-                    songs.bar.set_position(p, event.mouseButton.x);
+                    display->bar.set_position(p, event.mouseButton.x);
                 }
             } else if (event.type == sf::Event::MouseMoved) {
-                if (songs.bar.holding) {
+                if (display->bar.holding) {
                     std::cerr << event.mouseMove.x << std::endl;
-                    songs.bar.set_position(p, event.mouseMove.x);
+                    display->bar.set_position(p, event.mouseMove.x);
                 }
             } else if (event.type == sf::Event::MouseButtonReleased) {
-                if (songs.bar.holding) {
-                    songs.bar.set_position(p, event.mouseButton.x);
-                    songs.bar.holding = 0;
+                if (display->bar.holding) {
+                    display->bar.set_position(p, event.mouseButton.x);
+                    display->bar.holding = 0;
                     p->play();
                 }
             } else if (event.type == sf::Event::KeyPressed) {
@@ -116,7 +120,7 @@ int main() {
                         songs.init(cpl);
                     }
                 } else if (event.key.code == sf::Keyboard::BackSpace) {
-                    if (songSearch -> state()) {
+                    if (songSearch->state()) {
                         if (event.key.control) {
                             cpl = songSearch->pop_word();
                             songs.init(cpl);
@@ -130,7 +134,8 @@ int main() {
                     return 0;
                 }
             } else if (event.type == sf::Event::TextEntered) {
-                if (event.text.unicode != 27 && event.text.unicode != 18 && event.text.unicode != 8 && event.text.unicode != 13 && event.text.unicode != 26) {
+                if (event.text.unicode != 27 && event.text.unicode != 18 && event.text.unicode != 8 &&
+                    event.text.unicode != 13 && event.text.unicode != 26) {
                     std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' '
                               << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {
@@ -143,6 +148,7 @@ int main() {
         window.clear();
         songs.render(window, font, bold_font);
         songSearch->render(window, font);
+        display->render(window, font, bold_font);
         window.display();
     }
 
@@ -157,6 +163,8 @@ int main() {
 // TODO: create new class for current song displaying
 // TODO: add github token to clion/git/whatever
 // TODO: add volume circle
-// TODO: add background for search
+// done: add background for search
 // TODO: add visualiser
 // TODO: settings in config file
+// download songs from internet
+// TODO: add icon for repeating

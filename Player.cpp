@@ -1,159 +1,132 @@
-#include <SFML/System/Clock.hpp>
-#include <vector>
-#include "Song.cpp"
-#include <filesystem>
+#include "Player.h"
 
-#ifndef PLAYER
-#define PLAYER
+Player::Player(sf::Clock *_c) {
+    c = _c;
+}
 
-class Player {
-public:
-    int ptr = 0;
-    bool state;
-    double vol = 1.;
-    sf::Clock *c;
-    double progress;
-    bool loop = 0;
+Player::Player(Player *pl) {
+    c = pl->c;
+    state = 0;
+    vol = 1;
+    progress = 0;
+    ptr = 0;
+    loop = 0;
+}
 
-    sf::Time expire;
+void Player::upd_expire() {
+    expire = c->getElapsedTime() + songs[ptr]->getDuration() - songs[ptr]->getPlayingOffset();
+}
 
-    Player(sf::Clock *_c) {
-        c = _c;
+void Player::play() {
+    state = 1;
+    upd_expire();
+    songs[ptr]->set_vol(vol);
+    songs[ptr]->play();
+}
+
+void Player::pause() {
+    state = 0;
+    songs[ptr]->pause();
+}
+
+void Player::stop() {
+    state = 0;
+    songs[ptr]->stop();
+}
+
+void Player::next() {
+    stop();
+    if (!loop) {
+        ++ptr;
     }
+    ptr %= songs.size();
+    play();
+}
 
-/*    Player(Player *pl) {
-        c = pl->c;
-        state = pl->state;
-        vol = pl->vol;
-        progress = pl->progress;
-        loop = pl->loop;
-    }*/
+void Player::play_ind(int ind) {
+    stop();
+    ptr = ind;
+    play();
+}
 
-    Player(Player *pl) {
-        c = pl->c;
-        state = 0;
-        vol = 1;
-        progress = 0;
-        ptr = 0;
-        loop = 0;
-    }
-
-    std::vector<Song *> songs;
-
-    void upd_expire() {
-        expire = c->getElapsedTime() + songs[ptr]->getDuration() - songs[ptr]->getPlayingOffset();
-    }
-
-    void play() {
-        state = 1;
-        upd_expire();
-        songs[ptr]->set_vol(vol);
-        songs[ptr]->play();
-    }
-
-    void pause() {
-        state = 0;
-        songs[ptr]->pause();
-    }
-
-    void stop() {
-        state = 0;
-        songs[ptr]->stop();
-    }
-
-    void next() {
-        stop();
-        if (!loop) {
-            ++ptr;
+void Player::play_id(int id) {
+    for (int i = 0; i < songs.size(); ++i) {
+        if (songs[i]->id == id) {
+            play_ind(i);
+            return;
         }
-        ptr %= songs.size();
-        play();
     }
+}
 
-    void play_ind(int ind) {
-        stop();
-        ptr = ind;
-        play();
+void Player::prev() {
+    stop();
+    --ptr;
+    if (ptr < 0) {
+        ptr = songs.size() - 1;
     }
+    play();
+}
 
-    void play_id(int id) {
-        for (int i = 0; i < songs.size(); ++i) {
-            if (songs[i]->id == id) {
-                play_ind(i);
-                return;
-            }
+void Player::add_song(std::string s) {
+    songs.push_back(new Song(s));
+}
+
+bool Player::is_playing() {
+    return state;
+}
+
+void Player::add_folder(std::string s) {
+    using iter = std::filesystem::recursive_directory_iterator;
+    for (const auto &dirEntry: iter(s)) {
+        if (dirEntry.path().extension() == ".mp3") {
+            add_song(dirEntry.path());
         }
     }
 
-    void prev() {
-        stop();
-        --ptr;
-        if (ptr < 0) {
-            ptr = songs.size() - 1;
-        }
-        play();
+}
+
+void Player::set_vol(double x) {
+    vol = x;
+    if (state) {
+        songs[ptr]->set_vol(x);
     }
+}
 
-    void add_song(std::string s) {
-        songs.push_back(new Song(s));
-    }
+int Player::current_index() {
+    return ptr;
+}
 
-    bool is_playing() {
-        return state;
-    }
+void Player::add_vol() {
+    set_vol(std::min(1., vol + 0.05));
+}
 
-    void add_folder(std::string s) {
-        using iter = std::filesystem::recursive_directory_iterator;
-        for (const auto &dirEntry: iter(s)) {
-            if (dirEntry.path().extension() == ".mp3") {
-                add_song(dirEntry.path());
-            }
-        }
+void Player::dec_vol() {
+    set_vol(std::max(0., vol - 0.05));
+}
 
-    }
+void Player::backward_5() {
+    songs[ptr]->backward_5();
+    upd_expire();
+}
 
-    void set_vol(double x) {
-        vol = x;
-        if (state) {
-            songs[ptr]->set_vol(x);
-        }
-    }
+void Player::forward_5() {
+    songs[ptr]->forward_5();
+    upd_expire();
+}
 
-    int current_index() {
-        return ptr;
-    }
+sf::Time Player::getDuration() {
+    return songs[ptr]->getDuration();
+}
 
-    void add_vol() {
-        set_vol(std::min(1., vol + 0.05));
-    }
+sf::Time Player::getPlayingOffset() {
+    return songs[ptr]->getPlayingOffset();
+}
 
-    void dec_vol() {
-        set_vol(std::max(0., vol - 0.05));
-    }
+void Player::set_position(double d) {
+    double t = songs[ptr]->getDuration().asSeconds() * d;
+    songs[ptr]->set_position(t);
+}
 
-    void backward_5() {
-        songs[ptr]->backward_5();
-        upd_expire();
-    }
-
-    void forward_5() {
-        songs[ptr]->forward_5();
-        upd_expire();
-    }
-
-    sf::Time getDuration() {
-        return songs[ptr]->getDuration();
-    }
-
-    sf::Time getPlayingOffset() {
-        return songs[ptr]->getPlayingOffset();
-    }
-
-    void set_position(double d) {
-        double t = songs[ptr]->getDuration().asSeconds() * d;
-        songs[ptr]->set_position(t);
-    }
-
-};
-
-#endif
+Song *Player::getSong() {
+    return songs[ptr];
+}
