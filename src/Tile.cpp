@@ -28,3 +28,4 @@ void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font,
 }
 
 int Tile::W;
+int Tile::MAX_W = 400;

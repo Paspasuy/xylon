@@ -1,13 +1,27 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "bass.h"
 #include "Player.h"
 #include "SongView.h"
 #include "SongSearch.h"
 #include "SongDisplay.h"
+#include "VolumeCircleSlider.h"
+#include "../SelbaWard/Starfield.h"
+
+void stars_rot(sf::Vector2f &vec, float sin=0.001) {
+    float x1 = vec.x;
+    float y1 = vec.y;
+    float cos = 1 - sin * sin;
+    vec.x = cos * x1 - sin * y1;
+    vec.y = sin * x1 + cos * y1;
+}
 
 int main() {
+    srand(time(0));
+    int winw = 1024;
+    int winh = 768;
     std::locale::global(std::locale("ru_RU.utf-8"));
     std::wcin.imbue(std::locale("ru_RU.utf-8"));
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
@@ -21,14 +35,16 @@ int main() {
     }
     auto *cpl = p;
     auto *display = new SongDisplay(p);
+    VolumeCircleSlider vol_slider(p, clock->getElapsedTime());
     std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) {
         return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist);
     });
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
+    sw::Starfield starfield(sf::Vector2f(winw, winh), 700);
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode(1024, 768), "xylon", sf::Style::Default, settings);
-    Tile::W = std::min(int(window.getSize().x) / 2, MIN_W);
+    sf::RenderWindow window(sf::VideoMode(winw, winh), "xylon", sf::Style::Default, settings);
+    Tile::W = std::min(int(window.getSize().x) / 2, Tile::MAX_W);
     window.setVerticalSyncEnabled(true);
     SongView songs;
     songs.init(p);
@@ -41,7 +57,9 @@ int main() {
     if (!bold_font.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf")) {
         std::cerr << "FONTS BROKEN\n";
     }
-    auto songSearch = new SongSearch(p);
+    auto *songSearch = new SongSearch(p);
+    sf::Vector2f stars_vec(0.4, -0.1);
+    stars_rot(stars_vec, (rand() % 100) / 100.);
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
             p->next();
@@ -53,20 +71,21 @@ int main() {
                 return 0;
             }
             if (event.type == sf::Event::Resized) {
-                Tile::W = std::min(int(window.getSize().x) / 2, MIN_W);
+                Tile::W = std::min(int(window.getSize().x) / 2, Tile::MAX_W);
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 songs.winsz = window.getSize();
             } else if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+                    int delta = event.mouseWheelScroll.delta;
                     if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y).first != -1) {
-                        int delta = event.mouseWheelScroll.delta;
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
                             delta *= 5;
                         }
                         songs.scroll(delta);
                     } else {
-                        if (event.mouseWheelScroll.delta == 1) {
+                        vol_slider.touch(clock->getElapsedTime());
+                        if (delta == 1) {
                             p->add_vol();
                         } else {
                             p->dec_vol();
@@ -148,10 +167,14 @@ int main() {
                 }
             }
         }
+        stars_rot(stars_vec);
+        starfield.move(stars_vec);
         window.clear();
+        window.draw(starfield);
         songs.render(window, font, bold_font);
         songSearch->render(window, font);
         display->render(window, font, bold_font);
+        vol_slider.render(window, bold_font, clock->getElapsedTime());
         window.display();
     }
 

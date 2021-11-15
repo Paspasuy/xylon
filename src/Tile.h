@@ -6,11 +6,10 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include "Song.h"
 
-const int MIN_W = 400;
 
 class Tile {
 public:
-    static const int MIN_W = 400;
+    static int MAX_W;
     static int W;
     static const int H = 80;
     sf::Vector2i position;
