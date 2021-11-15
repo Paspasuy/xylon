@@ -4,6 +4,7 @@ class SongSearch {
 public:
     Player *p, *p2 = nullptr;
     std::wstring text;
+    sf::Color back_col = sf::Color(32, 32, 32);
 
     SongSearch(Player *_p) {
         p = _p;
@@ -22,10 +23,12 @@ public:
             ++iter;
         }
         if (v.empty()) {
+            back_col = sf::Color(128, 32, 32);
             if (p2 == nullptr)
                 return p;
             return p2;
         }
+        back_col = sf::Color(32, 32, 32);
         if (p2 != nullptr)
             delete p2;
         p2 = new Player(p);
@@ -69,10 +72,10 @@ public:
     void render(sf::RenderWindow &window, sf::Font &font) {
         if (!text.empty()) {
             sf::Text txt(L"search: " + text, font, 20);
-            sf::RectangleShape back(sf::Vector2f((text.size() + 8) * 12 + 4, 20));
+            sf::RectangleShape back(sf::Vector2f((text.size() + 8) * 12 + 4, 26));
             txt.setPosition(0, window.getSize().y - 30);
             back.setPosition(txt.getPosition());
-            back.setFillColor(sf::Color(32, 32, 32));
+            back.setFillColor(back_col);
             window.draw(back);
             window.draw(txt);
         }

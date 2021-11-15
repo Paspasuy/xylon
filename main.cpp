@@ -19,7 +19,7 @@ int main() {
         Tile::add_meta(it);
     }
     auto *cpl = p;
-    std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) { return i->artist < j->artist; });
+    std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) { return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist); });
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -111,8 +111,10 @@ int main() {
                 } else if (event.key.code == sf::Keyboard::R && event.key.control) {
                     p->loop ^= 1;
                 } else if (event.key.code == sf::Keyboard::Escape) {
-                    cpl = songSearch->clear();
-                    songs.init(cpl);
+                    if (songSearch->state()) {
+                        cpl = songSearch->clear();
+                        songs.init(cpl);
+                    }
                 } else if (event.key.code == sf::Keyboard::BackSpace) {
                     if (songSearch -> state()) {
                         if (event.key.control) {
@@ -128,7 +130,7 @@ int main() {
                     return 0;
                 }
             } else if (event.type == sf::Event::TextEntered) {
-                if (event.text.unicode != 27 && event.text.unicode != 8 && event.text.unicode != 13) {
+                if (event.text.unicode != 27 && event.text.unicode != 8 && event.text.unicode != 13 && event.text.unicode != 26) {
                     std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' '
                               << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {
@@ -149,7 +151,6 @@ int main() {
 
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
-// done: make progress slider interactive
 // TODO: inertial scrolling
 // TODO: add focused song (not current!)
 // TODO: album cover from real song
@@ -158,3 +159,4 @@ int main() {
 // TODO: add volume circle
 // TODO: add background for search
 // TODO: add visualiser
+// TODO: settings in config file
