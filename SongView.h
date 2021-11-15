@@ -25,13 +25,14 @@ public:
     void init(Player *p);
 
     void norm_shift();
+
     void norm_shift_up();
 
     void norm_shift_down();
 
     void scroll(int delta);
 
-    int get_click_id(int x, int y);
+    std::pair<int, int> get_click_id(int x, int y);
 };
 
 

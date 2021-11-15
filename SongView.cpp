@@ -61,13 +61,13 @@ void SongView::scroll(int delta) {
     norm_shift();
 }
 
-int SongView::get_click_id(int x, int y) {
+std::pair<int, int> SongView::get_click_id(int x, int y) {
     for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
         if (tiles[i]->position.x <= x && tiles[i]->position.x + Tile::W >= x) {
             if (tiles[i]->position.y <= y && tiles[i]->position.y + Tile::H >= y) {
-                return tiles[i]->s->id;
+                return {tiles[i]->s->id, i};
             }
         }
     }
-    return -1;
+    return {-1, -1};
 }

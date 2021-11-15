@@ -130,3 +130,7 @@ void Player::set_position(double d) {
 Song *Player::getSong() {
     return songs[ptr];
 }
+
+void Player::set_index(int idx) {
+    ptr = idx;
+}

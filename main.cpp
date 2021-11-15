@@ -59,7 +59,7 @@ int main() {
                 songs.winsz = window.getSize();
             } else if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-                    if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y) != -1) {
+                    if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y).first != -1) {
                         int delta = event.mouseWheelScroll.delta;
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
                             delta *= 5;
@@ -74,8 +74,11 @@ int main() {
                     }
                 }
             } else if (event.type == sf::Event::MouseButtonPressed) {
-                int id = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
+                auto [id, idx] = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
                 if (id != -1) {
+                    if (songSearch->state()) {
+                        cpl->set_index(idx);
+                    }
                     p->play_id(id);
                 } else if (display->bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
                     display->bar.holding = 1;
@@ -136,7 +139,7 @@ int main() {
             } else if (event.type == sf::Event::TextEntered) {
                 if (event.text.unicode != 27 && event.text.unicode != 18 && event.text.unicode != 8 &&
                     event.text.unicode != 13 && event.text.unicode != 26) {
-                    std::cout << "ASCII character typed: " << static_cast<char>(event.text.unicode) << ' '
+                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
                               << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {
                         cpl = songSearch->add_char(event.text.unicode);

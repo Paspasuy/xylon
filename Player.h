@@ -66,6 +66,7 @@ public:
 
     Song *getSong();
 
+    void set_index(int idx);
 };
 
 #endif //XYLON_PLAYER_H
