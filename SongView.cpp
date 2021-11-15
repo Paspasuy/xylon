@@ -23,9 +23,11 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
         tiles[i]->position = sf::Vector2i(winsz.x - Tile::W, shift + i * Tile::H);
         tiles[i]->render(window, font, bold_font, sh, 0);
     }
-    sh.setOutlineColor(sf::Color(sf::Color::Blue));
-    tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
-    tiles[cur]->render(window, font, bold_font, sh, 1);
+    if (cur != -1) {
+        sh.setOutlineColor(sf::Color(sf::Color::Blue));
+        tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
+        tiles[cur]->render(window, font, bold_font, sh, 1);
+    }
 }
 
 void SongView::init(Player *p) {

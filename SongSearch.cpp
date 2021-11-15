@@ -28,6 +28,7 @@ Player *SongSearch::rebuild() {
     if (p2 != nullptr)
         delete p2;
     p2 = new Player(p);
+    p2->ptr = -1;
     for (auto it: v) {
         p2->songs.push_back(*it);
     }
