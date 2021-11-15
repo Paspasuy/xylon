@@ -161,13 +161,8 @@ int main() {
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
 // TODO: inertial scrolling
-// won't do i think: add focused song (not current!)
-// done: album cover from real song
-// done: create new class for current song displaying
-// TODO: add github token to clion/git/whatever
+// done: add github token to clion/git/whatever
 // TODO: add volume circle
-// done: add background for search
 // TODO: add visualiser
 // TODO: settings in config file
-// download songs from internet
 // TODO: add icon for repeating
