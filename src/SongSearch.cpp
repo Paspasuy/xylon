@@ -12,8 +12,13 @@ Player *SongSearch::rebuild() {
     }
     std::vector<Song *>::iterator iter = p->songs.begin();
     std::vector<std::vector<Song *>::iterator> v;
+    int idx = -1;
+    int id = p->get_current_id();
     while (iter != p->songs.end()) {
         if ((*iter)->matches(text)) {
+            if (id == (*iter)->id) {
+                idx = v.size();
+            }
             v.push_back(iter);
         }
         ++iter;
@@ -28,7 +33,7 @@ Player *SongSearch::rebuild() {
     if (p2 != nullptr)
         delete p2;
     p2 = new Player(p);
-    p2->ptr = -1;
+    p2->ptr = idx;
     for (auto it: v) {
         p2->songs.push_back(*it);
     }

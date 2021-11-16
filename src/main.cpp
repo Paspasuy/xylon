@@ -186,7 +186,9 @@ int main() {
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
 // TODO: inertial scrolling
-// TODO: add volume circle
+// TODO: enhance volume circle
 // TODO: add visualiser
 // TODO: settings in config file
 // TODO: add icon for repeating
+// TODO: add ability to change song metadata
+// done: autoselect song (while searching) which is playing
