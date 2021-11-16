@@ -75,6 +75,7 @@ int main() {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
                 songs.winsz = window.getSize();
+                starfield.regenerate(sf::Vector2f(window.getSize().x, window.getSize().y));
             } else if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
                     int delta = event.mouseWheelScroll.delta;
@@ -186,7 +187,7 @@ int main() {
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
 // TODO: inertial scrolling
-// TODO: enhance volume circle
+// done: enhance volume circle
 // TODO: add visualiser
 // TODO: settings in config file
 // TODO: add icon for repeating

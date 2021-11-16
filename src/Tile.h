@@ -18,7 +18,7 @@ public:
 
     Tile(Song *_s);
 
-    void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh);
+    void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh, bool is_cur);
 };
 
 #endif //XYLON_TILE_H

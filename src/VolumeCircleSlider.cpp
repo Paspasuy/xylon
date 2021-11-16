@@ -10,6 +10,9 @@
 VolumeCircleSlider::VolumeCircleSlider(Player *_p, sf::Time _t) {
     t = _t - sf::seconds(2);
     p = _p;
+    shape = new VolumeShape(40.f);
+    shape->setFillColor(sf::Color::Transparent);
+    shape->setOutlineThickness(7.f);
 }
 
 void VolumeCircleSlider::render(sf::RenderWindow &window, sf::Font &bold_font, sf::Time _t) {
@@ -20,17 +23,14 @@ void VolumeCircleSlider::render(sf::RenderWindow &window, sf::Font &bold_font, s
         sf::Text txt(std::to_string(val) + "%", bold_font, 20);
         sf::Color cur_color = sf::Color(255, 255, 255, int(alpha * 255));
         txt.setFillColor(cur_color);
-        int x = window.getSize().x - Tile::W - 70;
-        int y = window.getSize().y - 70;
+        int x = 70; //window.getSize().x - Tile::W - 70;
+        int y = window.getSize().y - 90;
         txt.setPosition(x - txt.getLocalBounds().width / 2, y - txt.getLocalBounds().height);
         window.draw(txt);
-        int r = 40;
-        sf::CircleShape shape(r);
-        shape.setFillColor(sf::Color::Transparent);
-        shape.setOutlineThickness(7.f);
-        shape.setOutlineColor(cur_color);
-        shape.setPosition(x - r, y - r);
-        window.draw(shape);
+        shape->touch(val);
+        shape->setOutlineColor(cur_color);
+        shape->setPosition(x, y);
+        window.draw(*shape);
     }
 }
 

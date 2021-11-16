@@ -4,11 +4,13 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include "Player.h"
+#include "VolumeShape.h"
 
 class VolumeCircleSlider {
 public:
     Player *p;
     sf::Time t;
+    VolumeShape *shape;
     int val = 100;
 
     VolumeCircleSlider(Player *_p, sf::Time _t);
