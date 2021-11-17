@@ -27,6 +27,7 @@ public:
     std::wstring lartist = L"john doe";
     std::wstring lalbum = L"default album";
     std::string path;
+    std::u8string filename;
 
     sf::Sprite sprite;
     sf::Texture texture;
@@ -34,7 +35,7 @@ public:
 
     uint64_t id;
 
-    Song(const std::string &_path);
+    Song(const std::string &_path, const std::u8string &_filename);
 
     void play();
 

@@ -67,8 +67,8 @@ void Player::prev() {
     play();
 }
 
-void Player::add_song(std::string s) {
-    songs.push_back(new Song(s));
+void Player::add_song(const std::string &s, const std::u8string &t) {
+    songs.push_back(new Song(s, t));
 }
 
 bool Player::is_playing() {
@@ -79,7 +79,7 @@ void Player::add_folder(std::string s) {
     using iter = std::filesystem::recursive_directory_iterator;
     for (const auto &dirEntry: iter(s)) {
         if (dirEntry.path().extension() == ".mp3") {
-            add_song(dirEntry.path().string());
+            add_song(dirEntry.path().string(), dirEntry.path().filename().u8string());
         }
     }
 

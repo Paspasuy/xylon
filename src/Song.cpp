@@ -1,8 +1,9 @@
 #include "Song.h"
 
-Song::Song(const std::string &_path) {
+Song::Song(const std::string &_path, const std::u8string &_filename) {
         id = rand();
         path = _path;
+        filename = _filename;
         channel = BASS_StreamCreateFile(FALSE, path.c_str(), 0, 0, BASS_SAMPLE_FLOAT);
         int err = BASS_ErrorGetCode();
         if (err != 0) {
@@ -67,12 +68,13 @@ bool Song::matches(std::wstring text) {
 }
 
 void Song::add_meta() {
+    std::cerr << path << std::endl;
     TagLib::FileRef f(path.c_str());
     std::wstring s1 = f.tag()->title().toWString();
     std::wstring s2 = f.tag()->artist().toWString();
     std::wstring s3 = f.tag()->album().toWString();
     if (s1.size() == 0) {
-        s1 = std::wstring(path.begin(), path.end());
+        s1 = std::wstring(filename.begin(), filename.end());
     }
     title = s1;
     artist = s2;
@@ -83,6 +85,7 @@ void Song::add_meta() {
 }
 
 void Song::load_pic() {
+    std::cerr << path << std::endl;
     TagLib::MPEG::File ff(path.c_str());
     pic_loaded = 1;
     if (ff.hasID3v2Tag()) {

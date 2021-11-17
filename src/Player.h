@@ -40,7 +40,7 @@ public:
 
     void prev();
 
-    void add_song(std::string s);
+    void add_song(const std::string &s, const std::u8string &t);
 
     bool is_playing();
 

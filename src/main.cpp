@@ -117,7 +117,9 @@ int main() {
                     display->bar.set_position(p, event.mouseMove.x);
                 }
             } else if (event.type == sf::Event::MouseButtonReleased) {
-                songs.release(event.mouseButton.y, clock->getElapsedTime());
+                if (songs.holding) {
+                    songs.release(event.mouseButton.y, clock->getElapsedTime());
+                }
                 if (display->bar.holding) {
                     display->bar.set_position(p, event.mouseButton.x);
                     display->bar.holding = 0;
@@ -200,8 +202,8 @@ int main() {
 
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
-// done: inertial scrolling
 // TODO: add visualiser
 // TODO: settings in config file
 // TODO: add icon for repeating
 // TODO: add ability to change song metadata
+// TODO: resize album picture properly
