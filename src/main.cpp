@@ -63,7 +63,13 @@ int main() {
     sf::Time prev = clock->getElapsedTime();
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
-            p->next();
+            if (songSearch->state()) {
+                ++cpl->ptr;
+                cpl->ptr %= cpl->songs.size();
+                p->play_id(cpl->get_current_id());
+            } else {
+                p->next();
+            }
         }
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -136,11 +142,24 @@ int main() {
                 } else if (event.key.code == sf::Keyboard::Right) {
                     p->forward_5();
                 } else if (event.key.code == sf::Keyboard::Up) {
-                    p->prev();
-                    songs.norm_shift_up();
+                    if (songSearch->state()) {
+                        --cpl->ptr;
+                        cpl->ptr += cpl->songs.size() * 2;
+                        cpl->ptr %= cpl->songs.size();
+                        p->play_id(cpl->get_current_id());
+                    } else {
+                        p->prev();
+                        songs.norm_shift_up();
+                    }
                 } else if (event.key.code == sf::Keyboard::Down) {
-                    p->next();
-                    songs.norm_shift_down();
+                    if (songSearch->state()) {
+                        ++cpl->ptr;
+                        cpl->ptr %= cpl->songs.size();
+                        p->play_id(cpl->get_current_id());
+                    } else {
+                        p->next();
+                        songs.norm_shift_down();
+                    }
                 } else if (event.key.code == sf::Keyboard::Enter) {
                     if (songSearch->state()) {
                         int id = cpl->songs[0]->id;
