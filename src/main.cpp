@@ -64,6 +64,7 @@ int main() {
     auto *songSearch = new SongSearch(p);
     sf::Vector2f stars_vec(0.4, -0.1);
     stars_rot(stars_vec, (rand() % 100) / 100.f);
+    sf::Time prev = clock->getElapsedTime();
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
             p->next();
@@ -194,7 +195,13 @@ int main() {
         songSearch->render(window, font);
         display->render(window, font, bold_font);
         vol_slider.render(window, bold_font, clock->getElapsedTime());
+        sf::Time cur = clock->getElapsedTime();
+        sf::Text fps(std::to_string(int(1.f / (cur - prev).asSeconds() + 2) / 10 * 10), font, 20);
+        fps.setFillColor(sf::Color(255, 0, 0, 150));
+        fps.setPosition(0.f, 0.f);
+        window.draw(fps);
         window.display();
+        prev = cur;
     }
 
     return 0;

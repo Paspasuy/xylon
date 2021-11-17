@@ -68,7 +68,6 @@ bool Song::matches(std::wstring text) {
 }
 
 void Song::add_meta() {
-    std::cerr << path << std::endl;
     TagLib::FileRef f(path.c_str());
     std::wstring s1 = f.tag()->title().toWString();
     std::wstring s2 = f.tag()->artist().toWString();
