@@ -8,7 +8,10 @@ int SongView::get_up_tile(int winh) {
     return std::min(int(tiles.size()), (-shift + winh) / Tile::H + 1);
 }
 
-void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font) {
+void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time) {
+    update_vel(time - t);
+    update_shift(time - t);
+    t = time;
     sf::RectangleShape sh;
     winsz = window.getSize();
     sh.setSize(sf::Vector2f(Tile::W, Tile::H - 2));
@@ -61,7 +64,7 @@ void SongView::norm_shift_down() {
 }
 
 void SongView::scroll(int delta) {
-    shift += delta * 30;
+    vel += delta * 250;
     norm_shift();
 }
 
@@ -75,3 +78,41 @@ std::pair<int, int> SongView::get_click_id(int x, int y) {
     }
     return {-1, -1};
 }
+
+void SongView::update_vel(sf::Time t) {
+    if (vel > 0) {
+        vel -= t.asSeconds() * accel;
+        vel = std::max(0, vel);
+        vel = std::min(MAX_VEL, vel);
+    } else if (vel < 0) {
+        vel += t.asSeconds() * accel;
+        vel = std::min(0, vel);
+        vel = std::max(-MAX_VEL, vel);
+    }
+}
+
+void SongView::update_shift(sf::Time t) {
+    if (!holding) {
+        shift += vel * t.asSeconds();
+        norm_shift();
+    } else {
+
+    }
+}
+
+void SongView::grab(int y) {
+    holding = 1;
+    last_y = y;
+    vel = 0;
+}
+
+void SongView::release(int y, sf::Time time) {
+    vel = (y - last_y) / (time - t).asSeconds();
+    holding = 0;
+}
+
+void SongView::set_position(int y) {
+    shift += y - last_y;
+    last_y = y;
+}
+

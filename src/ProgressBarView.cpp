@@ -65,6 +65,5 @@ void ProgressBarView::set_position(Player *p, int x) {
     x = std::max(x, 0);
     x = std::min(x, int(cont.getSize().x));
     progress = double(x) / cont.getSize().x;
-    std::cerr << progress << std::endl;
     p->set_position(progress);
 }

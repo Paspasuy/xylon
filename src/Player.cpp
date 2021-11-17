@@ -79,7 +79,7 @@ void Player::add_folder(std::string s) {
     using iter = std::filesystem::recursive_directory_iterator;
     for (const auto &dirEntry: iter(s)) {
         if (dirEntry.path().extension() == ".mp3") {
-            add_song(dirEntry.path());
+            add_song(dirEntry.path().string());
         }
     }
 

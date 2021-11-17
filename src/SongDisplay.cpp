@@ -18,7 +18,7 @@ void SongDisplay::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bol
 
     sf::Text title_text(s->title, bold_font, 16);
     sf::Text artist_text(s->artist, font, 14);
-    sf::Text album_text(s->album, font, 14);
+//    sf::Text album_text(s->album, font, 14);
     int w = 10;
     int sw = margin + (PIC - w * s->title.getSize()) / 2;
     title_text.setPosition(sw, PIC + margin * 0.5 + 12);

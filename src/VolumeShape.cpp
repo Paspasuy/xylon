@@ -22,7 +22,6 @@ sf::Vector2f VolumeShape::getPoint(std::size_t index) const {
     }
     static const float pi = 3.141592654f;
     float angle = (ind * 2 * pi / (cnt - 1) - pi) * prog * 0.01 + pi / 2;
-    std::cerr << angle << ' ' << pi - angle << '\n';
     float x = std::cos(angle) * r;
     float y = std::sin(angle) * r;
     return sf::Vector2f(x, y);

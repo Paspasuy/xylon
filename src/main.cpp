@@ -25,11 +25,15 @@ int main() {
     std::locale::global(std::locale("ru_RU.utf-8"));
     std::wcin.imbue(std::locale("ru_RU.utf-8"));
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
-
+    std::string str;
+//    std::cin >> str;
+//    if (str.size() == 1) {
+        str = "/home/pavel/Music/";
+//    }
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
-    p->add_folder("/home/pavel/Music/");
+    p->add_folder(str);
     for (auto &it: p->songs) {
         it->add_meta();
     }
@@ -59,7 +63,7 @@ int main() {
     }
     auto *songSearch = new SongSearch(p);
     sf::Vector2f stars_vec(0.4, -0.1);
-    stars_rot(stars_vec, (rand() % 100) / 100.);
+    stars_rot(stars_vec, (rand() % 100) / 100.f);
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
             p->next();
@@ -96,6 +100,7 @@ int main() {
             } else if (event.type == sf::Event::MouseButtonPressed) {
                 auto [id, idx] = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
                 if (id != -1) {
+                    songs.grab(event.mouseButton.y);
                     if (songSearch->state()) {
                         cpl->set_index(idx);
                     }
@@ -109,10 +114,10 @@ int main() {
                 }
             } else if (event.type == sf::Event::MouseMoved) {
                 if (display->bar.holding) {
-                    std::cerr << event.mouseMove.x << std::endl;
                     display->bar.set_position(p, event.mouseMove.x);
                 }
             } else if (event.type == sf::Event::MouseButtonReleased) {
+                songs.release(event.mouseButton.y, clock->getElapsedTime());
                 if (display->bar.holding) {
                     display->bar.set_position(p, event.mouseButton.x);
                     display->bar.holding = 0;
@@ -137,6 +142,12 @@ int main() {
                 } else if (event.key.code == sf::Keyboard::Down) {
                     p->next();
                     songs.norm_shift_down();
+                } else if (event.key.code == sf::Keyboard::Enter) {
+                    if (songSearch->state()) {
+                        int id = cpl->songs[0]->id;
+                        p->play_id(id);
+                        cpl->ptr = 0;
+                    }
                 } else if (event.key.code == sf::Keyboard::R && event.key.control) {
                     p->loop ^= 1;
                 } else if (event.key.code == sf::Keyboard::Escape) {
@@ -161,8 +172,8 @@ int main() {
             } else if (event.type == sf::Event::TextEntered) {
                 if (event.text.unicode != 27 && event.text.unicode != 18 && event.text.unicode != 8 &&
                     event.text.unicode != 13 && event.text.unicode != 26) {
-                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
-                              << event.text.unicode << std::endl;
+//                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
+//                              << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {
                         cpl = songSearch->add_char(event.text.unicode);
                         songs.init(cpl);
@@ -170,11 +181,14 @@ int main() {
                 }
             }
         }
+        if (songs.holding) {
+            songs.set_position(sf::Mouse::getPosition(window).y);
+        }
         stars_rot(stars_vec);
         starfield.move(stars_vec);
         window.clear();
         window.draw(starfield);
-        songs.render(window, font, bold_font);
+        songs.render(window, font, bold_font, clock->getElapsedTime());
         songSearch->render(window, font);
         display->render(window, font, bold_font);
         vol_slider.render(window, bold_font, clock->getElapsedTime());
@@ -186,10 +200,8 @@ int main() {
 
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
-// TODO: inertial scrolling
-// done: enhance volume circle
+// done: inertial scrolling
 // TODO: add visualiser
 // TODO: settings in config file
 // TODO: add icon for repeating
 // TODO: add ability to change song metadata
-// done: autoselect song (while searching) which is playing

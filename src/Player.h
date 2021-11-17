@@ -69,6 +69,7 @@ public:
     void set_index(int idx);
 
     int get_current_id();
+
 };
 
 #endif //XYLON_PLAYER_H

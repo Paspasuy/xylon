@@ -9,7 +9,12 @@
 
 class SongView {
     std::vector<Tile *> tiles;
+    sf::Time t;
     int shift = 0;
+    int vel = 0;
+    const int accel = 1500;
+    const int MAX_VEL = 3000;
+    int last_y = 0;
     Player *pl;
 
     int get_low_tile();
@@ -18,9 +23,10 @@ class SongView {
 
     const int CUR_SHIFT = 50;
 public:
+    bool holding = 0;
     sf::Vector2<unsigned int> winsz;
 
-    void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font);
+    void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time);
 
     void init(Player *p);
 
@@ -32,7 +38,17 @@ public:
 
     void scroll(int delta);
 
+    void update_shift(sf::Time t);
+
+    void update_vel(sf::Time t);
+
     std::pair<int, int> get_click_id(int x, int y);
+
+    void grab(int y);
+
+    void release(int y, sf::Time time);
+
+    void set_position(int y);
 };
 
 
