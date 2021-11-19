@@ -61,7 +61,6 @@ int main() {
     auto *songSearch = new SongSearch(p);
     sf::Vector2f stars_vec(0.4, -0.1);
     stars_rot(stars_vec, (rand() % 100) / 100.f);
-    sf::Time prev = clock->getElapsedTime();
     Visualiser visualiser;
     float fft[2048];
     while (window.isOpen()) {
@@ -225,9 +224,7 @@ int main() {
         songSearch->render(window, font);
         display->render(window, font, bold_font);
         vol_slider.render(window, bold_font, clock->getElapsedTime());
-        sf::Time cur = clock->getElapsedTime();
         window.display();
-        prev = cur;
     }
 
     return 0;
@@ -238,3 +235,5 @@ int main() {
 // TODO: add icon for repeating
 // TODO: add ability to change song metadata
 // TODO: add different sorting comparators
+// TODO: add integration with all possible DEs
+// TODO: somehow compile for windows (in distant future)
