@@ -1,4 +1,5 @@
 #include "Song.h"
+#include <cmath>
 
 Song::Song(const std::string &_path, const std::u8string &_filename) {
         id = rand();
@@ -93,12 +94,15 @@ void Song::load_pic() {
             return;
         }
         auto *pic = static_cast<TagLib::ID3v2::AttachedPictureFrame *>(l.front());
+        int sz = std::sqrt(pic->picture().size() / 3);
         texture.loadFromMemory((const u_char *) pic->picture().data(), pic->picture().size(),
                                sf::IntRect(0, 0, 1200, 1200));
 //            texture.loadFromFile("/home/pavel/Music/amonger.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
-        sprite.setScale({0.25, 0.25});
+        int x = texture.getSize().x;
+        float scale = 0.25 * 1200 / x;
+        sprite.setScale({scale, scale});
     }
 }
 

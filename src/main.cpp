@@ -245,7 +245,3 @@ int main() {
 // TODO: settings in config file
 // TODO: add icon for repeating
 // TODO: add ability to change song metadata
-// TODO: resize album picture properly
-// done: fix bug with up/down
-// done: fix fast scrolling, pg up/pg down
-// done: fix bug, arrow down doesn't work if loop on
