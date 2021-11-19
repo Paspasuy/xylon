@@ -8,7 +8,7 @@ find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 add_library( libbass SHARED IMPORTED )
 add_library( libtag SHARED IMPORTED )
 
-add_executable(xylon src/main.cpp src/Player.cpp src/SongSearch.cpp src/ProgressBarView.cpp src/SongView.cpp src/Song.cpp src/Tile.cpp src/SongDisplay.cpp src/VolumeCircleSlider.cpp src/VolumeShape.cpp src/Visualiser.cpp SelbaWard/Starfield.cpp)
+add_executable(xylon src/main.cpp src/Player.cpp src/SongSearch.cpp src/ProgressBarView.cpp src/SongView.cpp src/Song.cpp src/Tile.cpp src/SongDisplay.cpp src/VolumeCircleSlider.cpp src/VolumeShape.cpp src/Visualiser.cpp src/Settings.cpp SelbaWard/Starfield.cpp)
 
 target_link_libraries(xylon tag)
 target_link_libraries(xylon bass)

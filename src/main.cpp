@@ -10,6 +10,7 @@
 #include "VolumeCircleSlider.h"
 #include "../SelbaWard/Starfield.h"
 #include "Visualiser.h"
+#include "Settings.h"
 
 void stars_rot(sf::Vector2f &vec, float sin=0.001) {
     float x1 = vec.x;
@@ -27,6 +28,8 @@ int main() {
     std::wcin.imbue(std::locale("ru_RU.utf-8"));
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
     std::string path_to_music = std::string(getenv("HOME")) + "/Music/";
+    Settings settings;
+    settings.init();
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
@@ -42,9 +45,9 @@ int main() {
     });
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sw::Starfield starfield(sf::Vector2f(winw, winh), 700);
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-    sf::RenderWindow window(sf::VideoMode(winw, winh), "xylon", sf::Style::Default, settings);
+    sf::ContextSettings ctxsettings;
+    ctxsettings.antialiasingLevel = 8;
+    sf::RenderWindow window(sf::VideoMode(winw, winh), "xylon", sf::Style::Default, ctxsettings);
     Tile::W = std::min(int(window.getSize().x) / 2, Tile::MAX_W);
     window.setVerticalSyncEnabled(true);
     SongView songs;
@@ -61,7 +64,7 @@ int main() {
     auto *songSearch = new SongSearch(p);
     sf::Vector2f stars_vec(0.4, -0.1);
     stars_rot(stars_vec, (rand() % 100) / 100.f);
-    Visualiser visualiser;
+    Visualiser visualiser(settings);
     float fft[2048];
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {

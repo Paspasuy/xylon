@@ -6,11 +6,13 @@
 #define XYLON_VISUALISER_H
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include "Settings.h"
 
 class Visualiser {
 public:
     bool display = 1;
-    Visualiser();
+    int type;
+    Visualiser(Settings s);
 
     void render(sf::RenderWindow &window, float *fft);
 };
