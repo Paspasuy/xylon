@@ -226,13 +226,6 @@ int main() {
         display->render(window, font, bold_font);
         vol_slider.render(window, bold_font, clock->getElapsedTime());
         sf::Time cur = clock->getElapsedTime();
-//        int fps_text = int(1.f / (cur - prev).asSeconds() + 2) / 10 * 10;
-//        if (fps_text != 60) {
-//            sf::Text fps(std::to_string(fps_text), font, 20);
-//            fps.setFillColor(sf::Color(255, 0, 0, 150));
-//            fps.setPosition(0.f, 0.f);
-//            window.draw(fps);
-//        }
         window.display();
         prev = cur;
     }
@@ -241,7 +234,7 @@ int main() {
 }
 
 // TODO: albums support
-// TODO: maybe add second margin (Oy)
 // TODO: settings in config file
 // TODO: add icon for repeating
 // TODO: add ability to change song metadata
+// TODO: add different sorting comparators

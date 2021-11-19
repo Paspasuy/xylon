@@ -12,7 +12,7 @@ public:
     static const int PIC = 300;
     Player *p;
     ProgressBarView bar;
-    int margin;
+    int margin_x, margin_y;
 
     SongDisplay(Player *_p);
 

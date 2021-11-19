@@ -101,7 +101,7 @@ void Song::load_pic() {
         texture.setSmooth(true);
         sprite.setTexture(texture);
         int x = texture.getSize().x;
-        float scale = 0.25 * 1200 / x;
+        float scale = 300.f / x;
         sprite.setScale({scale, scale});
     }
 }
