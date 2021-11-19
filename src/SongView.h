@@ -23,7 +23,7 @@ class SongView {
 
     const int CUR_SHIFT = 50;
 public:
-    bool holding = 0;
+    bool holding = false;
     sf::Vector2<unsigned int> winsz;
 
     void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time);
@@ -49,6 +49,12 @@ public:
     void release(int y, sf::Time time);
 
     void set_position(int y);
+
+    void norm_shift_tile();
+
+    void pageup();
+
+    void pagedown();
 };
 
 

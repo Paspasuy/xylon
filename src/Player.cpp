@@ -34,9 +34,9 @@ void Player::stop() {
     songs[ptr]->stop();
 }
 
-void Player::next() {
+void Player::next(bool ignore_loop) {
     stop();
-    if (!loop) {
+    if (ignore_loop || !loop) {
         ++ptr;
     }
     ptr %= songs.size();

@@ -114,7 +114,7 @@ int main() {
                         p->play_id(id);
                     }
                 } else if (display->bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
-                    display->bar.holding = 1;
+                    display->bar.holding = true;
                     p->pause();
                     display->bar.set_position(p, event.mouseButton.x);
                 }
@@ -128,7 +128,7 @@ int main() {
                 }
                 if (display->bar.holding) {
                     display->bar.set_position(p, event.mouseButton.x);
-                    display->bar.holding = 0;
+                    display->bar.holding = false;
                     p->play();
                 }
             } else if (event.type == sf::Event::KeyPressed) {
@@ -154,23 +154,24 @@ int main() {
                         p->play_id(cpl->get_current_id());
                     } else {
                         p->prev();
-                        songs.norm_shift_up();
                     }
+                    songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::Down) {
                     if (songSearch->state()) {
                         ++cpl->ptr;
                         cpl->ptr %= cpl->songs.size();
                         p->play_id(cpl->get_current_id());
                     } else {
-                        p->next();
-                        songs.norm_shift_down();
+                        p->next(true);
                     }
+                    songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::Enter) {
                     if (songSearch->state()) {
                         int id = cpl->songs[0]->id;
                         p->play_id(id);
                         cpl->ptr = 0;
                     }
+                    songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::R && event.key.control) {
                     p->loop ^= 1;
                 } else if (event.key.code == sf::Keyboard::Escape) {
@@ -188,6 +189,10 @@ int main() {
                             songs.init(cpl);
                         }
                     }
+                } else if (event.key.code == sf::Keyboard::PageDown) {
+                    songs.pagedown();
+                }  else if (event.key.code == sf::Keyboard::PageUp) {
+                    songs.pageup();
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;
@@ -196,14 +201,17 @@ int main() {
                 int u = event.text.unicode;
                 if (u != 27 && u != 18 && u != 8 &&
                     u != 13 && u != 26 && u != 22) {
-                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
-                              << event.text.unicode << std::endl;
+//                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
+//                              << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {
                         cpl = songSearch->add_char(event.text.unicode);
                         songs.init(cpl);
                     }
                 }
             }
+        }
+        if (visualiser.display && p->is_playing()) {
+            p->get_fft(fft);
         }
         if (songs.holding) {
             songs.set_position(sf::Mouse::getPosition(window).y);
@@ -212,12 +220,7 @@ int main() {
         starfield.move(stars_vec);
         window.clear();
         window.draw(starfield);
-        if (visualiser.display) {
-            if (p->is_playing()) {
-                p->get_fft(fft);
-            }
-            visualiser.render(window, fft);
-        }
+        visualiser.render(window, fft);
         songs.render(window, font, bold_font, clock->getElapsedTime());
         songSearch->render(window, font);
         display->render(window, font, bold_font);
@@ -239,8 +242,10 @@ int main() {
 
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
-// done: add visualiser
 // TODO: settings in config file
 // TODO: add icon for repeating
 // TODO: add ability to change song metadata
 // TODO: resize album picture properly
+// done: fix bug with up/down
+// done: fix fast scrolling, pg up/pg down
+// done: fix bug, arrow down doesn't work if loop on

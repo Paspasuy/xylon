@@ -53,6 +53,13 @@ void SongView::norm_shift() {
     shift = std::min(shift, 30);
 }
 
+void SongView::norm_shift_tile() {
+    vel = 0;
+    norm_shift_up();
+    norm_shift_down();
+    norm_shift();
+}
+
 void SongView::norm_shift_up() {
     int up_bound = -(pl->current_index() - 1) * Tile::H;
     shift = std::max(shift, up_bound);
@@ -114,5 +121,15 @@ void SongView::release(int y, sf::Time time) {
 void SongView::set_position(int y) {
     shift += y - last_y;
     last_y = y;
+}
+
+void SongView::pageup() {
+    shift += 500;
+    norm_shift();
+}
+
+void SongView::pagedown() {
+    shift -= 500;
+    norm_shift();
 }
 

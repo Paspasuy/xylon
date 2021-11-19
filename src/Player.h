@@ -32,7 +32,7 @@ public:
 
     void stop();
 
-    void next();
+    void next(bool ignore_loop = 0);
 
     void play_ind(int ind);
 
