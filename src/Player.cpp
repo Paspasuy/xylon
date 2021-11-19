@@ -138,3 +138,7 @@ void Player::set_index(int idx) {
 int Player::get_current_id() {
     return songs[ptr]->id;
 }
+
+void Player::get_fft(float* fft) {
+    songs[ptr]->get_fft(fft);
+}

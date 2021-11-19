@@ -9,6 +9,7 @@
 #include "SongDisplay.h"
 #include "VolumeCircleSlider.h"
 #include "../SelbaWard/Starfield.h"
+#include "Visualiser.h"
 
 void stars_rot(sf::Vector2f &vec, float sin=0.001) {
     float x1 = vec.x;
@@ -61,6 +62,8 @@ int main() {
     sf::Vector2f stars_vec(0.4, -0.1);
     stars_rot(stars_vec, (rand() % 100) / 100.f);
     sf::Time prev = clock->getElapsedTime();
+    Visualiser visualiser;
+    float fft[2048];
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
             if (songSearch->state()) {
@@ -137,6 +140,8 @@ int main() {
                             p->play();
                         }
                     }
+                } else if (event.key.code == sf::Keyboard::V) {
+                    visualiser.display ^= 1;
                 } else if (event.key.code == sf::Keyboard::Left) {
                     p->backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
@@ -188,10 +193,11 @@ int main() {
                     return 0;
                 }
             } else if (event.type == sf::Event::TextEntered) {
-                if (event.text.unicode != 27 && event.text.unicode != 18 && event.text.unicode != 8 &&
-                    event.text.unicode != 13 && event.text.unicode != 26) {
-//                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
-//                              << event.text.unicode << std::endl;
+                int u = event.text.unicode;
+                if (u != 27 && u != 18 && u != 8 &&
+                    u != 13 && u != 26 && u != 22) {
+                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
+                              << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {
                         cpl = songSearch->add_char(event.text.unicode);
                         songs.init(cpl);
@@ -206,15 +212,24 @@ int main() {
         starfield.move(stars_vec);
         window.clear();
         window.draw(starfield);
+        if (visualiser.display) {
+            if (p->is_playing()) {
+                p->get_fft(fft);
+            }
+            visualiser.render(window, fft);
+        }
         songs.render(window, font, bold_font, clock->getElapsedTime());
         songSearch->render(window, font);
         display->render(window, font, bold_font);
         vol_slider.render(window, bold_font, clock->getElapsedTime());
         sf::Time cur = clock->getElapsedTime();
-        sf::Text fps(std::to_string(int(1.f / (cur - prev).asSeconds() + 2) / 10 * 10), font, 20);
-        fps.setFillColor(sf::Color(255, 0, 0, 150));
-        fps.setPosition(0.f, 0.f);
-        window.draw(fps);
+//        int fps_text = int(1.f / (cur - prev).asSeconds() + 2) / 10 * 10;
+//        if (fps_text != 60) {
+//            sf::Text fps(std::to_string(fps_text), font, 20);
+//            fps.setFillColor(sf::Color(255, 0, 0, 150));
+//            fps.setPosition(0.f, 0.f);
+//            window.draw(fps);
+//        }
         window.display();
         prev = cur;
     }
@@ -224,7 +239,7 @@ int main() {
 
 // TODO: albums support
 // TODO: maybe add second margin (Oy)
-// TODO: add visualiser
+// done: add visualiser
 // TODO: settings in config file
 // TODO: add icon for repeating
 // TODO: add ability to change song metadata

@@ -70,6 +70,7 @@ public:
 
     int get_current_id();
 
+    void get_fft(float *fft);
 };
 
 #endif //XYLON_PLAYER_H

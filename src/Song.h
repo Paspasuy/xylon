@@ -63,6 +63,7 @@ public:
 
     static std::wstring lower(const std::wstring &s);
 
+    void get_fft(float* fft);
 };
 
 #endif //XYLON_SONG_H

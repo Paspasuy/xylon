@@ -13,9 +13,9 @@ Song::Song(const std::string &_path, const std::u8string &_filename) {
         }
     }
 
-    void Song::play() {
-        BASS_ChannelPlay(channel, FALSE);
-    }
+void Song::play() {
+    BASS_ChannelPlay(channel, FALSE);
+}
 
 void Song::pause() {
     BASS_ChannelPause(channel);
@@ -84,7 +84,6 @@ void Song::add_meta() {
 }
 
 void Song::load_pic() {
-    std::cerr << path << std::endl;
     TagLib::MPEG::File ff(path.c_str());
     pic_loaded = 1;
     if (ff.hasID3v2Tag()) {
@@ -110,4 +109,8 @@ std::wstring Song::lower(const std::wstring &s) {
         result += std::use_facet<std::ctype<wchar_t>>(loc).tolower(*it);
     }
     return result;
+}
+
+void Song::get_fft(float* fft) {
+    BASS_ChannelGetData(channel, fft, (int)BASS_DATA_FFT4096);
 }
