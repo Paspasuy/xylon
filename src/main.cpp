@@ -168,7 +168,7 @@ int main() {
                     }
                     songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::Enter) {
-                    if (songSearch->state()) {
+                    if (songSearch->state() && cpl->ptr < 0) {
                         int id = cpl->songs[0]->id;
                         p->play_id(id);
                         cpl->ptr = 0;
@@ -236,8 +236,6 @@ int main() {
 }
 
 // TODO: albums support
-// TODO: settings in config file
-// TODO: add icon for repeating
 // TODO: add ability to change song metadata
 // TODO: add different sorting comparators
 // TODO: add integration with all possible DEs

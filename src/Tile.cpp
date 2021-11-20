@@ -13,7 +13,6 @@ Tile::Tile(Song *_s) {
 void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh, bool is_cur) {
     sh.setPosition(position.x, position.y);
     sh.setOutlineThickness(2.f);
-//    sh.setFillColor(sf::Color(sf::Color::Transparent));
     sf::Text title_text(s->title, bold_font, 16);
     sf::Text artist_text(s->artist, font, 14);
     sf::Text album_text(s->album, font, 14);

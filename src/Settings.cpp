@@ -9,10 +9,10 @@ void Settings::load() {
     std::wifstream conf;
     conf.open("conf.txt");
     std::wstring line;
-    int colors[24];
-    int *params[25];
+    int colors[28];
+    int *params[29];
     params[0] = &vis_type;
-    for (size_t i = 0; i < 24; ++i) {
+    for (size_t i = 0; i < 28; ++i) {
         params[i + 1] = colors + i;
     }
     int i = 0;
@@ -36,6 +36,7 @@ void Settings::load() {
     init_col(&c4, colors + 12);
     init_col(&c5, colors + 16);
     init_col(&c6, colors + 20);
+    init_col(&c7, colors + 24);
     conf.close();
 }
 

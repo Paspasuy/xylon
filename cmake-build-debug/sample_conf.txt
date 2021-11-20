@@ -10,3 +10,5 @@
 0 200 0 225
 # Visualiser color
 109 0 133 255
+# Repeat indicator color
+255 0 0 255

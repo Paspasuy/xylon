@@ -27,11 +27,23 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
         tiles[i]->position = sf::Vector2i(winsz.x - Tile::W, shift + i * Tile::H);
         tiles[i]->render(window, font, bold_font, sh, false);
     }
-    if (cur != -1) {
+    if (low <= cur && cur < up) {
         sh.setOutlineColor(s->c3);
         sh.setFillColor(s->c4);
         tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
         tiles[cur]->render(window, font, bold_font, sh, true);
+        if (pl->loop) {
+//            int r = 7;
+            sf::RectangleShape rep(sf::Vector2f(3, Tile::H));
+//            sf::CircleShape rep(r);
+            rep.setFillColor(s->c7);
+            auto pos = tiles[cur]->position;
+//            pos.y += Tile::H / 2 - r;
+            pos.x += Tile::W + 3;
+
+            rep.setPosition(sf::Vector2f(pos));
+            window.draw(rep);
+        }
     }
 }
 
