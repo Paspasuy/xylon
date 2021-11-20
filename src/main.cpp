@@ -68,7 +68,7 @@ int main() {
     float fft[2048];
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
-            if (songSearch->state()) {
+            if (songSearch->state() && cpl->ptr >= 0) {
                 ++cpl->ptr;
                 cpl->ptr %= cpl->songs.size();
                 p->play_id(cpl->get_current_id());
@@ -242,5 +242,3 @@ int main() {
 // TODO: add different sorting comparators
 // TODO: add integration with all possible DEs
 // TODO: somehow compile for windows (in distant future)
-// TODO: rename init to load in settings
-// TODO: if searching and next song and nothing selected, don't play song from search

@@ -1,11 +1,12 @@
+# Visualiser type
 1
 # Usual tile color
-255 127 0 180
-255 127 0 20
+200 100 0 180
+200 100 0 20
 # Playing tile color
-0 0 255 255
-0 0 255 20
+0 0 200 255
+0 0 200 20
 # Progress bar color
-0 255 0 225
+0 200 0 225
 # Visualiser color
-255 0 255 255
+109 0 133 255
