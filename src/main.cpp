@@ -29,7 +29,7 @@ int main() {
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
     std::string path_to_music = std::string(getenv("HOME")) + "/Music/";
     auto *settings = new Settings;
-    settings->init();
+    settings->load();
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
@@ -193,8 +193,10 @@ int main() {
                     }
                 } else if (event.key.code == sf::Keyboard::PageDown) {
                     songs.pagedown();
-                }  else if (event.key.code == sf::Keyboard::PageUp) {
+                } else if (event.key.code == sf::Keyboard::PageUp) {
                     songs.pageup();
+                } else if (event.key.code == sf::Keyboard::F5) {
+                    settings->load();
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;

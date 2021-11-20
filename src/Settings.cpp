@@ -5,7 +5,7 @@
 #include <sstream>
 #include "Settings.h"
 
-void Settings::init() {
+void Settings::load() {
     std::wifstream conf;
     conf.open("conf.txt");
     std::wstring line;
