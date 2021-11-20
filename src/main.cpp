@@ -28,8 +28,8 @@ int main() {
     std::wcin.imbue(std::locale("ru_RU.utf-8"));
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
     std::string path_to_music = std::string(getenv("HOME")) + "/Music/";
-    Settings settings;
-    settings.init();
+    auto *settings = new Settings;
+    settings->init();
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
@@ -38,7 +38,7 @@ int main() {
         it->add_meta();
     }
     auto *cpl = p;
-    auto *display = new SongDisplay(p);
+    auto *display = new SongDisplay(p, settings);
     VolumeCircleSlider vol_slider(p, clock->getElapsedTime());
     std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) {
         return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist);
@@ -50,7 +50,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(winw, winh), "xylon", sf::Style::Default, ctxsettings);
     Tile::W = std::min(int(window.getSize().x) / 2, Tile::MAX_W);
     window.setVerticalSyncEnabled(true);
-    SongView songs;
+    SongView songs(settings);
     songs.init(p);
     p->play();
     sf::Font font;
@@ -115,22 +115,22 @@ int main() {
                     if (id != p->get_current_id()) {
                         p->play_id(id);
                     }
-                } else if (display->bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
-                    display->bar.holding = true;
+                } else if (display->bar->in_bar(event.mouseButton.x, event.mouseButton.y)) {
+                    display->bar->holding = true;
                     p->pause();
-                    display->bar.set_position(p, event.mouseButton.x);
+                    display->bar->set_position(p, event.mouseButton.x);
                 }
             } else if (event.type == sf::Event::MouseMoved) {
-                if (display->bar.holding) {
-                    display->bar.set_position(p, event.mouseMove.x);
+                if (display->bar->holding) {
+                    display->bar->set_position(p, event.mouseMove.x);
                 }
             } else if (event.type == sf::Event::MouseButtonReleased) {
                 if (songs.holding) {
                     songs.release(event.mouseButton.y, clock->getElapsedTime());
                 }
-                if (display->bar.holding) {
-                    display->bar.set_position(p, event.mouseButton.x);
-                    display->bar.holding = false;
+                if (display->bar->holding) {
+                    display->bar->set_position(p, event.mouseButton.x);
+                    display->bar->holding = false;
                     p->play();
                 }
             } else if (event.type == sf::Event::KeyPressed) {
@@ -240,3 +240,5 @@ int main() {
 // TODO: add different sorting comparators
 // TODO: add integration with all possible DEs
 // TODO: somehow compile for windows (in distant future)
+// TODO: rename init to load in settings
+// TODO: if searching and next song and nothing selected, don't play song from search

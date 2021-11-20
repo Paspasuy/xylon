@@ -6,9 +6,11 @@
 #include "Tile.h"
 #include "Player.h"
 #include "ProgressBarView.h"
+#include "Settings.h"
 
 class SongView {
     std::vector<Tile *> tiles;
+    Settings *s;
     sf::Time t;
     int shift = 0;
     int vel = 0;
@@ -25,6 +27,7 @@ class SongView {
 public:
     bool holding = false;
     sf::Vector2<unsigned int> winsz;
+    SongView(Settings *_s);
 
     void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time);
 

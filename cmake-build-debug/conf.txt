@@ -1,0 +1,11 @@
+1
+# Usual tile color
+255 127 0 180
+255 127 0 20
+# Playing tile color
+0 0 255 255
+0 0 255 20
+# Progress bar color
+0 255 0 225
+# Visualiser color
+255 0 255 255

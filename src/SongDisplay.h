@@ -4,17 +4,17 @@
 #include "Tile.h"
 #include "ProgressBarView.h"
 #include "Player.h"
-#include <SFML/Graphics/Text.hpp> // у меня рекуррентный include
+#include <SFML/Graphics/Text.hpp>
 
 
 class SongDisplay {
 public:
     static const int PIC = 300;
     Player *p;
-    ProgressBarView bar;
+    ProgressBarView *bar;
     int margin_x, margin_y;
 
-    SongDisplay(Player *_p);
+    SongDisplay(Player *_p, Settings *_s);
 
     void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font);
 };

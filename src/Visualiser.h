@@ -11,8 +11,9 @@
 class Visualiser {
 public:
     bool display = 1;
-    int type;
-    Visualiser(Settings s);
+    Settings *s;
+
+    Visualiser(Settings *_s);
 
     void render(sf::RenderWindow &window, float *fft);
 };

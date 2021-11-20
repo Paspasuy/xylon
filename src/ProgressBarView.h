@@ -5,6 +5,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include "Player.h"
+#include "Settings.h"
 
 class ProgressBarView {
 public:
@@ -14,8 +15,10 @@ public:
     bool holding = 0;
     int current, duration;
     sf::RectangleShape cont;
+    Settings *s;
+    ProgressBarView(Settings *_s);
 
-    void update(Player *pl);
+void update(Player *pl);
 
     void render(sf::RenderWindow &window, sf::Font &font, int x, int y);
 

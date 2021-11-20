@@ -17,7 +17,7 @@ void ProgressBarView::render(sf::RenderWindow &window, sf::Font &font, int x, in
     cont = line;
     line.setSize(sf::Vector2f(int(SongDisplay::PIC * progress), 3.f));
     line.setPosition(x, y + 5);
-    line.setFillColor(sf::Color::Green);
+    line.setFillColor(s->c5);
     window.draw(line);
     std::string s1;
     if (current / 60 < 10) {
@@ -66,4 +66,8 @@ void ProgressBarView::set_position(Player *p, int x) {
     x = std::min(x, int(cont.getSize().x));
     progress = double(x) / cont.getSize().x;
     p->set_position(progress);
+}
+
+ProgressBarView::ProgressBarView(Settings *_s) {
+    s = _s;
 }

@@ -18,8 +18,8 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
     int low = get_low_tile();
     int up = get_up_tile(winsz.y);
     int cur = pl->current_index();
-    sh.setOutlineColor(sf::Color(255, 127, 0, 180));
-    sh.setFillColor(sf::Color(255, 127, 0, 20));
+    sh.setOutlineColor(s->c1);
+    sh.setFillColor(s->c2);
     for (int i = low; i < up; ++i) {
         if (i == cur) {
             continue;
@@ -28,8 +28,8 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
         tiles[i]->render(window, font, bold_font, sh, false);
     }
     if (cur != -1) {
-        sh.setOutlineColor(sf::Color(sf::Color::Blue));
-        sh.setFillColor(sf::Color(0, 0, 255, 20));
+        sh.setOutlineColor(s->c3);
+        sh.setFillColor(s->c4);
         tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
         tiles[cur]->render(window, font, bold_font, sh, true);
     }
@@ -131,5 +131,9 @@ void SongView::pageup() {
 void SongView::pagedown() {
     shift -= 500;
     norm_shift();
+}
+
+SongView::SongView(Settings *_s) {
+    s = _s;
 }
 
