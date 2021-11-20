@@ -1,11 +1,12 @@
 #include "SongView.h"
+#include <cmath>
 
 int SongView::get_low_tile() {
-    return std::max(0, (-shift) / Tile::W);
+    return std::max(0, (-shift) / (Tile::H + TILE_GAP));
 }
 
 int SongView::get_up_tile(int winh) {
-    return std::min(int(tiles.size()), (-shift + winh) / Tile::H + 1);
+    return std::min(int(tiles.size()), (-shift + winh) / (Tile::H + TILE_GAP) + 1);
 }
 
 void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time) {
@@ -24,13 +25,19 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
         if (i == cur) {
             continue;
         }
-        tiles[i]->position = sf::Vector2i(winsz.x - Tile::W, shift + i * Tile::H);
+        int tile_h = shift + i * (Tile::H + TILE_GAP);
+        float dist = abs((tile_h + Tile::H / 2 - 1) - window.getSize().y / 2) + Tile::H * 2;
+        dist /= Tile::H;
+        int xs = int(CUR_SHIFT / dist);
+        tiles[i]->position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
+        sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
         tiles[i]->render(window, font, bold_font, sh, false);
     }
     if (low <= cur && cur < up) {
         sh.setOutlineColor(s->c3);
         sh.setFillColor(s->c4);
-        tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * Tile::H);
+        sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
+        tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
         tiles[cur]->render(window, font, bold_font, sh, true);
         if (pl->loop) {
 //            int r = 7;
@@ -39,7 +46,7 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
             rep.setFillColor(s->c7);
             auto pos = tiles[cur]->position;
 //            pos.y += Tile::H / 2 - r;
-            pos.x += Tile::W + 3;
+            pos.x += Tile::W + CUR_SHIFT - 3;
 
             rep.setPosition(sf::Vector2f(pos));
             window.draw(rep);
@@ -89,8 +96,8 @@ void SongView::scroll(int delta) {
 
 std::pair<int, int> SongView::get_click_id(int x, int y) {
     for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
-        if (tiles[i]->position.x <= x && tiles[i]->position.x + Tile::W >= x) {
-            if (tiles[i]->position.y <= y && tiles[i]->position.y + Tile::H >= y) {
+        if (tiles[i]->position.x - TILE_GAP / 2 <= x - TILE_GAP / 2 && tiles[i]->position.x + Tile::W + TILE_GAP / 2 >= x) {
+            if (tiles[i]->position.y - TILE_GAP <= y && tiles[i]->position.y + Tile::H + TILE_GAP >= y) {
                 return {tiles[i]->s->id, i};
             }
         }

@@ -18,7 +18,7 @@ void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font,
     sf::Text album_text(s->album, font, 14);
     title_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 2);
     artist_text.setPosition(sh.getPosition().x + 2, sh.getPosition().y + 20);
-    album_text.setPosition(sh.getPosition().x - 4 - s->album.getSize() * 8 + Tile::W, sh.getPosition().y + Tile::H - 20);
+    album_text.setPosition(sh.getPosition().x - 4 - s->album.getSize() * 8 + sh.getSize().x, sh.getPosition().y + Tile::H - 20);
     if (!is_cur) {
         title_text.setFillColor(sf::Color(255, 255, 255, 180));
         artist_text.setFillColor(sf::Color(255, 255, 255, 180));

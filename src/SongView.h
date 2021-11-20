@@ -16,6 +16,7 @@ class SongView {
     int vel = 0;
     const int accel = 1500;
     const int MAX_VEL = 3000;
+    const int TILE_GAP = 4;
     int last_y = 0;
     Player *pl;
 
