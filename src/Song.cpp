@@ -100,9 +100,12 @@ void Song::load_pic() {
 //            texture.loadFromFile("/home/pavel/Music/amonger.png");
         texture.setSmooth(true);
         sprite.setTexture(texture);
+        small_sprite.setTexture(texture);
         int x = texture.getSize().x;
         float scale = 300.f / x;
         sprite.setScale({scale, scale});
+        scale *= 80.f/300.f;
+        small_sprite.setScale({scale, scale});
     }
 }
 

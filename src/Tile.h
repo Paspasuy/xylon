@@ -8,6 +8,9 @@
 
 
 class Tile {
+    static bool pics_locked;
+    static std::vector<Song*> to_load;
+    static void load_pics();
 public:
     static int MAX_W;
     static int W;
@@ -15,6 +18,7 @@ public:
     sf::Vector2i position;
     Song *s;
     int margin = 0;
+    bool pic_transparent = 0;
 
     Tile(Song *_s);
 

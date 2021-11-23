@@ -235,6 +235,7 @@ int main() {
     return 0;
 }
 
+// TODO: add another thread for loading images
 // TODO: albums support
 // TODO: add ability to change song metadata
 // TODO: add different sorting comparators

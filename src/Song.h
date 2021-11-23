@@ -29,7 +29,7 @@ public:
     std::string path;
     std::u8string filename;
 
-    sf::Sprite sprite;
+    sf::Sprite sprite, small_sprite;
     sf::Texture texture;
     bool pic_loaded = 0;
 
