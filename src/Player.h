@@ -40,7 +40,7 @@ public:
 
     void prev();
 
-    void add_song(const std::string &s, const std::u8string &t);
+    void add_song(const std::string &s, const std::u8string &t, time_t time);
 
     bool is_playing();
 
@@ -68,9 +68,13 @@ public:
 
     void set_index(int idx);
 
-    int get_current_id();
+    int get_id();
 
     void get_fft(float *fft);
+
+    void sort_by_album();
+
+    void sort_by_date();
 };
 
 #endif //XYLON_PLAYER_H

@@ -1,18 +1,19 @@
 #include "Song.h"
 #include <cmath>
 
-Song::Song(const std::string &_path, const std::u8string &_filename) {
-        id = rand();
-        path = _path;
-        filename = _filename;
-        channel = BASS_StreamCreateFile(FALSE, path.c_str(), 0, 0, BASS_SAMPLE_FLOAT);
-        int err = BASS_ErrorGetCode();
-        if (err != 0) {
-            std::cerr << err << std::endl;
-            std::cerr << "CHANNEL: " << channel << std::endl;
-            std::cerr << "SONG: " << path << std::endl;
-        }
+Song::Song(const std::string &_path, const std::u8string &_filename, time_t _cr_time) {
+    cr_time = _cr_time;
+    id = rand();
+    path = _path;
+    filename = _filename;
+    channel = BASS_StreamCreateFile(FALSE, path.c_str(), 0, 0, BASS_SAMPLE_FLOAT);
+    int err = BASS_ErrorGetCode();
+    if (err != 0) {
+        std::cerr << err << std::endl;
+        std::cerr << "CHANNEL: " << channel << std::endl;
+        std::cerr << "SONG: " << path << std::endl;
     }
+}
 
 void Song::play() {
     BASS_ChannelPlay(channel, FALSE);

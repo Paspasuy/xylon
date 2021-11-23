@@ -28,6 +28,7 @@ public:
     std::wstring lalbum = L"default album";
     std::string path;
     std::u8string filename;
+    time_t cr_time;
 
     sf::Sprite sprite, small_sprite;
     sf::Texture texture;
@@ -35,7 +36,7 @@ public:
 
     uint64_t id;
 
-    Song(const std::string &_path, const std::u8string &_filename);
+    Song(const std::string &_path, const std::u8string &_filename, time_t _cr_time);
 
     void play();
 

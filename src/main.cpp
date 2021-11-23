@@ -40,9 +40,8 @@ int main() {
     auto *cpl = p;
     auto *display = new SongDisplay(p, settings);
     VolumeCircleSlider vol_slider(p, clock->getElapsedTime());
-    std::sort(p->songs.begin(), p->songs.end(), [&](Song *i, Song *j) {
-        return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist);
-    });
+    p->sort_by_date();
+
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sw::Starfield starfield(sf::Vector2f(winw, winh), 700);
     sf::ContextSettings ctxsettings;
@@ -71,7 +70,7 @@ int main() {
             if (songSearch->state() && cpl->ptr >= 0) {
                 ++cpl->ptr;
                 cpl->ptr %= cpl->songs.size();
-                p->play_id(cpl->get_current_id());
+                p->play_id(cpl->get_id());
             } else {
                 p->next();
             }
@@ -112,7 +111,7 @@ int main() {
                     if (songSearch->state()) {
                         cpl->set_index(idx);
                     }
-                    if (id != p->get_current_id()) {
+                    if (id != p->get_id()) {
                         p->play_id(id);
                     }
                 } else if (display->bar->in_bar(event.mouseButton.x, event.mouseButton.y)) {
@@ -153,7 +152,7 @@ int main() {
                         --cpl->ptr;
                         cpl->ptr += cpl->songs.size() * 2;
                         cpl->ptr %= cpl->songs.size();
-                        p->play_id(cpl->get_current_id());
+                        p->play_id(cpl->get_id());
                     } else {
                         p->prev();
                     }
@@ -162,7 +161,7 @@ int main() {
                     if (songSearch->state()) {
                         ++cpl->ptr;
                         cpl->ptr %= cpl->songs.size();
-                        p->play_id(cpl->get_current_id());
+                        p->play_id(cpl->get_id());
                     } else {
                         p->next(true);
                     }
@@ -235,7 +234,6 @@ int main() {
     return 0;
 }
 
-// TODO: add another thread for loading images
 // TODO: albums support
 // TODO: add ability to change song metadata
 // TODO: add different sorting comparators

@@ -6,11 +6,11 @@ Player::Player(sf::Clock *_c) {
 
 Player::Player(Player *pl) {
     c = pl->c;
-    state = 0;
+    state = false;
     vol = 1;
     progress = 0;
     ptr = 0;
-    loop = 0;
+    loop = false;
 }
 
 void Player::upd_expire() {
@@ -18,19 +18,19 @@ void Player::upd_expire() {
 }
 
 void Player::play() {
-    state = 1;
+    state = true;
     upd_expire();
     songs[ptr]->set_vol(vol);
     songs[ptr]->play();
 }
 
 void Player::pause() {
-    state = 0;
+    state = false;
     songs[ptr]->pause();
 }
 
 void Player::stop() {
-    state = 0;
+    state = false;
     songs[ptr]->stop();
 }
 
@@ -67,8 +67,8 @@ void Player::prev() {
     play();
 }
 
-void Player::add_song(const std::string &s, const std::u8string &t) {
-    songs.push_back(new Song(s, t));
+void Player::add_song(const std::string &s, const std::u8string &t, time_t time) {
+    songs.push_back(new Song(s, t, time));
 }
 
 bool Player::is_playing() {
@@ -79,7 +79,8 @@ void Player::add_folder(std::string s) {
     using iter = std::filesystem::recursive_directory_iterator;
     for (const auto &dirEntry: iter(s)) {
         if (dirEntry.path().extension() == ".mp3") {
-            add_song(dirEntry.path().string(), dirEntry.path().filename().u8string());
+            time_t time = std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(dirEntry.last_write_time()));
+            add_song(dirEntry.path().string(), dirEntry.path().filename().u8string(), time);
         }
     }
 
@@ -135,10 +136,23 @@ void Player::set_index(int idx) {
     ptr = idx;
 }
 
-int Player::get_current_id() {
+int Player::get_id() {
     return songs[ptr]->id;
 }
 
 void Player::get_fft(float* fft) {
     songs[ptr]->get_fft(fft);
 }
+
+void Player::sort_by_album() {
+    std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
+        return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist);
+    });
+}
+
+void Player::sort_by_date() {
+    std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
+        return i->cr_time < j->cr_time;
+    });
+}
+
