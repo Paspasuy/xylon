@@ -26,9 +26,9 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
             continue;
         }
         int tile_h = shift + i * (Tile::H + TILE_GAP);
-        float dist = abs((tile_h + Tile::H / 2 - 1) - window.getSize().y / 2) + Tile::H * 2;
-        dist /= Tile::H;
-        int xs = int(CUR_SHIFT / dist);
+//        float dist = abs((tile_h + Tile::H / 2 - 1) - window.getSize().y / 2) + Tile::H * 2;
+//        dist /= Tile::H;
+        int xs = 0;//int(CUR_SHIFT / dist);
         tiles[i]->position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
         sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
         tiles[i]->render(window, font, bold_font, sh, false);
@@ -63,12 +63,12 @@ void SongView::init(Player *p) {
     for (auto &it: p->songs) {
         tiles.push_back(new Tile(it));
     }
-    shift = (-pl->ptr + 1) * Tile::H;
+    shift = (-pl->ptr + 1) * (Tile::H + TILE_GAP);
     norm_shift();
 }
 
 void SongView::norm_shift() {
-    shift = std::max(shift, -int(tiles.size() * Tile::H) - 30 + int(winsz.y));
+    shift = std::max(shift, -int(tiles.size() * (Tile::H + TILE_GAP)) - 30 + int(winsz.y));
     shift = std::min(shift, 30);
 }
 
@@ -80,12 +80,12 @@ void SongView::norm_shift_tile() {
 }
 
 void SongView::norm_shift_up() {
-    int up_bound = -(pl->current_index() - 1) * Tile::H;
+    int up_bound = -(pl->current_index() - 1) * (Tile::H + TILE_GAP);
     shift = std::max(shift, up_bound);
 }
 
 void SongView::norm_shift_down() {
-    int down_bound = -(pl->current_index() + 2) * Tile::H + winsz.y;
+    int down_bound = -(pl->current_index() + 2) * (Tile::H + TILE_GAP) + winsz.y;
     shift = std::min(shift, down_bound);
 }
 
@@ -96,8 +96,8 @@ void SongView::scroll(int delta) {
 
 std::pair<int, int> SongView::get_click_id(int x, int y) {
     for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
-        if (tiles[i]->position.x - TILE_GAP / 2 <= x - TILE_GAP / 2 && tiles[i]->position.x + Tile::W + TILE_GAP / 2 >= x) {
-            if (tiles[i]->position.y - TILE_GAP <= y && tiles[i]->position.y + Tile::H + TILE_GAP >= y) {
+        if (tiles[i]->position.x - TILE_GAP <= x) {
+            if (tiles[i]->position.y - TILE_GAP / 2 <= y && tiles[i]->position.y + Tile::H + TILE_GAP / 2 >= y) {
                 return {tiles[i]->s->id, i};
             }
         }
