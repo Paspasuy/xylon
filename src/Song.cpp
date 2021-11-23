@@ -104,7 +104,7 @@ void Song::load_pic() {
         int x = texture.getSize().x;
         float scale = 300.f / x;
         sprite.setScale({scale, scale});
-        scale *= 80.f/300.f;
+        scale *= 78.f/300.f;
         small_sprite.setScale({scale, scale});
     }
 }

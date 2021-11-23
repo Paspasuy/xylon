@@ -21,7 +21,7 @@ void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font,
         }
     }
     sh.setPosition(position.x, position.y);
-    sh.setOutlineThickness(2.f);
+    sh.setOutlineThickness(1.f);
     sf::Text title_text(s->title, bold_font, 16);
     sf::Text artist_text(s->artist, font, 14);
     sf::Text album_text(s->album, font, 14);
@@ -43,9 +43,9 @@ void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font,
             s->small_sprite.setColor(sf::Color(255, 255, 255, 255));
             pic_transparent = false;
         }
-        window.draw(s->small_sprite);
     }
     window.draw(sh);
+    window.draw(s->small_sprite);
     window.draw(title_text);
     window.draw(artist_text);
     window.draw(album_text);
