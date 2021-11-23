@@ -154,5 +154,6 @@ void Player::sort_by_date() {
     std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
         return i->cr_time < j->cr_time;
     });
+    std::reverse(songs.begin(), songs.end());
 }
 
