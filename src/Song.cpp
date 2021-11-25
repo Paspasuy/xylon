@@ -74,6 +74,7 @@ void Song::add_meta() {
     std::wstring s1 = f.tag()->title().toWString();
     std::wstring s2 = f.tag()->artist().toWString();
     std::wstring s3 = f.tag()->album().toWString();
+    track = f.tag()->track();
     if (s1.size() == 0) {
         s1 = std::wstring(filename.begin(), filename.end());
     }

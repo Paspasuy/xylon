@@ -12,6 +12,7 @@ class Tile {
     static std::vector<Song*> to_load;
     static void load_pics();
 public:
+    static bool LOAD_IMG;
     static int MAX_W;
     static int W;
     static const int H = 80;

@@ -178,6 +178,7 @@ int main() {
                     if (sortSelect->state) {
                         sortSelect->sort(p);
                         songs.init(p);
+                        sortSelect->state = false;
                     } else if (songSearch->state() && cpl->ptr < 0) {
                         int id = cpl->songs[0]->id;
                         p->play_id(id);
@@ -211,7 +212,7 @@ int main() {
                     songs.pageup();
                 } else if (event.key.code == sf::Keyboard::F5) {
                     settings->load();
-                }  else if (event.key.code == sf::Keyboard::F6) {
+                } else if (event.key.code == sf::Keyboard::F6) {
                     if (!songSearch->state()) {
                         if (sortSelect->state) {
                             sortSelect->sort(p);
@@ -219,14 +220,15 @@ int main() {
                         }
                         sortSelect->state ^= 1;
                     }
+                } else if (event.key.code == sf::Keyboard::I && event.key.control) {
+                    Tile::LOAD_IMG ^= 1;
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;
                 }
-            } else if (event.type == sf::Event::TextEntered) {
+            } else if (event.type == sf::Event::TextEntered && !sortSelect->state) {
                 int u = event.text.unicode;
-                if (u != 27 && u != 18 && u != 8 &&
-                    u != 13 && u != 26 && u != 22) {
+                if (u != 27 && u != 13 && u != 8 && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
 //                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
 //                              << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || songSearch->state()) {

@@ -23,6 +23,7 @@ public:
     sf::String title = "Title";
     sf::String artist = "John Doe";
     sf::String album = "Default Album";
+    uint track = 0;
     std::wstring ltitle = L"title";
     std::wstring lartist = L"john doe";
     std::wstring lalbum = L"default album";

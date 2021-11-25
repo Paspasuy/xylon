@@ -147,7 +147,7 @@ void Player::get_fft(float* fft) {
 void Player::sort_by_album() {
     int id = songs[ptr]->id;
     std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
-        return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist);
+        return std::make_pair(i->album, i->track) < std::make_pair(j->album, j->track);
     });
     for (int i = 0; i < songs.size(); ++i) {
         if (songs[i]->id == id) {
