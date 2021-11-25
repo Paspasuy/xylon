@@ -15,6 +15,7 @@ Tile::Tile(Song *_s) {
 void Tile::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh, bool is_cur) {
     if (!s->pic_loaded) {
         if (!pics_locked) {
+            pics_locked = true;
             to_load.push_back(s);
             std::thread thr(load_pics);
             thr.detach();
@@ -58,7 +59,6 @@ bool Tile::pics_locked = false;
 int Tile::MAX_W = 450;
 
 void Tile::load_pics() {
-    pics_locked = true;
     for (Song* ptr: to_load) {
         ptr->load_pic();
     }
