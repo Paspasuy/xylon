@@ -145,15 +145,29 @@ void Player::get_fft(float* fft) {
 }
 
 void Player::sort_by_album() {
+    int id = songs[ptr]->id;
     std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
         return std::make_pair(i->album, i->artist) < std::make_pair(j->album, j->artist);
     });
+    for (int i = 0; i < songs.size(); ++i) {
+        if (songs[i]->id == id) {
+            ptr = i;
+            return;
+        }
+    }
 }
 
 void Player::sort_by_date() {
+    int id = songs[ptr]->id;
     std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
         return i->cr_time < j->cr_time;
     });
     std::reverse(songs.begin(), songs.end());
+    for (int i = 0; i < songs.size(); ++i) {
+        if (songs[i]->id == id) {
+            ptr = i;
+            return;
+        }
+    }
 }
 

@@ -11,6 +11,8 @@
 #include "../SelbaWard/Starfield.h"
 #include "Visualiser.h"
 #include "Settings.h"
+#include "FolderSelect.h"
+#include "SortSelect.h"
 
 void stars_rot(sf::Vector2f &vec, float sin=0.001) {
     float x1 = vec.x;
@@ -37,10 +39,11 @@ int main() {
     for (auto &it: p->songs) {
         it->add_meta();
     }
+    p->sort_by_date();
+    p->ptr = 0;
     auto *cpl = p;
     auto *display = new SongDisplay(p, settings);
     VolumeCircleSlider vol_slider(p, clock->getElapsedTime());
-    p->sort_by_date();
 
 //    p -> add_song("/home/pavel/Music/amogus2.wav");
     sw::Starfield starfield(sf::Vector2f(winw, winh), 700);
@@ -64,6 +67,7 @@ int main() {
     sf::Vector2f stars_vec(0.4, -0.1);
     stars_rot(stars_vec, (rand() % 100) / 100.f);
     Visualiser visualiser(settings);
+    auto *sortSelect = new SortSelect();
     float fft[2048];
     while (window.isOpen()) {
         if (clock->getElapsedTime() > p->expire && p->is_playing()) {
@@ -148,7 +152,9 @@ int main() {
                 } else if (event.key.code == sf::Keyboard::Right) {
                     p->forward_5();
                 } else if (event.key.code == sf::Keyboard::Up) {
-                    if (songSearch->state()) {
+                    if (sortSelect->state) {
+                        sortSelect->up();
+                    } else if (songSearch->state()) {
                         --cpl->ptr;
                         cpl->ptr += cpl->songs.size() * 2;
                         cpl->ptr %= cpl->songs.size();
@@ -158,7 +164,9 @@ int main() {
                     }
                     songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::Down) {
-                    if (songSearch->state()) {
+                    if (sortSelect->state) {
+                        sortSelect->down();
+                    } else if (songSearch->state()) {
                         ++cpl->ptr;
                         cpl->ptr %= cpl->songs.size();
                         p->play_id(cpl->get_id());
@@ -167,7 +175,10 @@ int main() {
                     }
                     songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::Enter) {
-                    if (songSearch->state() && cpl->ptr < 0) {
+                    if (sortSelect->state) {
+                        sortSelect->sort(p);
+                        songs.init(p);
+                    } else if (songSearch->state() && cpl->ptr < 0) {
                         int id = cpl->songs[0]->id;
                         p->play_id(id);
                         cpl->ptr = 0;
@@ -176,7 +187,11 @@ int main() {
                 } else if (event.key.code == sf::Keyboard::R && event.key.control) {
                     p->loop ^= 1;
                 } else if (event.key.code == sf::Keyboard::Escape) {
-                    if (songSearch->state()) {
+                    if (sortSelect->state) {
+                        sortSelect->state = false;
+                        sortSelect->sort(p);
+                        songs.init(p);
+                    } else if (songSearch->state()) {
                         cpl = songSearch->clear();
                         songs.init(cpl);
                     }
@@ -196,6 +211,14 @@ int main() {
                     songs.pageup();
                 } else if (event.key.code == sf::Keyboard::F5) {
                     settings->load();
+                }  else if (event.key.code == sf::Keyboard::F6) {
+                    if (!songSearch->state()) {
+                        if (sortSelect->state) {
+                            sortSelect->sort(p);
+                            songs.init(p);
+                        }
+                        sortSelect->state ^= 1;
+                    }
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;
@@ -228,6 +251,7 @@ int main() {
         songSearch->render(window, font);
         display->render(window, font, bold_font);
         vol_slider.render(window, bold_font, clock->getElapsedTime());
+        sortSelect->render(window, font);
         window.display();
     }
 
@@ -239,3 +263,6 @@ int main() {
 // TODO: add different sorting comparators
 // TODO: add integration with all possible DEs
 // TODO: somehow compile for windows (in distant future)
+// TODO: write help menu, write readme
+// TODO: add different directories support
+// TODO: add different music files support
