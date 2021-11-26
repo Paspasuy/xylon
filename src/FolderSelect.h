@@ -10,8 +10,9 @@
 #include <string>
 
 class FolderSelect {
+public:
     std::vector<std::string> folders;
-
+    FolderSelect();
 };
 
 

@@ -29,13 +29,15 @@ int main() {
     std::locale::global(std::locale("ru_RU.utf-8"));
     std::wcin.imbue(std::locale("ru_RU.utf-8"));
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
-    std::string path_to_music = std::string(getenv("HOME")) + "/Music/";
     auto *settings = new Settings;
     settings->load();
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
-    p->add_folder(path_to_music);
+    auto *folders = new FolderSelect();
+    for (std::string &s: folders->folders) {
+        p->add_folder(s);
+    }
     for (auto &it: p->songs) {
         it->add_meta();
     }
