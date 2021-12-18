@@ -11,7 +11,6 @@
 #include "../SelbaWard/Starfield.h"
 #include "Visualiser.h"
 #include "Settings.h"
-#include "FolderSelect.h"
 #include "SortSelect.h"
 
 void stars_rot(sf::Vector2f &vec, float sin=0.001) {
@@ -22,7 +21,7 @@ void stars_rot(sf::Vector2f &vec, float sin=0.001) {
     vec.y = sin * x1 + cos * y1;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     srand(time(0));
     int winw = 1024;
     int winh = 768;
@@ -34,8 +33,7 @@ int main() {
     BASS_Init(1, 44100, 0, 0, NULL);
     auto *clock = new sf::Clock();
     auto *p = new Player(clock);
-    auto *folders = new FolderSelect();
-    for (std::string &s: folders->folders) {
+    for (std::string &s: settings->folders) {
         p->add_folder(s);
     }
     for (auto &it: p->songs) {
@@ -46,8 +44,6 @@ int main() {
     auto *cpl = p;
     auto *display = new SongDisplay(p, settings);
     VolumeCircleSlider vol_slider(p, clock->getElapsedTime());
-
-//    p -> add_song("/home/pavel/Music/amogus2.wav");
     sw::Starfield starfield(sf::Vector2f(winw, winh), 700);
     sf::ContextSettings ctxsettings;
     ctxsettings.antialiasingLevel = 8;
@@ -147,7 +143,7 @@ int main() {
                             p->play();
                         }
                     }
-                } else if (event.key.code == sf::Keyboard::V) {
+                } else if (event.key.code == sf::Keyboard::V && event.key.control) {
                     visualiser.display ^= 1;
                 } else if (event.key.code == sf::Keyboard::Left) {
                     p->backward_5();

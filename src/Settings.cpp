@@ -4,10 +4,41 @@
 
 #include <sstream>
 #include "Settings.h"
+#include <iostream>
+#include <filesystem>
+
+std::wstring DEFAULT_CONF_STR = L"# Visualiser type\n"
+                                     "1\n"
+                                     "# Usual tile color\n"
+                                     "200 100 0 0\n"
+                                     "200 100 0 30\n"
+                                     "# Playing tile color\n"
+                                     "0 0 200 0\n"
+                                     "0 0 200 50\n"
+                                     "# Progress bar color\n"
+                                     "0 200 0 225\n"
+                                     "# Visualiser color\n"
+                                     "109 0 133 255\n"
+                                     "# Repeat indicator color\n"
+                                     "255 0 0 255\n"
+                                     "# Folders\n";
 
 void Settings::load() {
     std::wifstream conf;
-    conf.open("conf.txt");
+    std::string str = getenv("HOME");
+    str += "/.config/xylon/conf.txt";
+    conf.open(str);
+    if (!conf.is_open()) {
+        std::filesystem::path path{ str };
+        std::filesystem::create_directories(path.parent_path());
+        std::wofstream cfg;
+        cfg.open(str);
+        cfg << DEFAULT_CONF_STR;
+        cfg.close();
+        conf.open(str);
+//        std::filesystem::copy("/usr/share/xylon/sample_conf.txt", str);
+//        conf.open(str + "/.config/xylon/conf.txt");
+    }
     std::wstring line;
     int colors[28];
     int *params[29];
@@ -23,12 +54,21 @@ void Settings::load() {
             if (idx != std::string::npos) {
                 line = line.substr(0, idx);
             }
-            std::wstringstream ss(line);
-            while (ss >> *params[i]) {
-                ++i;
+            idx = line.find('/');
+            if (idx == std::string::npos) {
+                std::wstringstream ss(line);
+                while (ss >> *params[i]) {
+                    ++i;
+                }
+                ++line_ind;
+            } else {
+                std::string str(line.begin(), line.end());
+                folders.push_back(str);
             }
-            ++line_ind;
         }
+    }
+    if (folders.empty()) {
+        folders.push_back(std::string(getenv("HOME")) + "/Music/");
     }
     init_col(&c1, colors);
     init_col(&c2, colors + 4);
@@ -47,3 +87,4 @@ void Settings::init_col(sf::Color *c, const int *colors) {
     c->a = colors[3];
 //    std::cerr << int(c->r) << ' '<< int(c->g) << ' '<< int(c->b) << ' '<< int(c->a) << '\n';
 }
+
