@@ -13,7 +13,7 @@
 
 class SortSelect {
 public:
-    std::vector<std::string> sorts{"Date", "Album"};
+    std::vector<std::string> sorts{"Date", "Album", "Random"};
     bool state = false;
     int ptr = 0;
     void up();

@@ -43,5 +43,7 @@ void SortSelect::sort(Player *p) {
         p->sort_by_date();
     } else if (ptr == 1) {
         p->sort_by_album();
+    } else if (ptr == 2) {
+        p->sort_by_random();
     }
 }

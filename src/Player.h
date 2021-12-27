@@ -75,6 +75,8 @@ public:
     void sort_by_album();
 
     void sort_by_date();
+
+    void sort_by_random();
 };
 
 #endif //XYLON_PLAYER_H

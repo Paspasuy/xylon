@@ -1,3 +1,4 @@
+#include <random>
 #include "Player.h"
 
 Player::Player(sf::Clock *_c) {
@@ -163,6 +164,18 @@ void Player::sort_by_date() {
         return i->cr_time < j->cr_time;
     });
     std::reverse(songs.begin(), songs.end());
+    for (int i = 0; i < songs.size(); ++i) {
+        if (songs[i]->id == id) {
+            ptr = i;
+            return;
+        }
+    }
+}
+
+void Player::sort_by_random() {
+    int id = songs[ptr]->id;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    shuffle(songs.begin(), songs.end(), std::default_random_engine(seed));
     for (int i = 0; i < songs.size(); ++i) {
         if (songs[i]->id == id) {
             ptr = i;

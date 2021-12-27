@@ -188,8 +188,6 @@ int main(int argc, char *argv[]) {
                 } else if (event.key.code == sf::Keyboard::Escape) {
                     if (sortSelect->state) {
                         sortSelect->state = false;
-                        sortSelect->sort(p);
-                        songs.init(p);
                     } else if (songSearch->state()) {
                         cpl = songSearch->clear();
                         songs.init(cpl);
@@ -212,10 +210,6 @@ int main(int argc, char *argv[]) {
                     settings->load();
                 } else if (event.key.code == sf::Keyboard::F6) {
                     if (!songSearch->state()) {
-                        if (sortSelect->state) {
-                            sortSelect->sort(p);
-                            songs.init(p);
-                        }
                         sortSelect->state ^= 1;
                     }
                 } else if (event.key.code == sf::Keyboard::I && event.key.control) {
