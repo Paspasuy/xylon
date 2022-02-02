@@ -11,7 +11,7 @@ class Player {
 public:
     int ptr = 0;
     bool state;
-    double vol = 1.;
+    double vol = 0.5;
     sf::Clock *c;
     double progress;
     bool loop = 0;

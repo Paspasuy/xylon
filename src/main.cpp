@@ -145,6 +145,8 @@ int main(int argc, char *argv[]) {
                     }
                 } else if (event.key.code == sf::Keyboard::V && event.key.control) {
                     visualiser.display ^= 1;
+                } else if (event.key.code == sf::Keyboard::C && event.key.control) {
+                    sf::Clipboard::setString(p->getSong()->artist + L" — " + p->getSong()->title);
                 } else if (event.key.code == sf::Keyboard::Left) {
                     p->backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
@@ -214,6 +216,8 @@ int main(int argc, char *argv[]) {
                     }
                 } else if (event.key.code == sf::Keyboard::I && event.key.control) {
                     Tile::LOAD_IMG ^= 1;
+                }  else if (event.key.code == -1) {
+                    p->is_playing() ? p->pause(): p->play();
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;
@@ -258,5 +262,5 @@ int main(int argc, char *argv[]) {
 // TODO: add integration with all possible DEs
 // TODO: somehow compile for windows (in distant future)
 // TODO: write help menu, write readme
-// TODO: add different directories support
-// TODO: add different music files support
+// TODO: add different file formats support
+// TODO: playback control via hotkeys
