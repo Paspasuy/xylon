@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         p.add_folder(s);
     }
     for (auto &it: p.songs) {
-        it->add_meta();
+        it.add_meta();
     }
     p.sort_by_date();
     p.ptr = 0;
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
                 } else if (event.key.code == sf::Keyboard::V && event.key.control) {
                     visualiser.display ^= 1;
                 } else if (event.key.code == sf::Keyboard::C && event.key.control) {
-                    sf::Clipboard::setString(p.getSong()->artist + L" — " + p.getSong()->title);
+                    sf::Clipboard::setString(p.getSong().artist + L" — " + p.getSong().title);
                 } else if (event.key.code == sf::Keyboard::Left) {
                     p.backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
                         songs.init(&p);
                         sortSelect.state = false;
                     } else if (songSearch.state() && cpl->ptr < 0) {
-                        int id = cpl->songs[0]->id;
+                        int id = cpl->songs[0].id;
                         p.play_id(id);
                         cpl->ptr = 0;
                     }

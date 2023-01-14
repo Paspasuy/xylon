@@ -29,22 +29,22 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
 //        float dist = abs((tile_h + Tile::H / 2 - 1) - window.getSize().y / 2) + Tile::H * 2;
 //        dist /= Tile::H;
         int xs = 0;//int(CUR_SHIFT / dist);
-        tiles[i]->position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
+        tiles[i].position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
         sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
-        tiles[i]->render(window, font, bold_font, sh, false);
+        tiles[i].render(window, font, bold_font, sh, false);
     }
     if (low <= cur && cur < up) {
         sh.setOutlineColor(s->c3);
         sh.setFillColor(s->c4);
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
-        tiles[cur]->position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
-        tiles[cur]->render(window, font, bold_font, sh, true);
+        tiles[cur].position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
+        tiles[cur].render(window, font, bold_font, sh, true);
         if (pl->loop) {
 //            int r = 7;
             sf::RectangleShape rep(sf::Vector2f(3, Tile::H));
 //            sf::CircleShape rep(r);
             rep.setFillColor(s->c7);
-            auto pos = tiles[cur]->position;
+            auto pos = tiles[cur].position;
 //            pos.y += Tile::H / 2 - r;
             pos.x += Tile::W + CUR_SHIFT - 3;
 
@@ -56,12 +56,9 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
 
 void SongView::init(Player *p) {
     pl = p;
-    for (auto iter: tiles) {
-        delete iter;
-    }
     tiles.clear();
-    for (auto &it: p->songs) {
-        tiles.push_back(new Tile(it));
+    for (auto& it: p->songs) {
+        tiles.push_back(Tile(&it));
     }
     shift = (-pl->ptr + 1) * (Tile::H + TILE_GAP);
     norm_shift();
@@ -96,9 +93,9 @@ void SongView::scroll(int delta) {
 
 std::pair<int, int> SongView::get_click_id(int x, int y) {
     for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
-        if (tiles[i]->position.x - TILE_GAP <= x) {
-            if (tiles[i]->position.y - TILE_GAP / 2 <= y && tiles[i]->position.y + Tile::H + TILE_GAP / 2 >= y) {
-                return {tiles[i]->s->id, i};
+        if (tiles[i].position.x - TILE_GAP <= x) {
+            if (tiles[i].position.y - TILE_GAP / 2 <= y && tiles[i].position.y + Tile::H + TILE_GAP / 2 >= y) {
+                return {tiles[i].s->id, i};
             }
         }
     }

@@ -9,7 +9,7 @@
 #include "Settings.h"
 
 class SongView {
-    std::vector<Tile *> tiles;
+    std::vector<Tile> tiles;
     Settings *s;
     sf::Time t;
     int shift = 0;

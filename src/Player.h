@@ -22,7 +22,7 @@ public:
 
     Player(Player *pl);
 
-    std::vector<Song *> songs;
+    std::vector<Song> songs;
 
     void upd_expire();
 
@@ -64,7 +64,7 @@ public:
 
     void set_position(double d);
 
-    Song *getSong();
+    Song& getSong();
 
     void set_index(int idx);
 

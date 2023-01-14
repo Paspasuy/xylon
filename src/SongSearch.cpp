@@ -10,13 +10,13 @@ Player *SongSearch::rebuild() {
     if (text.empty()) {
         return p;
     }
-    std::vector<Song *>::iterator iter = p->songs.begin();
-    std::vector<std::vector<Song *>::iterator> v;
+    std::vector<Song>::iterator iter = p->songs.begin();
+    std::vector<std::vector<Song>::iterator> v;
     int idx = -1;
     int id = p->get_id();
     while (iter != p->songs.end()) {
-        if ((*iter)->matches(text)) {
-            if (id == (*iter)->id) {
+        if ((*iter).matches(text)) {
+            if (id == (*iter).id) {
                 idx = v.size();
             }
             v.push_back(iter);

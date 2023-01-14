@@ -15,24 +15,24 @@ Player::Player(Player *pl) {
 }
 
 void Player::upd_expire() {
-    expire = c->getElapsedTime() + songs[ptr]->getDuration() - songs[ptr]->getPlayingOffset();
+    expire = c->getElapsedTime() + songs[ptr].getDuration() - songs[ptr].getPlayingOffset();
 }
 
 void Player::play() {
     state = true;
     upd_expire();
-    songs[ptr]->set_vol(vol);
-    songs[ptr]->play();
+    songs[ptr].set_vol(vol);
+    songs[ptr].play();
 }
 
 void Player::pause() {
     state = false;
-    songs[ptr]->pause();
+    songs[ptr].pause();
 }
 
 void Player::stop() {
     state = false;
-    songs[ptr]->stop();
+    songs[ptr].stop();
 }
 
 void Player::next(bool ignore_loop) {
@@ -52,7 +52,7 @@ void Player::play_ind(int ind) {
 
 void Player::play_id(int id) {
     for (int i = 0; i < songs.size(); ++i) {
-        if (songs[i]->id == id) {
+        if (songs[i].id == id) {
             play_ind(i);
             return;
         }
@@ -69,7 +69,7 @@ void Player::prev() {
 }
 
 void Player::add_song(const std::string &s, const std::u8string &t, time_t time) {
-    songs.push_back(new Song(s, t, time));
+    songs.push_back(*new Song(s, t, time));
 }
 
 bool Player::is_playing() {
@@ -90,7 +90,7 @@ void Player::add_folder(std::string s) {
 void Player::set_vol(double x) {
     vol = x;
     if (state) {
-        songs[ptr]->set_vol(x);
+        songs[ptr].set_vol(x);
     }
 }
 
@@ -107,29 +107,29 @@ void Player::dec_vol() {
 }
 
 void Player::backward_5() {
-    songs[ptr]->backward_5();
+    songs[ptr].backward_5();
     upd_expire();
 }
 
 void Player::forward_5() {
-    songs[ptr]->forward_5();
+    songs[ptr].forward_5();
     upd_expire();
 }
 
 sf::Time Player::getDuration() {
-    return songs[ptr]->getDuration();
+    return songs[ptr].getDuration();
 }
 
 sf::Time Player::getPlayingOffset() {
-    return songs[ptr]->getPlayingOffset();
+    return songs[ptr].getPlayingOffset();
 }
 
 void Player::set_position(double d) {
-    double t = songs[ptr]->getDuration().asSeconds() * d;
-    songs[ptr]->set_position(t);
+    double t = songs[ptr].getDuration().asSeconds() * d;
+    songs[ptr].set_position(t);
 }
 
-Song *Player::getSong() {
+Song& Player::getSong() {
     return songs[ptr];
 }
 
@@ -138,20 +138,20 @@ void Player::set_index(int idx) {
 }
 
 int Player::get_id() {
-    return songs[ptr]->id;
+    return songs[ptr].id;
 }
 
 void Player::get_fft(float* fft) {
-    songs[ptr]->get_fft(fft);
+    songs[ptr].get_fft(fft);
 }
 
 void Player::sort_by_album() {
-    int id = songs[ptr]->id;
-    std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
-        return std::make_pair(i->album, i->track) < std::make_pair(j->album, j->track);
+    int id = songs[ptr].id;
+    std::sort(songs.begin(), songs.end(), [](Song &i, Song &j) {
+        return std::make_pair(i.album, i.track) < std::make_pair(j.album, j.track);
     });
     for (int i = 0; i < songs.size(); ++i) {
-        if (songs[i]->id == id) {
+        if (songs[i].id == id) {
             ptr = i;
             return;
         }
@@ -159,13 +159,13 @@ void Player::sort_by_album() {
 }
 
 void Player::sort_by_date() {
-    int id = songs[ptr]->id;
-    std::sort(songs.begin(), songs.end(), [&](Song *i, Song *j) {
-        return i->cr_time < j->cr_time;
+    int id = songs[ptr].id;
+    std::sort(songs.begin(), songs.end(), [](Song &i, Song &j) {
+        return i.cr_time < j.cr_time;
     });
     std::reverse(songs.begin(), songs.end());
     for (int i = 0; i < songs.size(); ++i) {
-        if (songs[i]->id == id) {
+        if (songs[i].id == id) {
             ptr = i;
             return;
         }
@@ -173,11 +173,11 @@ void Player::sort_by_date() {
 }
 
 void Player::sort_by_random() {
-    int id = songs[ptr]->id;
+    int id = songs[ptr].id;
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     shuffle(songs.begin(), songs.end(), std::default_random_engine(seed));
     for (int i = 0; i < songs.size(); ++i) {
-        if (songs[i]->id == id) {
+        if (songs[i].id == id) {
             ptr = i;
             return;
         }
