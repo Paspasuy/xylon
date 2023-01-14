@@ -41,12 +41,12 @@ void Settings::load() {
     }
     std::wstring line;
     int colors[28];
-    int *params[29];
+    int* params[29];
     params[0] = &vis_type;
     for (size_t i = 0; i < 28; ++i) {
         params[i + 1] = colors + i;
     }
-    int i = 0;
+    int i = 0, tmp = 0;
     int line_ind = 0;
     if (conf.is_open()) {
         while (getline(conf, line)) {
@@ -57,8 +57,8 @@ void Settings::load() {
             idx = line.find('/');
             if (idx == std::string::npos) {
                 std::wstringstream ss(line);
-                while (ss >> *params[i]) {
-                    ++i;
+                while (ss >> tmp) {
+                    *params[i++] = tmp;
                 }
                 ++line_ind;
             } else {

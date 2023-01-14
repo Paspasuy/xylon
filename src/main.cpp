@@ -28,31 +28,31 @@ int main(int argc, char *argv[]) {
     std::locale::global(std::locale("ru_RU.utf-8"));
     std::wcin.imbue(std::locale("ru_RU.utf-8"));
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
-    auto *settings = new Settings;
-    settings->load();
+    Settings settings;
+    settings.load();
     BASS_Init(1, 44100, 0, 0, NULL);
-    auto *clock = new sf::Clock();
-    auto *p = new Player(clock);
-    for (std::string &s: settings->folders) {
-        p->add_folder(s);
+    sf::Clock clock;
+    Player p(&clock);
+    for (std::string &s: settings.folders) {
+        p.add_folder(s);
     }
-    for (auto &it: p->songs) {
+    for (auto &it: p.songs) {
         it->add_meta();
     }
-    p->sort_by_date();
-    p->ptr = 0;
-    auto *cpl = p;
-    auto *display = new SongDisplay(p, settings);
-    VolumeCircleSlider vol_slider(p, clock->getElapsedTime());
+    p.sort_by_date();
+    p.ptr = 0;
+    auto *cpl = &p;
+    SongDisplay display(&p, &settings);
+    VolumeCircleSlider vol_slider(&p, clock.getElapsedTime());
     sw::Starfield starfield(sf::Vector2f(winw, winh), 700);
     sf::ContextSettings ctxsettings;
     ctxsettings.antialiasingLevel = 8;
     sf::RenderWindow window(sf::VideoMode(winw, winh), "xylon", sf::Style::Default, ctxsettings);
     Tile::W = std::min(int(window.getSize().x) / 2, Tile::MAX_W);
     window.setVerticalSyncEnabled(true);
-    SongView songs(settings);
-    songs.init(p);
-    p->play();
+    SongView songs(&settings);
+    songs.init(&p);
+    p.play();
     sf::Font font;
     if (!font.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf")) {
         std::cerr << "FONTS BROKEN\n";
@@ -61,20 +61,20 @@ int main(int argc, char *argv[]) {
     if (!bold_font.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf")) {
         std::cerr << "FONTS BROKEN\n";
     }
-    auto *songSearch = new SongSearch(p);
+    SongSearch songSearch(&p);
     sf::Vector2f stars_vec(0.4, -0.1);
     stars_rot(stars_vec, (rand() % 100) / 100.f);
-    Visualiser visualiser(settings);
-    auto *sortSelect = new SortSelect();
+    Visualiser visualiser(&settings);
+    SortSelect sortSelect;
     float fft[2048];
     while (window.isOpen()) {
-        if (clock->getElapsedTime() > p->expire && p->is_playing()) {
-            if (songSearch->state() && cpl->ptr >= 0) {
+        if (clock.getElapsedTime() > p.expire && p.is_playing()) {
+            if (songSearch.state() && cpl->ptr >= 0) {
                 ++cpl->ptr;
                 cpl->ptr %= cpl->songs.size();
-                p->play_id(cpl->get_id());
+                p.play_id(cpl->get_id());
             } else {
-                p->next();
+                p.next();
             }
         }
         sf::Event event;
@@ -98,11 +98,11 @@ int main(int argc, char *argv[]) {
                         }
                         songs.scroll(delta);
                     } else {
-                        vol_slider.touch(clock->getElapsedTime());
+                        vol_slider.touch(clock.getElapsedTime());
                         if (delta == 1) {
-                            p->add_vol();
+                            p.add_vol();
                         } else {
-                            p->dec_vol();
+                            p.dec_vol();
                         }
                     }
                 }
@@ -110,97 +110,97 @@ int main(int argc, char *argv[]) {
                 auto [id, idx] = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
                 if (id != -1) {
                     songs.grab(event.mouseButton.y);
-                    if (songSearch->state()) {
+                    if (songSearch.state()) {
                         cpl->set_index(idx);
                     }
-                    if (id != p->get_id()) {
-                        p->play_id(id);
+                    if (id != p.get_id()) {
+                        p.play_id(id);
                     }
-                } else if (display->bar->in_bar(event.mouseButton.x, event.mouseButton.y)) {
-                    display->bar->holding = true;
-                    p->pause();
-                    display->bar->set_position(p, event.mouseButton.x);
+                } else if (display.bar->in_bar(event.mouseButton.x, event.mouseButton.y)) {
+                    display.bar->holding = true;
+                    p.pause();
+                    display.bar->set_position(&p, event.mouseButton.x);
                 }
             } else if (event.type == sf::Event::MouseMoved) {
-                if (display->bar->holding) {
-                    display->bar->set_position(p, event.mouseMove.x);
+                if (display.bar->holding) {
+                    display.bar->set_position(&p, event.mouseMove.x);
                 }
             } else if (event.type == sf::Event::MouseButtonReleased) {
                 if (songs.holding) {
-                    songs.release(event.mouseButton.y, clock->getElapsedTime());
+                    songs.release(event.mouseButton.y, clock.getElapsedTime());
                 }
-                if (display->bar->holding) {
-                    display->bar->set_position(p, event.mouseButton.x);
-                    display->bar->holding = false;
-                    p->play();
+                if (display.bar->holding) {
+                    display.bar->set_position(&p, event.mouseButton.x);
+                    display.bar->holding = false;
+                    p.play();
                 }
             } else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Space) {
-                    if (!songSearch->state()) {
-                        if (p->is_playing()) {
-                            p->pause();
+                    if (!songSearch.state()) {
+                        if (p.is_playing()) {
+                            p.pause();
                         } else {
-                            p->play();
+                            p.play();
                         }
                     }
                 } else if (event.key.code == sf::Keyboard::V && event.key.control) {
                     visualiser.display ^= 1;
                 } else if (event.key.code == sf::Keyboard::C && event.key.control) {
-                    sf::Clipboard::setString(p->getSong()->artist + L" — " + p->getSong()->title);
+                    sf::Clipboard::setString(p.getSong()->artist + L" — " + p.getSong()->title);
                 } else if (event.key.code == sf::Keyboard::Left) {
-                    p->backward_5();
+                    p.backward_5();
                 } else if (event.key.code == sf::Keyboard::Right) {
-                    p->forward_5();
+                    p.forward_5();
                 } else if (event.key.code == sf::Keyboard::Up) {
-                    if (sortSelect->state) {
-                        sortSelect->up();
-                    } else if (songSearch->state()) {
+                    if (sortSelect.state) {
+                        sortSelect.up();
+                    } else if (songSearch.state()) {
                         --cpl->ptr;
                         cpl->ptr += cpl->songs.size() * 2;
                         cpl->ptr %= cpl->songs.size();
-                        p->play_id(cpl->get_id());
+                        p.play_id(cpl->get_id());
                     } else {
-                        p->prev();
+                        p.prev();
                     }
                     songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::Down) {
-                    if (sortSelect->state) {
-                        sortSelect->down();
-                    } else if (songSearch->state()) {
+                    if (sortSelect.state) {
+                        sortSelect.down();
+                    } else if (songSearch.state()) {
                         ++cpl->ptr;
                         cpl->ptr %= cpl->songs.size();
-                        p->play_id(cpl->get_id());
+                        p.play_id(cpl->get_id());
                     } else {
-                        p->next(true);
+                        p.next(true);
                     }
                     songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::Enter) {
-                    if (sortSelect->state) {
-                        sortSelect->sort(p);
-                        songs.init(p);
-                        sortSelect->state = false;
-                    } else if (songSearch->state() && cpl->ptr < 0) {
+                    if (sortSelect.state) {
+                        sortSelect.sort(&p);
+                        songs.init(&p);
+                        sortSelect.state = false;
+                    } else if (songSearch.state() && cpl->ptr < 0) {
                         int id = cpl->songs[0]->id;
-                        p->play_id(id);
+                        p.play_id(id);
                         cpl->ptr = 0;
                     }
                     songs.norm_shift_tile();
                 } else if (event.key.code == sf::Keyboard::R && event.key.control) {
-                    p->loop ^= 1;
+                    p.loop ^= 1;
                 } else if (event.key.code == sf::Keyboard::Escape) {
-                    if (sortSelect->state) {
-                        sortSelect->state = false;
-                    } else if (songSearch->state()) {
-                        cpl = songSearch->clear();
+                    if (sortSelect.state) {
+                        sortSelect.state = false;
+                    } else if (songSearch.state()) {
+                        cpl = songSearch.clear();
                         songs.init(cpl);
                     }
                 } else if (event.key.code == sf::Keyboard::BackSpace) {
-                    if (songSearch->state()) {
+                    if (songSearch.state()) {
                         if (event.key.control) {
-                            cpl = songSearch->pop_word();
+                            cpl = songSearch.pop_word();
                             songs.init(cpl);
                         } else {
-                            cpl = songSearch->pop_char();
+                            cpl = songSearch.pop_char();
                             songs.init(cpl);
                         }
                     }
@@ -209,33 +209,33 @@ int main(int argc, char *argv[]) {
                 } else if (event.key.code == sf::Keyboard::PageUp) {
                     songs.pageup();
                 } else if (event.key.code == sf::Keyboard::F5) {
-                    settings->load();
+                    settings.load();
                 } else if (event.key.code == sf::Keyboard::F6) {
-                    if (!songSearch->state()) {
-                        sortSelect->state ^= 1;
+                    if (!songSearch.state()) {
+                        sortSelect.state ^= 1;
                     }
                 } else if (event.key.code == sf::Keyboard::I && event.key.control) {
                     Tile::LOAD_IMG ^= 1;
                 }  else if (event.key.code == -1) {
-                    p->is_playing() ? p->pause(): p->play();
+                    p.is_playing() ? p.pause(): p.play();
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;
                 }
-            } else if (event.type == sf::Event::TextEntered && !sortSelect->state) {
+            } else if (event.type == sf::Event::TextEntered && !sortSelect.state) {
                 int u = event.text.unicode;
                 if (u != 27 && u != 13 && u != 8 && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
 //                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
 //                              << event.text.unicode << std::endl;
-                    if (event.text.unicode != 32 || songSearch->state()) {
-                        cpl = songSearch->add_char(event.text.unicode);
+                    if (event.text.unicode != 32 || songSearch.state()) {
+                        cpl = songSearch.add_char(event.text.unicode);
                         songs.init(cpl);
                     }
                 }
             }
         }
-        if (visualiser.display && p->is_playing()) {
-            p->get_fft(fft);
+        if (visualiser.display && p.is_playing()) {
+            p.get_fft(fft);
         }
         if (songs.holding) {
             songs.set_position(sf::Mouse::getPosition(window).y);
@@ -245,11 +245,11 @@ int main(int argc, char *argv[]) {
         window.clear();
         window.draw(starfield);
         visualiser.render(window, fft);
-        songs.render(window, font, bold_font, clock->getElapsedTime());
-        songSearch->render(window, font);
-        display->render(window, font, bold_font);
-        vol_slider.render(window, bold_font, clock->getElapsedTime());
-        sortSelect->render(window, font);
+        songs.render(window, font, bold_font, clock.getElapsedTime());
+        songSearch.render(window, font);
+        display.render(window, font, bold_font);
+        vol_slider.render(window, bold_font, clock.getElapsedTime());
+        sortSelect.render(window, font);
         window.display();
     }
 
