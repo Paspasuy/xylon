@@ -19,7 +19,7 @@ Player *SongSearch::rebuild() {
             if (id == (*iter).id) {
                 idx = v.size();
             }
-            v.push_back(iter);
+            v.emplace_back(iter);
         }
         ++iter;
     }
@@ -35,7 +35,7 @@ Player *SongSearch::rebuild() {
     p2 = new Player(p);
     p2->ptr = idx;
     for (auto it: v) {
-        p2->songs.push_back(*it);
+        p2->songs.emplace_back(*it);
     }
     return p2;
 }

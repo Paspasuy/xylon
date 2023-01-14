@@ -58,7 +58,7 @@ void SongView::init(Player *p) {
     pl = p;
     tiles.clear();
     for (auto& it: p->songs) {
-        tiles.push_back(Tile(&it));
+        tiles.emplace_back(Tile(&it));
     }
     shift = (-pl->ptr + 1) * (Tile::H + TILE_GAP);
     norm_shift();

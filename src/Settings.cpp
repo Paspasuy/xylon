@@ -68,7 +68,7 @@ void Settings::load() {
         }
     }
     if (folders.empty()) {
-        folders.push_back(std::string(getenv("HOME")) + "/Music/");
+        folders.emplace_back(std::string(getenv("HOME")) + "/Music/");
     }
     init_col(&c1, colors);
     init_col(&c2, colors + 4);

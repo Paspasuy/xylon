@@ -7,12 +7,11 @@
 #include "VolumeCircleSlider.h"
 #include "Tile.h"
 
-VolumeCircleSlider::VolumeCircleSlider(Player *_p, sf::Time _t) {
+VolumeCircleSlider::VolumeCircleSlider(Player *_p, sf::Time _t) : shape(VolumeShape(40.f)) {
     t = _t - sf::seconds(2);
     p = _p;
-    shape = new VolumeShape(40.f);
-    shape->setFillColor(sf::Color::Transparent);
-    shape->setOutlineThickness(7.f);
+    shape.setFillColor(sf::Color::Transparent);
+    shape.setOutlineThickness(7.f);
 }
 
 void VolumeCircleSlider::render(sf::RenderWindow &window, sf::Font &bold_font, sf::Time _t) {
@@ -27,10 +26,10 @@ void VolumeCircleSlider::render(sf::RenderWindow &window, sf::Font &bold_font, s
         int y = window.getSize().y - 90;
         txt.setPosition(x - txt.getLocalBounds().width / 2, y - txt.getLocalBounds().height);
         window.draw(txt);
-        shape->touch(val);
-        shape->setOutlineColor(cur_color);
-        shape->setPosition(x, y);
-        window.draw(*shape);
+        shape.touch(val);
+        shape.setOutlineColor(cur_color);
+        shape.setPosition(x, y);
+        window.draw(shape);
     }
 }
 

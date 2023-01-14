@@ -10,7 +10,7 @@ class VolumeCircleSlider {
 public:
     Player *p;
     sf::Time t;
-    VolumeShape *shape;
+    VolumeShape shape;
     int val = 100;
 
     VolumeCircleSlider(Player *_p, sf::Time _t);

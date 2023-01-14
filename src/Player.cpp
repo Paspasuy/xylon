@@ -69,7 +69,7 @@ void Player::prev() {
 }
 
 void Player::add_song(const std::string &s, const std::u8string &t, time_t time) {
-    songs.push_back(*new Song(s, t, time));
+    songs.emplace_back(Song(s, t, time));
 }
 
 bool Player::is_playing() {

@@ -1,8 +1,7 @@
 #include "SongDisplay.h"
 
-SongDisplay::SongDisplay(Player *_p, Settings *_s) {
+SongDisplay::SongDisplay(Player *_p, Settings *_s) : bar(ProgressBarView(_s)) {
     p = _p;
-    bar = new ProgressBarView(_s);
 }
 
 void SongDisplay::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font) {
@@ -29,6 +28,6 @@ void SongDisplay::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bol
     artist_text.setPosition(sw, PIC + margin_y + 20 + 12);
     window.draw(artist_text);
 
-    bar->update(p);
-    bar->render(window, font, margin_x, PIC + 57 + margin_y);
+    bar.update(p);
+    bar.render(window, font, margin_x, PIC + 57 + margin_y);
 }

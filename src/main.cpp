@@ -116,22 +116,22 @@ int main(int argc, char *argv[]) {
                     if (id != p.get_id()) {
                         p.play_id(id);
                     }
-                } else if (display.bar->in_bar(event.mouseButton.x, event.mouseButton.y)) {
-                    display.bar->holding = true;
+                } else if (display.bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
+                    display.bar.holding = true;
                     p.pause();
-                    display.bar->set_position(&p, event.mouseButton.x);
+                    display.bar.set_position(&p, event.mouseButton.x);
                 }
             } else if (event.type == sf::Event::MouseMoved) {
-                if (display.bar->holding) {
-                    display.bar->set_position(&p, event.mouseMove.x);
+                if (display.bar.holding) {
+                    display.bar.set_position(&p, event.mouseMove.x);
                 }
             } else if (event.type == sf::Event::MouseButtonReleased) {
                 if (songs.holding) {
                     songs.release(event.mouseButton.y, clock.getElapsedTime());
                 }
-                if (display.bar->holding) {
-                    display.bar->set_position(&p, event.mouseButton.x);
-                    display.bar->holding = false;
+                if (display.bar.holding) {
+                    display.bar.set_position(&p, event.mouseButton.x);
+                    display.bar.holding = false;
                     p.play();
                 }
             } else if (event.type == sf::Event::KeyPressed) {
@@ -256,6 +256,7 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+// TODO: song duration in song list
 // TODO: albums support
 // TODO: add ability to change song metadata
 // TODO: add different sorting comparators
