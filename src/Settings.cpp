@@ -2,26 +2,28 @@
 // Created by pavel on 11/19/21.
 //
 
-#include <sstream>
 #include "Settings.h"
-#include <iostream>
-#include <filesystem>
 
-std::wstring DEFAULT_CONF_STR = L"# Visualiser type\n"
-                                     "1\n"
-                                     "# Usual tile color\n"
-                                     "200 100 0 0\n"
-                                     "200 100 0 30\n"
-                                     "# Playing tile color\n"
-                                     "0 0 200 0\n"
-                                     "0 0 200 50\n"
-                                     "# Progress bar color\n"
-                                     "0 200 0 225\n"
-                                     "# Visualiser color\n"
-                                     "109 0 133 255\n"
-                                     "# Repeat indicator color\n"
-                                     "255 0 0 255\n"
-                                     "# Folders\n";
+#include <filesystem>
+#include <iostream>
+#include <sstream>
+
+std::wstring DEFAULT_CONF_STR =
+    L"# Visualiser type\n"
+    "1\n"
+    "# Usual tile color\n"
+    "200 100 0 0\n"
+    "200 100 0 30\n"
+    "# Playing tile color\n"
+    "0 0 200 0\n"
+    "0 0 200 50\n"
+    "# Progress bar color\n"
+    "0 200 0 225\n"
+    "# Visualiser color\n"
+    "109 0 133 255\n"
+    "# Repeat indicator color\n"
+    "255 0 0 255\n"
+    "# Folders\n";
 
 void Settings::load() {
     std::wifstream conf;
@@ -29,15 +31,15 @@ void Settings::load() {
     str += "/.config/xylon/conf.txt";
     conf.open(str);
     if (!conf.is_open()) {
-        std::filesystem::path path{ str };
+        std::filesystem::path path{str};
         std::filesystem::create_directories(path.parent_path());
         std::wofstream cfg;
         cfg.open(str);
         cfg << DEFAULT_CONF_STR;
         cfg.close();
         conf.open(str);
-//        std::filesystem::copy("/usr/share/xylon/sample_conf.txt", str);
-//        conf.open(str + "/.config/xylon/conf.txt");
+        //        std::filesystem::copy("/usr/share/xylon/sample_conf.txt", str);
+        //        conf.open(str + "/.config/xylon/conf.txt");
     }
     std::wstring line;
     int colors[28];
@@ -80,11 +82,10 @@ void Settings::load() {
     conf.close();
 }
 
-void Settings::init_col(sf::Color *c, const int *colors) {
+void Settings::init_col(sf::Color* c, const int* colors) {
     c->r = colors[0];
     c->g = colors[1];
     c->b = colors[2];
     c->a = colors[3];
-//    std::cerr << int(c->r) << ' '<< int(c->g) << ' '<< int(c->b) << ' '<< int(c->a) << '\n';
+    //    std::cerr << int(c->r) << ' '<< int(c->g) << ' '<< int(c->b) << ' '<< int(c->a) << '\n';
 }
-

@@ -1,8 +1,9 @@
 #ifndef XYLON_SONGSEARCH_H
 #define XYLON_SONGSEARCH_H
 
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+
 #include "Player.h"
 
 class SongSearch {
@@ -27,4 +28,4 @@ public:
     void update_color(size_t i);
 };
 
-#endif //XYLON_SONGSEARCH_H
+#endif  // XYLON_SONGSEARCH_H

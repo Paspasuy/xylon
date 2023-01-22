@@ -1,9 +1,8 @@
-#include <random>
 #include "Player.h"
 
-Player::Player(sf::Clock *_c) {
-    c = _c;
-}
+#include <random>
+
+Player::Player(sf::Clock* _c) { c = _c; }
 
 void Player::upd_expire() {
     expire = c->getElapsedTime() + songs[ptr].getDuration() - songs[ptr].getPlayingOffset();
@@ -41,9 +40,7 @@ void Player::play_ind(int ind) {
     play();
 }
 
-void Player::play_id(int id) {
-    play_ind(index_by_id(id));
-}
+void Player::play_id(int id) { play_ind(index_by_id(id)); }
 
 void Player::prev() {
     stop();
@@ -56,19 +53,17 @@ void Player::add_song(const std::string& s, const std::u8string& t, time_t time)
     songs.back().add_meta();
 }
 
-bool Player::is_playing() {
-    return playing;
-}
+bool Player::is_playing() { return playing; }
 
 void Player::add_folder(const std::string& path) {
     using iter = std::filesystem::recursive_directory_iterator;
-    for (const auto &dirEntry: iter(path)) {
+    for (const auto& dirEntry : iter(path)) {
         if (dirEntry.path().extension() == ".mp3") {
-            time_t time = std::chrono::system_clock::to_time_t(std::chrono::file_clock::to_sys(dirEntry.last_write_time()));
+            time_t time = std::chrono::system_clock::to_time_t(
+                std::chrono::file_clock::to_sys(dirEntry.last_write_time()));
             add_song(dirEntry.path().string(), dirEntry.path().filename().u8string(), time);
         }
     }
-
 }
 
 void Player::set_vol(double x) {
@@ -78,13 +73,9 @@ void Player::set_vol(double x) {
     }
 }
 
-void Player::add_vol() {
-    set_vol(std::min(1., vol + 0.05));
-}
+void Player::add_vol() { set_vol(std::min(1., vol + 0.05)); }
 
-void Player::dec_vol() {
-    set_vol(std::max(0., vol - 0.05));
-}
+void Player::dec_vol() { set_vol(std::max(0., vol - 0.05)); }
 
 void Player::backward_5() {
     songs[ptr].backward_5();
@@ -96,34 +87,24 @@ void Player::forward_5() {
     upd_expire();
 }
 
-sf::Time Player::getDuration() {
-    return songs[ptr].getDuration();
-}
+sf::Time Player::getDuration() { return songs[ptr].getDuration(); }
 
-sf::Time Player::getPlayingOffset() {
-    return songs[ptr].getPlayingOffset();
-}
+sf::Time Player::getPlayingOffset() { return songs[ptr].getPlayingOffset(); }
 
 void Player::set_position(double d) {
     double t = songs[ptr].getDuration().asSeconds() * d;
     songs[ptr].set_position(t);
 }
 
-Song& Player::getSong() {
-    return songs[ptr];
-}
+Song& Player::getSong() { return songs[ptr]; }
 
-int Player::get_id() {
-    return songs[ptr].id;
-}
+int Player::get_id() { return songs[ptr].id; }
 
-void Player::get_fft(float* fft) {
-    songs[ptr].get_fft(fft);
-}
+void Player::get_fft(float* fft) { songs[ptr].get_fft(fft); }
 
 void Player::sort_by_album() {
     int id = songs[ptr].id;
-    std::sort(songs.begin(), songs.end(), [](Song &i, Song &j) {
+    std::sort(songs.begin(), songs.end(), [](Song& i, Song& j) {
         return std::make_pair(i.album, i.track) < std::make_pair(j.album, j.track);
     });
     ptr = index_by_id(id);
@@ -131,12 +112,9 @@ void Player::sort_by_album() {
 
 void Player::sort_by_date() {
     int id = songs[ptr].id;
-    std::sort(songs.begin(), songs.end(), [](Song &i, Song &j) {
-        return i.cr_time < j.cr_time;
-    });
+    std::sort(songs.begin(), songs.end(), [](Song& i, Song& j) { return i.cr_time < j.cr_time; });
     std::reverse(songs.begin(), songs.end());
     ptr = index_by_id(id);
-
 }
 
 void Player::sort_by_random() {
@@ -157,7 +135,7 @@ int Player::index_by_id(int id) {
 
 std::vector<Song*> Player::get_songs(const std::wstring& filter) {
     std::vector<Song*> res;
-    for (auto& song: songs) {
+    for (auto& song : songs) {
         if (song.matches(filter)) {
             res.emplace_back(&song);
         }
@@ -166,7 +144,7 @@ std::vector<Song*> Player::get_songs(const std::wstring& filter) {
 }
 
 int Player::get_first_id(const std::wstring& filter) {
-    for (auto& song: songs) {
+    for (auto& song : songs) {
         if (song.matches(filter)) {
             return song.id;
         }
@@ -174,6 +152,4 @@ int Player::get_first_id(const std::wstring& filter) {
     return -1;
 }
 
-uint64_t Player::current_id() {
-    return songs[ptr].id;
-}
+uint64_t Player::current_id() { return songs[ptr].id; }

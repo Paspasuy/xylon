@@ -1,39 +1,46 @@
 #ifndef XYLON_SONGVIEW_H
 #define XYLON_SONGVIEW_H
 
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "Tile.h"
+#include <SFML/Window.hpp>
+
 #include "Player.h"
 #include "ProgressBarView.h"
 #include "Settings.h"
+#include "Tile.h"
 
 class SongView {
     std::vector<Tile> tiles;
-    Settings *s;
+    Settings* s;
     sf::Time t;
     int shift = 0;
     int vel = 0;
     int cur = -1;
     const int accel = 1500;
-    const int MAX_VEL = 3000;
+    const int FAST = 2000;
     const int TILE_GAP = 2;
+    const int MAX_VEL = 3000;
+    const int MAX_VEL_WITH_SHIFT = 30000;
     int last_y = 0;
-    Player *pl;
+    Player* pl;
 
     int get_low_tile();
 
     int get_up_tile(int winh);
 
     const int CUR_SHIFT = 50;
+
 public:
     bool holding = false;
+    bool shift_pressed = false;
+
     sf::Vector2<unsigned int> winsz;
-    SongView(Settings *_s);
+    SongView(Settings* _s);
 
-    void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time);
+    void render(sf::RenderWindow& window, PicLoader& pl, sf::Clock& cl, sf::Font& font, sf::Font& bold_font,
+                sf::Time time);
 
-    void init(Player *p, const std::wstring& filter=L"");
+    void init(Player* p, const std::wstring& filter = L"");
 
     void norm_shift();
 
@@ -66,8 +73,6 @@ public:
     void play_next();
 
     void play_prev();
-
 };
 
-
-#endif //XYLON_SONGVIEW_H
+#endif  // XYLON_SONGVIEW_H

@@ -1,7 +1,8 @@
 #include "ProgressBarView.h"
+
 #include "SongDisplay.h"
 
-void ProgressBarView::update(Player *pl) {
+void ProgressBarView::update(Player* pl) {
     sf::Time t1 = pl->getPlayingOffset();
     sf::Time t2 = pl->getDuration();
     current = int(t1.asSeconds());
@@ -9,7 +10,7 @@ void ProgressBarView::update(Player *pl) {
     progress = double(t1.asMicroseconds()) / t2.asMicroseconds();
 }
 
-void ProgressBarView::render(sf::RenderWindow &window, sf::Font &font, int x, int y) {
+void ProgressBarView::render(sf::RenderWindow& window, sf::Font& font, int x, int y) {
     sf::RectangleShape line(sf::Vector2f(SongDisplay::PIC, 3.f));
     line.setPosition(x, y + 5);
     line.setFillColor(sf::Color(127, 127, 127));
@@ -60,7 +61,7 @@ bool ProgressBarView::in_bar(int x, int y) {
     return false;
 }
 
-void ProgressBarView::set_position(Player *p, int x) {
+void ProgressBarView::set_position(Player* p, int x) {
     x -= cont.getPosition().x;
     x = std::max(x, 0);
     x = std::min(x, int(cont.getSize().x));
@@ -68,6 +69,4 @@ void ProgressBarView::set_position(Player *p, int x) {
     p->set_position(progress);
 }
 
-ProgressBarView::ProgressBarView(Settings *_s) {
-    s = _s;
-}
+ProgressBarView::ProgressBarView(Settings* _s) { s = _s; }

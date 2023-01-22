@@ -2,13 +2,12 @@
 #define XYLON_PLAYER_H
 
 #include <SFML/System/Clock.hpp>
+#include <filesystem>
 #include <vector>
+
 #include "Song.h"
 
-#include <filesystem>
-
 class Player {
-
     bool playing;
     sf::Clock* c;
     std::vector<Song> songs;
@@ -22,7 +21,7 @@ public:
 
     sf::Time expire;
 
-    explicit Player(sf::Clock *_c);
+    explicit Player(sf::Clock* _c);
 
     void upd_expire();
 
@@ -66,7 +65,7 @@ public:
 
     int get_id();
 
-    void get_fft(float *fft);
+    void get_fft(float* fft);
 
     void sort_by_album();
 
@@ -74,11 +73,11 @@ public:
 
     void sort_by_random();
 
-    std::vector<Song*> get_songs(const std::wstring& filter=L"");
+    std::vector<Song*> get_songs(const std::wstring& filter = L"");
 
     int get_first_id(const std::wstring& filter);
 
     size_t current_id();
 };
 
-#endif //XYLON_PLAYER_H
+#endif  // XYLON_PLAYER_H

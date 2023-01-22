@@ -1,15 +1,15 @@
 #include "SongView.h"
+
 #include <cmath>
 
-int SongView::get_low_tile() {
-    return std::max(0, (-shift) / (Tile::H + TILE_GAP));
-}
+int SongView::get_low_tile() { return std::max(0, (-shift) / (Tile::H + TILE_GAP)); }
 
 int SongView::get_up_tile(int winh) {
     return std::min(int(tiles.size()), (-shift + winh) / (Tile::H + TILE_GAP) + 1);
 }
 
-void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time) {
+void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Clock& cl, sf::Font& font, sf::Font& bold_font,
+                      sf::Time time) {
     update_vel(time - t);
     update_shift(time - t);
     t = time;
@@ -29,26 +29,27 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
             continue;
         }
         int tile_h = shift + i * (Tile::H + TILE_GAP);
-//        float dist = abs((tile_h + Tile::H / 2 - 1) - window.getSize().y / 2) + Tile::H * 2;
-//        dist /= Tile::H;
-        int xs = 0;//int(CUR_SHIFT / dist);
+        //        float dist = abs((tile_h + Tile::H / 2 - 1) - window.getSize().y / 2) + Tile::H *
+        //        2; dist /= Tile::H;
+        int xs = 0;  // int(CUR_SHIFT / dist);
         tiles[i].position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
         sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
-        tiles[i].render(window, font, bold_font, sh, false);
+        tiles[i].render(window, pic_loader, font, bold_font, sh, cl, abs(vel) >= FAST, false);
     }
     if (touch) {
         sh.setOutlineColor(s->c3);
         sh.setFillColor(s->c4);
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
-        tiles[cur].position = sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
-        tiles[cur].render(window, font, bold_font, sh, true);
+        tiles[cur].position =
+            sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
+        tiles[cur].render(window, pic_loader, font, bold_font, sh, cl, abs(vel) >= FAST, true);
         if (pl->loop) {
-//            int r = 7;
+            //            int r = 7;
             sf::RectangleShape rep(sf::Vector2f(3, Tile::H));
-//            sf::CircleShape rep(r);
+            //            sf::CircleShape rep(r);
             rep.setFillColor(s->c7);
             auto pos = tiles[cur].position;
-//            pos.y += Tile::H / 2 - r;
+            //            pos.y += Tile::H / 2 - r;
             pos.x += Tile::W + CUR_SHIFT - 3;
 
             rep.setPosition(sf::Vector2f(pos));
@@ -57,10 +58,10 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
     }
 }
 
-void SongView::init(Player *p, const std::wstring& filter) {
+void SongView::init(Player* p, const std::wstring& filter) {
     pl = p;
     tiles.clear();
-    for (Song* it: p->get_songs(filter)) {
+    for (Song* it : p->get_songs(filter)) {
         tiles.emplace_back(Tile(it));
     }
     shift = (-pl->ptr + 1) * (Tile::H + TILE_GAP);
@@ -97,7 +98,8 @@ void SongView::scroll(int delta) {
 std::pair<int, int> SongView::get_click_id(int x, int y) {
     for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
         if (tiles[i].position.x - TILE_GAP <= x) {
-            if (tiles[i].position.y - TILE_GAP / 2 <= y && tiles[i].position.y + Tile::H + TILE_GAP / 2 >= y) {
+            if (tiles[i].position.y - TILE_GAP / 2 <= y &&
+                tiles[i].position.y + Tile::H + TILE_GAP / 2 >= y) {
                 return {tiles[i].s->id, i};
             }
         }
@@ -106,14 +108,15 @@ std::pair<int, int> SongView::get_click_id(int x, int y) {
 }
 
 void SongView::update_vel(sf::Time t) {
+    int mx = shift_pressed ? MAX_VEL_WITH_SHIFT : MAX_VEL;
     if (vel > 0) {
         vel -= t.asSeconds() * accel;
         vel = std::max(0, vel);
-        vel = std::min(MAX_VEL, vel);
+        vel = std::min(mx, vel);
     } else if (vel < 0) {
         vel += t.asSeconds() * accel;
         vel = std::min(0, vel);
-        vel = std::max(-MAX_VEL, vel);
+        vel = std::max(-mx, vel);
     }
 }
 
@@ -122,7 +125,6 @@ void SongView::update_shift(sf::Time t) {
         shift += vel * t.asSeconds();
         norm_shift();
     } else {
-
     }
 }
 
@@ -152,21 +154,16 @@ void SongView::pagedown() {
     norm_shift();
 }
 
-SongView::SongView(Settings *_s) {
-    s = _s;
-}
+SongView::SongView(Settings* _s) { s = _s; }
 
-size_t SongView::size() {
-    return tiles.size();
-}
+size_t SongView::size() { return tiles.size(); }
 
 void SongView::play_prev() {
-    pl->play_id(tiles[cur = (cur == -1 ? 0: (cur + tiles.size() - 1) % tiles.size())].s->id);
+    pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + tiles.size() - 1) % tiles.size())].s->id);
     norm_shift_tile();
 }
 
 void SongView::play_next() {
-    pl->play_id(tiles[cur = (cur == -1 ? 0: (cur + 1) % tiles.size())].s->id);
+    pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + 1) % tiles.size())].s->id);
     norm_shift_tile();
 }
-

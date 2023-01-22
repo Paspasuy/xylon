@@ -5,19 +5,18 @@
 #ifndef XYLON_VOLUMESHAPE_H
 #define XYLON_VOLUMESHAPE_H
 
-
-#include <valarray>
 #include <SFML/Graphics.hpp>
+#include <valarray>
 
 class VolumeShape : public sf::Shape {
-public :
+public:
     int prog = -1;
 
     explicit VolumeShape(float radius);
 
     void setRadius(float radius);
 
-    const float &getRadius() const;
+    const float& getRadius() const;
 
     virtual std::size_t getPointCount() const;
 
@@ -25,10 +24,8 @@ public :
 
     void touch(int val);
 
-private :
-
+private:
     float r;
 };
 
-
-#endif //XYLON_VOLUMESHAPE_H
+#endif  // XYLON_VOLUMESHAPE_H

@@ -2,19 +2,18 @@
 // Created by pavel on 11/19/21.
 //
 
+#include "Visualiser.h"
+
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <cmath>
 #include <iostream>
-#include <SFML/Graphics/RectangleShape.hpp>
-#include "Visualiser.h"
+
 #include "Tile.h"
 
-Visualiser::Visualiser(Settings *_s) {
-    s = _s;
-}
+Visualiser::Visualiser(Settings* _s) { s = _s; }
 
-void Visualiser::render(sf::RenderWindow &window, float *fft) {
-    if (!display)
-        return;
+void Visualiser::render(sf::RenderWindow& window, float* fft) {
+    if (!display) return;
     int len = window.getSize().x - Tile::W;
     sf::RectangleShape sh;
     int w = 4;
@@ -28,7 +27,7 @@ void Visualiser::render(sf::RenderWindow &window, float *fft) {
     }
     for (int i = 1; i < len / (w + 1); i += 1) {
         fft[i] /= down_c;
-        sh.setSize(sf::Vector2f(w, std::min(700  * std::sqrt(fft[i]), 1500.f)));
+        sh.setSize(sf::Vector2f(w, std::min(700 * std::sqrt(fft[i]), 1500.f)));
         if (s->vis_type == 0) {
             sh.setPosition(i * (w + 1), h - sh.getSize().y);
         } else if (s->vis_type == 1) {

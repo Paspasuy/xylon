@@ -5,20 +5,23 @@
 #ifndef XYLON_SONG_H
 #define XYLON_SONG_H
 
-#include <SFML/System/Time.hpp>
-#include <SFML/System/String.hpp>
+#include <taglib/attachedpictureframe.h>
+#include <taglib/fileref.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/tag.h>
+
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include "bass.h"
+#include <SFML/System/String.hpp>
+#include <SFML/System/Time.hpp>
+#include <SFML/System/Clock.hpp>
 
-#include <taglib/fileref.h>
-#include <taglib/mpegfile.h>
-#include <taglib/attachedpictureframe.h>
-#include <taglib/id3v2tag.h>
-#include <taglib/tag.h>
+#include "bass.h"
 
 class Song {
     HCHANNEL channel;
+
 public:
     sf::String title = "Title";
     sf::String artist = "John Doe";
@@ -33,11 +36,13 @@ public:
 
     sf::Sprite sprite, small_sprite;
     sf::Texture texture;
-    bool pic_loaded = 0;
+    sf::Time time_loaded;
+    bool pic_loaded = false;
+    bool pic_loading = false;
 
     uint64_t id;
 
-    Song(const std::string &_path, const std::u8string &_filename, time_t _cr_time);
+    Song(const std::string& _path, const std::u8string& _filename, time_t _cr_time);
 
     void play();
 
@@ -61,11 +66,12 @@ public:
 
     void add_meta();
 
-    void load_pic();
+    void load_pic(sf::Clock* cl);
 
-    static std::wstring lower(const std::wstring &s);
+    static std::wstring lower(const std::wstring& s);
 
     void get_fft(float* fft);
+
 };
 
-#endif //XYLON_SONG_H
+#endif  // XYLON_SONG_H

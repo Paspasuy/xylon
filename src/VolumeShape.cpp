@@ -1,8 +1,8 @@
 #include "VolumeShape.h"
+
 #include <iostream>
 
-VolumeShape::VolumeShape(float radius) :
-        r(radius) {
+VolumeShape::VolumeShape(float radius) : r(radius) {
     setFillColor(sf::Color::Transparent);
     update();
 }
@@ -12,7 +12,7 @@ void VolumeShape::setRadius(float radius) {
     update();
 }
 
-const float &VolumeShape::getRadius() const { return r; }
+const float& VolumeShape::getRadius() const { return r; }
 
 sf::Vector2f VolumeShape::getPoint(std::size_t index) const {
     int ind = index;
@@ -35,4 +35,3 @@ void VolumeShape::touch(int val) {
 }
 
 std::size_t VolumeShape::getPointCount() const { return 300; }
-

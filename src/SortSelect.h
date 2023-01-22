@@ -5,10 +5,11 @@
 #ifndef XYLON_SORTSELECT_H
 #define XYLON_SORTSELECT_H
 
-
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <string>
 #include <vector>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Font.hpp>
+
 #include "Player.h"
 
 class SortSelect {
@@ -18,10 +19,8 @@ public:
     int ptr = 0;
     void up();
     void down();
-    void render(sf::RenderWindow &window, sf::Font font);
-    void sort(Player *p);
-
+    void render(sf::RenderWindow& window, sf::Font font);
+    void sort(Player* p);
 };
 
-
-#endif //XYLON_SORTSELECT_H
+#endif  // XYLON_SORTSELECT_H

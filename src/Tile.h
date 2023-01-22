@@ -2,28 +2,28 @@
 #define XYLON_TILE_H
 
 #include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+
+#include "PicLoader.h"
 #include "Song.h"
 
-
 class Tile {
-    static bool pics_locked;
-    static std::vector<Song*> to_load;
-    static void load_pics();
+
 public:
-    static bool LOAD_IMG;
     static int MAX_W;
     static int W;
     static const int H = 80;
+    const int IMG_ALPHA = 100;
+    const int FADE_TIME = 300;
     sf::Vector2i position;
-    Song *s;
-    int margin = 0;
-    bool pic_transparent = 0;
+    Song* s;
+    bool pic_transparent = false;
 
-    Tile(Song *_s);
+    Tile(Song* _s);
 
-    void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::RectangleShape &sh, bool is_cur);
+    void render(sf::RenderWindow& window, PicLoader& pl, sf::Font& font, sf::Font& bold_font,
+                sf::RectangleShape& sh, sf::Clock& cl, bool too_fast, bool is_cur);
 };
 
-#endif //XYLON_TILE_H
+#endif  // XYLON_TILE_H

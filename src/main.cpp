@@ -1,19 +1,21 @@
-#include <iostream>
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include "bass.h"
-#include "Player.h"
-#include "SongView.h"
-#include "SongSearch.h"
-#include "SongDisplay.h"
-#include "VolumeCircleSlider.h"
-#include "../SelbaWard/Starfield.h"
-#include "Visualiser.h"
-#include "Settings.h"
-#include "SortSelect.h"
+#include <SFML/Window.hpp>
+#include <iostream>
 
-void stars_rot(sf::Vector2f &vec, float sin=0.001) {
+#include "../SelbaWard/Starfield.h"
+#include "PicLoader.h"
+#include "Player.h"
+#include "Settings.h"
+#include "SongDisplay.h"
+#include "SongSearch.h"
+#include "SongView.h"
+#include "SortSelect.h"
+#include "Visualiser.h"
+#include "VolumeCircleSlider.h"
+#include "bass.h"
+
+void stars_rot(sf::Vector2f& vec, float sin = 0.001) {
     float x1 = vec.x;
     float y1 = vec.y;
     float cos = 1 - sin * sin;
@@ -21,7 +23,7 @@ void stars_rot(sf::Vector2f &vec, float sin=0.001) {
     vec.y = sin * x1 + cos * y1;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     srand(time(0));
     int winw = 1024;
     int winh = 768;
@@ -33,7 +35,7 @@ int main(int argc, char *argv[]) {
     BASS_Init(1, 44100, 0, 0, NULL);
     sf::Clock clock;
     Player p(&clock);
-    for (std::string &s: settings.folders) {
+    for (std::string& s : settings.folders) {
         p.add_folder(s);
     }
     p.sort_by_date();
@@ -50,6 +52,7 @@ int main(int argc, char *argv[]) {
     songs.init(&p);
     p.play();
     sf::Font font;
+    PicLoader pl(&clock);
     if (!font.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf")) {
         std::cerr << "FONTS BROKEN\n";
     }
@@ -63,7 +66,7 @@ int main(int argc, char *argv[]) {
     Visualiser visualiser(&settings);
     SortSelect sortSelect;
     float fft[2048];
-    while (window.isOpen()) {
+    for (uint64_t frame = 0; window.isOpen(); ++frame) {
         if (clock.getElapsedTime() > p.expire && p.is_playing()) {
             songs.play_next();
         }
@@ -82,7 +85,8 @@ int main(int argc, char *argv[]) {
             } else if (event.type == sf::Event::MouseWheelScrolled) {
                 if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
                     int delta = event.mouseWheelScroll.delta;
-                    if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y).first != -1) {
+                    if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y)
+                            .first != -1) {
                         if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
                             delta *= 5;
                         }
@@ -194,18 +198,20 @@ int main(int argc, char *argv[]) {
                         sortSelect.state ^= 1;
                     }
                 } else if (event.key.code == sf::Keyboard::I && event.key.control) {
-                    Tile::LOAD_IMG ^= 1;
-                }  else if (event.key.code == -1) {
-                    p.is_playing() ? p.pause(): p.play();
+                    pl.should_load ^= 1;
+                } else if (event.key.code == -1) {
+                    p.is_playing() ? p.pause() : p.play();
                 } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                     window.close();
                     return 0;
                 }
             } else if (event.type == sf::Event::TextEntered && !sortSelect.state) {
                 int u = event.text.unicode;
-                if (u != 27 && u != 13 && u != 8 && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
-//                    std::wcout << L"ASCII character typed: " << static_cast<wchar_t>(event.text.unicode) << ' '
-//                              << event.text.unicode << std::endl;
+                if (u != 27 && u != 13 && u != 8 &&
+                    !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                    //                    std::wcout << L"ASCII character typed: " <<
+                    //                    static_cast<wchar_t>(event.text.unicode) << ' '
+                    //                              << event.text.unicode << std::endl;
                     if (event.text.unicode != 32 || !songSearch.empty()) {
                         songSearch.add_char(event.text.unicode);
                         songs.init(&p, songSearch.get_filter());
@@ -220,14 +226,18 @@ int main(int argc, char *argv[]) {
         if (songs.holding) {
             songs.set_position(sf::Mouse::getPosition(window).y);
         }
+        songs.shift_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
+        if ((frame & 1) == 0) {
+            pl.update();
+        }
         stars_rot(stars_vec);
         starfield.move(stars_vec);
         window.clear();
         window.draw(starfield);
         visualiser.render(window, fft);
-        songs.render(window, font, bold_font, clock.getElapsedTime());
+        songs.render(window, pl, clock, font, bold_font, clock.getElapsedTime());
         songSearch.render(window, font);
-        display.render(window, font, bold_font);
+        display.render(window, clock, font, bold_font);
         vol_slider.render(window, bold_font, clock.getElapsedTime());
         sortSelect.render(window, font);
         window.display();
@@ -237,11 +247,9 @@ int main(int argc, char *argv[]) {
 }
 
 // TODO: folders support
-// TODO: scroll faster with shift, don't load images if scrolling with shift
 // TODO: song duration in song list
 // TODO: GUI for downloading songs from Internet (yt-dlp?)
 // TODO: shaders
 // TODO: somehow compile for windows (in distant future)
 // TODO: write help menu, write readme
 // TODO: add different file formats support (flac?)
-
