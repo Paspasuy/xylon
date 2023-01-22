@@ -7,25 +7,24 @@
 
 class SongSearch {
 public:
-    Player *p, *p2 = nullptr;
     std::wstring text;
     sf::Color back_col = sf::Color(32, 32, 32);
 
-    SongSearch(Player *_p);
+    void add_char(wchar_t c);
 
-    Player *rebuild();
+    void pop_char();
 
-    Player *add_char(wchar_t c);
+    void pop_word();
 
-    Player *pop_char();
+    void clear();
 
-    Player *pop_word();
+    void render(sf::RenderWindow& window, sf::Font& font);
 
-    Player *clear();
+    bool empty();
 
-    void render(sf::RenderWindow &window, sf::Font &font);
+    const std::wstring& get_filter();
 
-    bool state();
+    void update_color(size_t i);
 };
 
 #endif //XYLON_SONGSEARCH_H

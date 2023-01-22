@@ -14,6 +14,7 @@ class SongView {
     sf::Time t;
     int shift = 0;
     int vel = 0;
+    int cur = -1;
     const int accel = 1500;
     const int MAX_VEL = 3000;
     const int TILE_GAP = 2;
@@ -32,7 +33,7 @@ public:
 
     void render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_font, sf::Time time);
 
-    void init(Player *p);
+    void init(Player *p, const std::wstring& filter=L"");
 
     void norm_shift();
 
@@ -59,6 +60,13 @@ public:
     void pageup();
 
     void pagedown();
+
+    size_t size();
+
+    void play_next();
+
+    void play_prev();
+
 };
 
 

@@ -18,3 +18,7 @@ target_link_libraries(xylon tag)
 target_link_libraries(xylon bass)
 target_link_libraries(xylon sfml-graphics sfml-audio)
 target_link_libraries(xylon Threads::Threads)
+
+# target_compile_options(xylon PRIVATE -fsanitize=address)
+# target_link_options(xylon PRIVATE -fsanitize=address)
+

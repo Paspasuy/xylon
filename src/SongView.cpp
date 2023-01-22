@@ -18,11 +18,14 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
     sh.setSize(sf::Vector2f(Tile::W, Tile::H - 2));
     int low = get_low_tile();
     int up = get_up_tile(winsz.y);
-    int cur = pl->current_index();
+    uint64_t cur_id = pl->current_id();
+    bool touch = false;
     sh.setOutlineColor(s->c1);
     sh.setFillColor(s->c2);
     for (int i = low; i < up; ++i) {
-        if (i == cur) {
+        if (tiles[i].s->id == cur_id) {
+            cur = i;
+            touch = true;
             continue;
         }
         int tile_h = shift + i * (Tile::H + TILE_GAP);
@@ -33,7 +36,7 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
         sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
         tiles[i].render(window, font, bold_font, sh, false);
     }
-    if (low <= cur && cur < up) {
+    if (touch) {
         sh.setOutlineColor(s->c3);
         sh.setFillColor(s->c4);
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
@@ -54,11 +57,11 @@ void SongView::render(sf::RenderWindow &window, sf::Font &font, sf::Font &bold_f
     }
 }
 
-void SongView::init(Player *p) {
+void SongView::init(Player *p, const std::wstring& filter) {
     pl = p;
     tiles.clear();
-    for (auto& it: p->songs) {
-        tiles.emplace_back(Tile(&it));
+    for (Song* it: p->get_songs(filter)) {
+        tiles.emplace_back(Tile(it));
     }
     shift = (-pl->ptr + 1) * (Tile::H + TILE_GAP);
     norm_shift();
@@ -77,12 +80,12 @@ void SongView::norm_shift_tile() {
 }
 
 void SongView::norm_shift_up() {
-    int up_bound = -(pl->current_index() - 1) * (Tile::H + TILE_GAP);
+    int up_bound = -(cur - 1) * (Tile::H + TILE_GAP);
     shift = std::max(shift, up_bound);
 }
 
 void SongView::norm_shift_down() {
-    int down_bound = -(pl->current_index() + 2) * (Tile::H + TILE_GAP) + winsz.y;
+    int down_bound = -(cur + 2) * (Tile::H + TILE_GAP) + winsz.y;
     shift = std::min(shift, down_bound);
 }
 
@@ -151,5 +154,19 @@ void SongView::pagedown() {
 
 SongView::SongView(Settings *_s) {
     s = _s;
+}
+
+size_t SongView::size() {
+    return tiles.size();
+}
+
+void SongView::play_prev() {
+    pl->play_id(tiles[cur = (cur == -1 ? 0: (cur + tiles.size() - 1) % tiles.size())].s->id);
+    norm_shift_tile();
+}
+
+void SongView::play_next() {
+    pl->play_id(tiles[cur = (cur == -1 ? 0: (cur + 1) % tiles.size())].s->id);
+    norm_shift_tile();
 }
 

@@ -8,21 +8,21 @@
 #include <filesystem>
 
 class Player {
+
+    bool playing;
+    sf::Clock* c;
+    std::vector<Song> songs;
+
+    int index_by_id(int id);
+
 public:
-    int ptr = 0;
-    bool state;
     double vol = 0.5;
-    sf::Clock *c;
-    double progress;
-    bool loop = 0;
+    int ptr = 0;
+    bool loop = false;
 
     sf::Time expire;
 
-    Player(sf::Clock *_c);
-
-    Player(Player *pl);
-
-    std::vector<Song> songs;
+    explicit Player(sf::Clock *_c);
 
     void upd_expire();
 
@@ -32,7 +32,7 @@ public:
 
     void stop();
 
-    void next(bool ignore_loop = 0);
+    void next(bool ignore_loop = false);
 
     void play_ind(int ind);
 
@@ -40,15 +40,13 @@ public:
 
     void prev();
 
-    void add_song(const std::string &s, const std::u8string &t, time_t time);
+    void add_song(const std::string& s, const std::u8string& t, time_t time);
 
     bool is_playing();
 
-    void add_folder(std::string s);
+    void add_folder(const std::string& path);
 
     void set_vol(double x);
-
-    int current_index();
 
     void add_vol();
 
@@ -66,8 +64,6 @@ public:
 
     Song& getSong();
 
-    void set_index(int idx);
-
     int get_id();
 
     void get_fft(float *fft);
@@ -77,6 +73,12 @@ public:
     void sort_by_date();
 
     void sort_by_random();
+
+    std::vector<Song*> get_songs(const std::wstring& filter=L"");
+
+    int get_first_id(const std::wstring& filter);
+
+    size_t current_id();
 };
 
 #endif //XYLON_PLAYER_H

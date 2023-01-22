@@ -63,10 +63,10 @@ void Song::set_position(double pos) {
 }
 
 bool Song::matches(std::wstring text) {
-    if (ltitle.find(text) != std::string::npos) return 1;
-    if (lartist.find(text) != std::string::npos) return 1;
-    if (lalbum.find(text) != std::string::npos) return 1;
-    return 0;
+    if (ltitle.find(text) != std::string::npos) return true;
+    if (lartist.find(text) != std::string::npos) return true;
+    if (lalbum.find(text) != std::string::npos) return true;
+    return false;
 }
 
 void Song::add_meta() {
