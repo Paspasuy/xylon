@@ -2,7 +2,8 @@
 
 SongDisplay::SongDisplay(Player* _p, Settings* _s) : bar(ProgressBarView(_s)) { p = _p; }
 
-void SongDisplay::render(sf::RenderWindow& window, sf::Clock& cl, sf::Font& font, sf::Font& bold_font) {
+void SongDisplay::render(sf::RenderWindow& window, sf::Clock& cl, sf::Font& font,
+                         sf::Font& bold_font) {
     Song& s = p->getSong();
     margin_x = std::max(0, int(window.getSize().x - Tile::W - PIC) / 2);
     margin_y = std::max(0, int(window.getSize().y / 2 - PIC) / 2);

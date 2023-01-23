@@ -9,7 +9,6 @@
 #include "Song.h"
 
 class Tile {
-
 public:
     static int MAX_W;
     static int W;

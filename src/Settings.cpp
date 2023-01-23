@@ -89,3 +89,5 @@ void Settings::init_col(sf::Color* c, const int* colors) {
     c->a = colors[3];
     //    std::cerr << int(c->r) << ' '<< int(c->g) << ' '<< int(c->b) << ' '<< int(c->a) << '\n';
 }
+
+Settings::Settings() { load(); }

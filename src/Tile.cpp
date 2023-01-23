@@ -34,9 +34,11 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::Font& font, sf::F
     if (s->pic_loaded) {
         s->small_sprite.setPosition(position.x, position.y);
         float transition = std::min(
-            1.f, static_cast<float>((cl.getElapsedTime() - s->time_loaded).asMilliseconds()) / FADE_TIME);
+            1.f, static_cast<float>((cl.getElapsedTime() - s->time_loaded).asMilliseconds()) /
+                     FADE_TIME);
         if (!is_cur && !pic_transparent) {
-            s->small_sprite.setColor(sf::Color(255, 255, 255, static_cast<int>(IMG_ALPHA * transition)));
+            s->small_sprite.setColor(
+                sf::Color(255, 255, 255, static_cast<int>(IMG_ALPHA * transition)));
             if (transition == 1.f) pic_transparent = true;
         }
         if (is_cur && pic_transparent) {

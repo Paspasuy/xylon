@@ -3,6 +3,7 @@
 
 #include <mutex>
 #include <queue>
+
 #include "Song.h"
 
 class PicLoader {

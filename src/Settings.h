@@ -13,6 +13,7 @@ class Settings {
     std::string path;
 
 public:
+    Settings();
     std::vector<std::string> folders;
     int vis_type = 0;
     sf::Color c1, c2, c3, c4, c5, c6, c7;

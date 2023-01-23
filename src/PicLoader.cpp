@@ -1,7 +1,8 @@
-#include <thread>
 #include "PicLoader.h"
 
-PicLoader::PicLoader(sf::Clock *cl) : cl(cl) {}
+#include <thread>
+
+PicLoader::PicLoader(sf::Clock* cl) : cl(cl) {}
 
 void PicLoader::load(Song* pSong) {
     pSong->pic_loading = true;
@@ -28,6 +29,4 @@ void PicLoader::update() {
     }
 }
 
-void PicLoader::load_ptr(Song* cur, sf::Clock* cl) {
-    cur->load_pic(cl);
-}
+void PicLoader::load_ptr(Song* cur, sf::Clock* cl) { cur->load_pic(cl); }

@@ -5,10 +5,10 @@
 #ifndef XYLON_SORTSELECT_H
 #define XYLON_SORTSELECT_H
 
+#include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <string>
 #include <vector>
-#include <SFML/Graphics/Font.hpp>
 
 #include "Player.h"
 

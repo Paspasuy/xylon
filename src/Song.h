@@ -13,9 +13,9 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Clock.hpp>
 #include <SFML/System/String.hpp>
 #include <SFML/System/Time.hpp>
-#include <SFML/System/Clock.hpp>
 
 #include "bass.h"
 
@@ -71,7 +71,6 @@ public:
     static std::wstring lower(const std::wstring& s);
 
     void get_fft(float* fft);
-
 };
 
 #endif  // XYLON_SONG_H
