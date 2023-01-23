@@ -1,5 +1,6 @@
-#include <filesystem>
 #include "DirectoryNode.h"
+
+#include <filesystem>
 
 void DirectoryNode::collectNames(std::vector<std::string>& result, int level) {
     if (level >= 0) {

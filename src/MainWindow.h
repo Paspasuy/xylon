@@ -4,6 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "../SelbaWard/Starfield.h"
+#include "DirectorySelect.h"
 #include "PicLoader.h"
 #include "Player.h"
 #include "Settings.h"
@@ -14,7 +15,6 @@
 #include "Utils.h"
 #include "Visualiser.h"
 #include "VolumeCircleSlider.h"
-#include "DirectorySelect.h"
 
 class MainWindow : public sf::RenderWindow {
     sw::Starfield starfield;

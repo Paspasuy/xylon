@@ -4,8 +4,8 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "Player.h"
-#include "ProgressBarView.h"
 #include "Tile.h"
+#include "gui/ProgressBarView.h"
 
 class SongDisplay {
 public:

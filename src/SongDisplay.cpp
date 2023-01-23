@@ -21,11 +21,13 @@ void SongDisplay::render(sf::RenderWindow& window) {
     int sw = margin_x + (PIC - w * s.title.getSize()) / 2;
     title_text.setPosition(sw, PIC + margin_y + 12);
     window.draw(title_text);
+
     w = 8;
     sw = margin_x + (PIC - w * s.artist.getSize()) / 2;
     artist_text.setPosition(sw, PIC + margin_y + 20 + 12);
     window.draw(artist_text);
 
     bar.update(p);
-    bar.render(window, margin_x, PIC + 57 + margin_y);
+    bar.setPosition(margin_x, PIC + 57 + margin_y);
+    window.draw(bar);
 }

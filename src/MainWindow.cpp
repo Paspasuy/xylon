@@ -73,18 +73,18 @@ void MainWindow::pollEvents() {
             } else if (songDisplay.bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
                 songDisplay.bar.holding = true;
                 p.pause();
-                songDisplay.bar.set_position(&p, event.mouseButton.x);
+                songDisplay.bar.set_progress(&p, event.mouseButton.x);
             }
         } else if (event.type == sf::Event::MouseMoved) {
             if (songDisplay.bar.holding) {
-                songDisplay.bar.set_position(&p, event.mouseMove.x);
+                songDisplay.bar.set_progress(&p, event.mouseMove.x);
             }
         } else if (event.type == sf::Event::MouseButtonReleased) {
             if (songs.holding) {
                 songs.release(event.mouseButton.y, clk.getElapsedTime());
             }
             if (songDisplay.bar.holding) {
-                songDisplay.bar.set_position(&p, event.mouseButton.x);
+                songDisplay.bar.set_progress(&p, event.mouseButton.x);
                 songDisplay.bar.holding = false;
                 p.play();
             }
@@ -132,7 +132,7 @@ void MainWindow::pollEvents() {
                     dirSelect.loadToPlayer();
                     songs.init(&p);
                     dirSelect.show = false;
-                }else if (!songSearch.empty()) {
+                } else if (!songSearch.empty()) {
                     p.play_id(p.get_first_id(songSearch.get_filter()));
                 }
                 songs.norm_shift_tile();

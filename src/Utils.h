@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/System/Clock.hpp>
+
 #include "Settings.h"
 
 extern sf::Font FONT, BOLD_FONT;
