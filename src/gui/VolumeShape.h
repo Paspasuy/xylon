@@ -14,10 +14,6 @@ public:
 
     explicit VolumeShape(float radius);
 
-    void setRadius(float radius);
-
-    const float& getRadius() const;
-
     virtual std::size_t getPointCount() const;
 
     virtual sf::Vector2f getPoint(std::size_t index) const;

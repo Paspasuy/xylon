@@ -29,7 +29,7 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& s
     time_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + Tile::H - 20);
     album_text.setPosition(
         sh.getPosition().x +
-            std::max(-4 - (int)s->album.getSize() * 8 + (int)sh.getSize().x, 90 + 8 * 5),
+            std::max(-4 - (int)s->album.getSize() * 8 + (int)sh.getSize().x, 90 + 8 * 6),
         sh.getPosition().y + Tile::H - 20);
     if (!is_cur) {
         title_text.setFillColor(sf::Color(255, 255, 255, 180));

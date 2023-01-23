@@ -4,19 +4,21 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "Player.h"
+#include "../Player.h"
 #include "VolumeShape.h"
 
-class VolumeCircleSlider {
+class VolumeCircleSlider : public sf::Drawable {
 public:
     Player* p;
     sf::Time t;
-    VolumeShape shape;
-    int val = 100;
+    mutable VolumeShape shape;
 
-    VolumeCircleSlider(Player* _p, sf::Time _t);
+    ~VolumeCircleSlider() override;
 
-    void render(sf::RenderWindow& window, sf::Time t);
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+
+public:
+    explicit VolumeCircleSlider(Player* _p);
 
     void touch(sf::Time _t);
 };

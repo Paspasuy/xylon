@@ -13,8 +13,8 @@
 #include "SongView.h"
 #include "SortSelect.h"
 #include "Utils.h"
-#include "Visualiser.h"
-#include "VolumeCircleSlider.h"
+#include "gui/Visualiser.h"
+#include "gui/VolumeCircleSlider.h"
 
 class MainWindow : public sf::RenderWindow {
     sw::Starfield starfield;

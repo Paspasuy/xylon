@@ -7,13 +7,6 @@ VolumeShape::VolumeShape(float radius) : r(radius) {
     update();
 }
 
-void VolumeShape::setRadius(float radius) {
-    r = radius;
-    update();
-}
-
-const float& VolumeShape::getRadius() const { return r; }
-
 sf::Vector2f VolumeShape::getPoint(std::size_t index) const {
     int ind = index;
     int cnt = getPointCount() / 2;

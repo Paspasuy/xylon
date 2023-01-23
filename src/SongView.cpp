@@ -8,7 +8,8 @@ int SongView::get_up_tile(int winh) {
     return std::min(int(tiles.size()), (-shift + winh) / (Tile::H + TILE_GAP) + 1);
 }
 
-void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Time time) {
+void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader) {
+    sf::Time time = clk.getElapsedTime();
     update_vel(time - t);
     update_shift(time - t);
     t = time;

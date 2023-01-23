@@ -36,7 +36,7 @@ public:
 
     sf::Vector2<unsigned int> winsz;
 
-    void render(sf::RenderWindow& window, PicLoader& pl, sf::Time time);
+    void render(sf::RenderWindow& window, PicLoader& pl);
 
     void init(Player* p, const std::wstring& filter = L"");
 

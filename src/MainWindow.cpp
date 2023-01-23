@@ -14,7 +14,7 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
       dirSelect(),
       p(dirSelect.player),
       songDisplay(&p),
-      vol_slider(&p, clk.getElapsedTime()),
+      vol_slider(&p),
       stars_vec(0.4, -0.1) {
     setVerticalSyncEnabled(true);
 
@@ -227,11 +227,11 @@ void MainWindow::beforeRender(uint64_t frame) {
 void MainWindow::render() {
     clear();
     draw(starfield);
-    visualiser.render(*this);
-    songs.render(*this, pl, clk.getElapsedTime());
+    draw(visualiser);
+    songs.render(*this, pl);
     songSearch.render(*this);
     songDisplay.render(*this);
-    vol_slider.render(*this, clk.getElapsedTime());
+    draw(vol_slider);
     draw(sortSelect);
     draw(dirSelect);
     display();

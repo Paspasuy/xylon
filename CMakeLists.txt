@@ -12,7 +12,7 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
-add_executable(xylon src/main.cpp src/Player.cpp src/SongSearch.cpp src/gui/ProgressBarView.cpp src/SongView.cpp src/Song.cpp src/Tile.cpp src/SongDisplay.cpp src/VolumeCircleSlider.cpp src/VolumeShape.cpp src/Visualiser.cpp src/Settings.cpp src/SortSelect.cpp src/PicLoader.cpp src/MainWindow.cpp
+add_executable(xylon src/main.cpp src/Player.cpp src/SongSearch.cpp src/gui/ProgressBarView.cpp src/SongView.cpp src/Song.cpp src/Tile.cpp src/SongDisplay.cpp src/gui/VolumeCircleSlider.cpp src/gui/VolumeShape.cpp src/gui/Visualiser.cpp src/Settings.cpp src/SortSelect.cpp src/PicLoader.cpp src/MainWindow.cpp
         src/DirectoryNode.cpp src/DirectorySelect.cpp src/gui/SelectView.cpp SelbaWard/Starfield.cpp src/Utils.cpp)
 
 target_link_libraries(xylon tag)
