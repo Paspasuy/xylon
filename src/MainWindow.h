@@ -9,7 +9,7 @@
 #include "Player.h"
 #include "utils/Settings.h"
 #include "gui/SongDisplay.h"
-#include "SongSearch.h"
+#include "gui/SongSearch.h"
 #include "SongView.h"
 #include "gui/SortSelect.h"
 #include "utils/Utils.h"

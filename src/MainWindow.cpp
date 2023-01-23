@@ -229,7 +229,7 @@ void MainWindow::render() {
     draw(starfield);
     draw(visualiser);
     songs.render(*this, pl);
-    songSearch.render(*this);
+    draw(songSearch);
     draw(songDisplay);
     draw(vol_slider);
     draw(sortSelect);

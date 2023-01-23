@@ -124,7 +124,6 @@ void SongView::update_shift(sf::Time t) {
     if (!holding) {
         shift += vel * t.asSeconds();
         norm_shift();
-    } else {
     }
 }
 

@@ -4,10 +4,10 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "Player.h"
-#include "utils/Utils.h"
+#include "../Player.h"
+#include "../utils/Utils.h"
 
-class SongSearch {
+class SongSearch : public sf::Drawable {
 public:
     std::wstring text;
     sf::Color back_col = sf::Color(32, 32, 32);
@@ -20,13 +20,16 @@ public:
 
     void clear();
 
-    void render(sf::RenderWindow& window);
-
     bool empty();
 
     const std::wstring& get_filter();
 
     void update_color(size_t i);
+
+    ~SongSearch() override;
+
+protected:
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
 
 #endif  // XYLON_SONGSEARCH_H
