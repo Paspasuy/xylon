@@ -16,7 +16,7 @@ public:
 
     VolumeCircleSlider(Player* _p, sf::Time _t);
 
-    void render(sf::RenderWindow& window, sf::Font& bold_font, sf::Time t);
+    void render(sf::RenderWindow& window, sf::Time t);
 
     void touch(sf::Time _t);
 };

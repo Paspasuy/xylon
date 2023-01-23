@@ -8,8 +8,7 @@ int SongView::get_up_tile(int winh) {
     return std::min(int(tiles.size()), (-shift + winh) / (Tile::H + TILE_GAP) + 1);
 }
 
-void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Clock& cl,
-                      sf::Font& font, sf::Font& bold_font, sf::Time time) {
+void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Time time) {
     update_vel(time - t);
     update_shift(time - t);
     t = time;
@@ -34,7 +33,7 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Clock
         int xs = 0;  // int(CUR_SHIFT / dist);
         tiles[i].position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
         sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
-        tiles[i].render(window, pic_loader, font, bold_font, sh, cl, abs(vel) >= FAST, false);
+        tiles[i].render(window, pic_loader, sh, abs(vel) >= FAST, false);
     }
     if (touch) {
         sh.setOutlineColor(s->c3);
@@ -42,7 +41,7 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Clock
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
         tiles[cur].position =
             sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
-        tiles[cur].render(window, pic_loader, font, bold_font, sh, cl, abs(vel) >= FAST, true);
+        tiles[cur].render(window, pic_loader, sh, abs(vel) >= FAST, true);
         if (pl->loop) {
             //            int r = 7;
             sf::RectangleShape rep(sf::Vector2f(3, Tile::H));

@@ -1,7 +1,8 @@
 #include "Tile.h"
 
 #include <SFML/Graphics/Text.hpp>
-#include <thread>
+
+#include "Utils.h"
 
 Tile::Tile(Song* s) : s(s) {
     //        TagLib::MP4::Tag* tag = ff.tag();
@@ -10,8 +11,8 @@ Tile::Tile(Song* s) : s(s) {
     //        TagLib::MP4::CoverArtList coverArtList = coverItem.toCoverArtList();
 }
 
-void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::Font& font, sf::Font& bold_font,
-                  sf::RectangleShape& sh, sf::Clock& cl, bool too_fast, bool is_cur) {
+void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& sh, bool too_fast,
+                  bool is_cur) {
     if (pl.should_load && !too_fast) {
         if (!s->pic_loaded && !s->pic_loading) {
             pl.load(s);
@@ -19,9 +20,9 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::Font& font, sf::F
     }
     sh.setPosition(position.x, position.y);
     sh.setOutlineThickness(1.f);
-    sf::Text title_text(s->title, bold_font, 16);
-    sf::Text artist_text(s->artist, font, 14);
-    sf::Text album_text(s->album, font, 14);
+    sf::Text title_text(s->title, BOLD_FONT, 16);
+    sf::Text artist_text(s->artist, FONT, 14);
+    sf::Text album_text(s->album, FONT, 14);
     title_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + 2);
     artist_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + 20);
     album_text.setPosition(sh.getPosition().x - 4 - s->album.getSize() * 8 + sh.getSize().x,
@@ -34,7 +35,7 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::Font& font, sf::F
     if (s->pic_loaded) {
         s->small_sprite.setPosition(position.x, position.y);
         float transition = std::min(
-            1.f, static_cast<float>((cl.getElapsedTime() - s->time_loaded).asMilliseconds()) /
+            1.f, static_cast<float>((clk.getElapsedTime() - s->time_loaded).asMilliseconds()) /
                      FADE_TIME);
         if (!is_cur && !pic_transparent) {
             s->small_sprite.setColor(

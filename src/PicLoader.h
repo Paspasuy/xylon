@@ -5,15 +5,14 @@
 #include <queue>
 
 #include "Song.h"
+#include "Utils.h"
 
 class PicLoader {
     std::mutex mutex;
     std::queue<Song*> to_load;
-    sf::Clock* cl;
-    static void load_ptr(Song* cur, sf::Clock* cl);
+    static void load_ptr(Song* cur);
 
 public:
-    explicit PicLoader(sf::Clock* cl);
     bool should_load = true;
     void load(Song* pSong);
     void update();

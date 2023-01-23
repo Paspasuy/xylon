@@ -27,9 +27,9 @@ void SongSearch::pop_word() {
 
 void SongSearch::clear() { text.clear(); }
 
-void SongSearch::render(sf::RenderWindow& window, sf::Font& font) {
+void SongSearch::render(sf::RenderWindow& window) {
     if (!text.empty()) {
-        sf::Text txt(L"search: " + text, font, 20);
+        sf::Text txt(L"search: " + text, FONT, 20);
         sf::RectangleShape back(sf::Vector2f((text.size() + 8) * 12 + 4, 26));
         txt.setPosition(0, window.getSize().y - 30);
         back.setPosition(txt.getPosition());

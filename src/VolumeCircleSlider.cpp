@@ -8,6 +8,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "Tile.h"
+#include "Utils.h"
 
 VolumeCircleSlider::VolumeCircleSlider(Player* _p, sf::Time _t) : shape(VolumeShape(40.f)) {
     t = _t - sf::seconds(2);
@@ -16,12 +17,12 @@ VolumeCircleSlider::VolumeCircleSlider(Player* _p, sf::Time _t) : shape(VolumeSh
     shape.setOutlineThickness(7.f);
 }
 
-void VolumeCircleSlider::render(sf::RenderWindow& window, sf::Font& bold_font, sf::Time _t) {
+void VolumeCircleSlider::render(sf::RenderWindow& window, sf::Time _t) {
     float time = (_t - t).asSeconds();
     if (time < 1.25) {
         float alpha = std::min(1., 4. * (1.25 - time));
         int val = int(100 * (p->vol + 0.001));
-        sf::Text txt(std::to_string(val) + "%", bold_font, 20);
+        sf::Text txt(std::to_string(val) + "%", BOLD_FONT, 20);
         sf::Color cur_color = sf::Color(255, 255, 255, int(alpha * 255));
         txt.setFillColor(cur_color);
         int x = 70;  // window.getSize().x - Tile::W - 70;

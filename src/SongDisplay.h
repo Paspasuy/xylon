@@ -16,7 +16,7 @@ public:
 
     SongDisplay(Player* _p, Settings* _s);
 
-    void render(sf::RenderWindow& window, sf::Clock& cl, sf::Font& font, sf::Font& bold_font);
+    void render(sf::RenderWindow& window);
 };
 
 #endif  // XYLON_SONGDISPLAY_H

@@ -2,10 +2,8 @@
 
 #include <random>
 
-Player::Player(sf::Clock* _c) { c = _c; }
-
 void Player::upd_expire() {
-    expire = c->getElapsedTime() + songs[ptr].getDuration() - songs[ptr].getPlayingOffset();
+    expire = clk.getElapsedTime() + songs[ptr].getDuration() - songs[ptr].getPlayingOffset();
 }
 
 void Player::play() {

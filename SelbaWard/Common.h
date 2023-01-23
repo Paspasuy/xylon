@@ -1,6 +1,6 @@
 // Selba Ward (https://github.com/Hapaxia/SelbaWard)
 
-#ifndef XYLON_COMMON_H
+#ifndef XYLON_UTILS_H
 #define XYLON_COMMON_H
 
 #include <exception>
@@ -52,4 +52,4 @@ namespace sw = selbaward; // create shortcut namespace
 #endif
 #endif
 
-#endif // XYLON_COMMON_H
+#endif // XYLON_UTILS_H

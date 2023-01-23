@@ -8,6 +8,7 @@
 #include "ProgressBarView.h"
 #include "Settings.h"
 #include "Tile.h"
+#include "Utils.h"
 
 class SongView {
     std::vector<Tile> tiles;
@@ -37,8 +38,7 @@ public:
     sf::Vector2<unsigned int> winsz;
     SongView(Settings* _s);
 
-    void render(sf::RenderWindow& window, PicLoader& pl, sf::Clock& cl, sf::Font& font,
-                sf::Font& bold_font, sf::Time time);
+    void render(sf::RenderWindow& window, PicLoader& pl, sf::Time time);
 
     void init(Player* p, const std::wstring& filter = L"");
 

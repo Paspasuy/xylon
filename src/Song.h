@@ -13,10 +13,10 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <SFML/System/Clock.hpp>
 #include <SFML/System/String.hpp>
 #include <SFML/System/Time.hpp>
 
+#include "Utils.h"
 #include "bass.h"
 
 class Song {
@@ -66,7 +66,7 @@ public:
 
     void add_meta();
 
-    void load_pic(sf::Clock* cl);
+    void load_pic();
 
     static std::wstring lower(const std::wstring& s);
 

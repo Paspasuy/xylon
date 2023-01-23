@@ -5,6 +5,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "Player.h"
+#include "Utils.h"
 
 class SongSearch {
 public:
@@ -19,7 +20,7 @@ public:
 
     void clear();
 
-    void render(sf::RenderWindow& window, sf::Font& font);
+    void render(sf::RenderWindow& window);
 
     bool empty();
 

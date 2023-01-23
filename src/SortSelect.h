@@ -1,7 +1,3 @@
-//
-// Created by pavel on 11/25/21.
-//
-
 #ifndef XYLON_SORTSELECT_H
 #define XYLON_SORTSELECT_H
 
@@ -11,16 +7,12 @@
 #include <vector>
 
 #include "Player.h"
+#include "gui/SelectView.h"
 
-class SortSelect {
+class SortSelect : public SelectView {
 public:
-    std::vector<std::string> sorts{"Date", "Album", "Random"};
-    bool state = false;
-    int ptr = 0;
-    void up();
-    void down();
-    void render(sf::RenderWindow& window, sf::Font font);
-    void sort(Player* p);
+    SortSelect();
+    void applySort(Player* p);
 };
 
 #endif  // XYLON_SORTSELECT_H

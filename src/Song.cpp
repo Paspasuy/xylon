@@ -81,10 +81,10 @@ void Song::add_meta() {
     lartist = lower(s3);
 }
 
-void Song::load_pic(sf::Clock* cl) {
+void Song::load_pic() {
     TagLib::MPEG::File ff(path.c_str());
     pic_loaded = true;
-    time_loaded = cl->getElapsedTime();
+    time_loaded = clk.getElapsedTime();
     if (ff.hasID3v2Tag()) {
         TagLib::ID3v2::Tag* id3V2Tag = ff.ID3v2Tag();
         auto l = id3V2Tag->frameList("APIC");

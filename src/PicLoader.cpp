@@ -2,8 +2,6 @@
 
 #include <thread>
 
-PicLoader::PicLoader(sf::Clock* cl) : cl(cl) {}
-
 void PicLoader::load(Song* pSong) {
     pSong->pic_loading = true;
     mutex.lock();
@@ -22,11 +20,11 @@ void PicLoader::update() {
         Song* cur = to_load.front();
         to_load.pop();
         mutex.unlock();
-        std::thread thr(load_ptr, cur, cl);
+        std::thread thr(load_ptr, cur);
         thr.detach();
     } else {
         mutex.unlock();
     }
 }
 
-void PicLoader::load_ptr(Song* cur, sf::Clock* cl) { cur->load_pic(cl); }
+void PicLoader::load_ptr(Song* cur) { cur->load_pic(); }

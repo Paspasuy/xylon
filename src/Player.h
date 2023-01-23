@@ -6,10 +6,10 @@
 #include <vector>
 
 #include "Song.h"
+#include "Utils.h"
 
 class Player {
     bool playing;
-    sf::Clock* c;
     std::vector<Song> songs;
 
     int index_by_id(int id);
@@ -20,8 +20,6 @@ public:
     bool loop = false;
 
     sf::Time expire;
-
-    explicit Player(sf::Clock* _c);
 
     void upd_expire();
 
