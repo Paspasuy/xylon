@@ -26,7 +26,6 @@ class MainWindow : public sf::RenderWindow {
     SongSearch songSearch;
     Visualiser visualiser;
     SortSelect sortSelect;
-    float fft[2048];
     sf::Vector2f stars_vec;
 
 public:

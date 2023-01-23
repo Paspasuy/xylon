@@ -11,12 +11,13 @@
 
 class Visualiser {
 public:
-    bool display = 1;
+    bool display = true;
     Settings* s;
+    float fft[2048];
 
     Visualiser(Settings* _s);
 
-    void render(sf::RenderWindow& window, float* fft);
+    void render(sf::RenderWindow& window);
 };
 
 #endif  // XYLON_VISUALISER_H

@@ -185,7 +185,7 @@ void MainWindow::pollEvents() {
 
 void MainWindow::beforeRender(uint64_t frame) {
     if (visualiser.display && p.is_playing()) {
-        p.get_fft(fft);
+        p.get_fft(visualiser.fft);
     }
     if (songs.holding) {
         songs.set_position(sf::Mouse::getPosition(*this).y);
@@ -202,7 +202,7 @@ void MainWindow::beforeRender(uint64_t frame) {
 void MainWindow::render() {
     clear();
     draw(starfield);
-    visualiser.render(*this, fft);
+    visualiser.render(*this);
     songs.render(*this, pl, clk.getElapsedTime());
     songSearch.render(*this);
     songDisplay.render(*this);

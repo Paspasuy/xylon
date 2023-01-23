@@ -12,7 +12,7 @@
 
 Visualiser::Visualiser(Settings* _s) { s = _s; }
 
-void Visualiser::render(sf::RenderWindow& window, float* fft) {
+void Visualiser::render(sf::RenderWindow& window) {
     if (!display) return;
     int len = window.getSize().x - Tile::W;
     sf::RectangleShape sh;
