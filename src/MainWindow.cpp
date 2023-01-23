@@ -11,14 +11,17 @@ void stars_rot(sf::Vector2f& vec, float sin = 0.001) {
 MainWindow::MainWindow(sf::ContextSettings contextSettings)
     : sf::RenderWindow(sf::VideoMode(1024, 768), "xylon", sf::Style::Default, contextSettings),
       starfield(sf::Vector2f(1024, 768), 700),
+      dirSelect(),
+      p(dirSelect.player),
       songDisplay(&p),
       vol_slider(&p, clk.getElapsedTime()),
       stars_vec(0.4, -0.1) {
     setVerticalSyncEnabled(true);
 
     for (std::string& s : settings.folders) {
-        p.add_folder(s);
+        dirSelect.root.addChild(s);
     }
+    dirSelect.init();
     p.sort_by_date();
     p.ptr = 0;
 
@@ -105,6 +108,8 @@ void MainWindow::pollEvents() {
             } else if (event.key.code == sf::Keyboard::Up) {
                 if (sortSelect.show) {
                     sortSelect.up();
+                } else if (dirSelect.show) {
+                    dirSelect.up();
                 } else {
                     songs.play_prev();
                 }
@@ -112,6 +117,8 @@ void MainWindow::pollEvents() {
             } else if (event.key.code == sf::Keyboard::Down) {
                 if (sortSelect.show) {
                     sortSelect.down();
+                } else if (dirSelect.show) {
+                    dirSelect.down();
                 } else {
                     songs.play_next();
                 }
@@ -121,7 +128,11 @@ void MainWindow::pollEvents() {
                     sortSelect.applySort(&p);
                     songs.init(&p);
                     sortSelect.show = false;
-                } else if (!songSearch.empty()) {
+                } else if (dirSelect.show) {
+                    dirSelect.loadToPlayer();
+                    songs.init(&p);
+                    dirSelect.show = false;
+                }else if (!songSearch.empty()) {
                     p.play_id(p.get_first_id(songSearch.get_filter()));
                 }
                 songs.norm_shift_tile();
@@ -148,13 +159,25 @@ void MainWindow::pollEvents() {
                     songSearch.update_color(songs.size());
                 }
             } else if (event.key.code == sf::Keyboard::PageDown) {
-                songs.pagedown();
+                if (sortSelect.show) {
+                    sortSelect.pageDown();
+                } else if (dirSelect.show) {
+                    dirSelect.pageDown();
+                } else {
+                    songs.pagedown();
+                }
             } else if (event.key.code == sf::Keyboard::PageUp) {
-                songs.pageup();
+                if (sortSelect.show) {
+                    sortSelect.pageUp();
+                } else if (dirSelect.show) {
+                    dirSelect.pageUp();
+                } else {
+                    songs.pageup();
+                }
             } else if (event.key.code == sf::Keyboard::F5) {
                 settings.load();
             } else if (event.key.code == sf::Keyboard::F6) {
-                if (songSearch.empty()) {
+                if (songSearch.empty() && !dirSelect.show) {
                     sortSelect.show ^= 1;
                 }
             } else if (event.key.code == sf::Keyboard::I && event.key.control) {
@@ -163,6 +186,10 @@ void MainWindow::pollEvents() {
                 p.is_playing() ? p.pause() : p.play();
             } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                 close();
+            } else if (event.key.code == sf::Keyboard::O && event.key.control) {
+                if (songSearch.empty() && !sortSelect.show) {
+                    dirSelect.show ^= 1;
+                }
             }
         } else if (event.type == sf::Event::TextEntered && !sortSelect.show) {
             int u = event.text.unicode;
@@ -206,6 +233,7 @@ void MainWindow::render() {
     songDisplay.render(*this);
     vol_slider.render(*this, clk.getElapsedTime());
     draw(sortSelect);
+    draw(dirSelect);
     display();
 }
 

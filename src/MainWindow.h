@@ -14,10 +14,12 @@
 #include "Utils.h"
 #include "Visualiser.h"
 #include "VolumeCircleSlider.h"
+#include "DirectorySelect.h"
 
 class MainWindow : public sf::RenderWindow {
     sw::Starfield starfield;
-    Player p;
+    DirectorySelect dirSelect;
+    Player& p;
     SongDisplay songDisplay;
     VolumeCircleSlider vol_slider;
     SongView songs;

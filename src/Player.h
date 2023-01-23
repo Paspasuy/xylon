@@ -76,6 +76,8 @@ public:
     int get_first_id(const std::wstring& filter);
 
     size_t current_id();
+
+    void reset();
 };
 
 #endif  // XYLON_PLAYER_H

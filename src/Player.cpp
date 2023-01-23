@@ -20,7 +20,7 @@ void Player::pause() {
 
 void Player::stop() {
     playing = false;
-    songs[ptr].stop();
+    if (!songs.empty()) songs[ptr].stop();
 }
 
 void Player::next(bool ignore_loop) {
@@ -151,3 +151,11 @@ int Player::get_first_id(const std::wstring& filter) {
 }
 
 uint64_t Player::current_id() { return songs[ptr].id; }
+
+void Player::reset() {
+    stop();
+    songs.clear();
+    playing = false;
+    ptr = 0;
+    loop = false;
+}

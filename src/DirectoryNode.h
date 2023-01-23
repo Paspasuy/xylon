@@ -7,8 +7,9 @@
 struct DirectoryNode {
     std::vector<DirectoryNode*> children;
     std::string name;
+    DirectoryNode(const std::string& name);
     void addChild(const std::string& path);
-    void collectNames(std::vector<std::pair<std::string, int>>& result, int level = 0);
+    void collectNames(std::vector<std::string>& result, int level = -1);
     ~DirectoryNode();
 };
 

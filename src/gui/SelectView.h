@@ -8,13 +8,18 @@
 #include "../Utils.h"
 
 class SelectView : public sf::Drawable {
+    const int PAGE = 10;
+    const int H = 30;
 public:
+    SelectView();
     SelectView(std::initializer_list<std::string>);
     ~SelectView() override;
     bool show = false;
     int ptr = 0;
     void up();
     void down();
+    void pageUp();
+    void pageDown();
     std::vector<std::string> items;
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
