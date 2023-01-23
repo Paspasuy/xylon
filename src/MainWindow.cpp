@@ -141,6 +141,8 @@ void MainWindow::pollEvents() {
             } else if (event.key.code == sf::Keyboard::Escape) {
                 if (sortSelect.show) {
                     sortSelect.show = false;
+                } else if (dirSelect.show) {
+                    dirSelect.show = false;
                 } else if (!songSearch.empty()) {
                     songSearch.clear();
                     songs.init(&p, songSearch.get_filter());
@@ -176,22 +178,22 @@ void MainWindow::pollEvents() {
                 }
             } else if (event.key.code == sf::Keyboard::F5) {
                 settings.load();
-            } else if (event.key.code == sf::Keyboard::F6) {
-                if (songSearch.empty() && !dirSelect.show) {
-                    sortSelect.show ^= 1;
-                }
             } else if (event.key.code == sf::Keyboard::I && event.key.control) {
                 pl.should_load ^= 1;
             } else if (event.key.code == -1) {
                 p.is_playing() ? p.pause() : p.play();
             } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                 close();
+            } else if (event.key.code == sf::Keyboard::S && event.key.control) {
+                if (songSearch.empty() && !dirSelect.show) {
+                    sortSelect.show ^= 1;
+                }
             } else if (event.key.code == sf::Keyboard::O && event.key.control) {
                 if (songSearch.empty() && !sortSelect.show) {
                     dirSelect.show ^= 1;
                 }
             }
-        } else if (event.type == sf::Event::TextEntered && !sortSelect.show) {
+        } else if (event.type == sf::Event::TextEntered && !sortSelect.show && !dirSelect.show) {
             int u = event.text.unicode;
             if (u != 27 && u != 13 && u != 8 &&
                 !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
