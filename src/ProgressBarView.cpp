@@ -1,4 +1,5 @@
 #include "ProgressBarView.h"
+#include "Utils.h"
 
 #include "SongDisplay.h"
 
@@ -20,29 +21,12 @@ void ProgressBarView::render(sf::RenderWindow& window, int x, int y) {
     line.setPosition(x, y + 5);
     line.setFillColor(settings.c5);
     window.draw(line);
-    std::string s1;
-    if (current / 60 < 10) {
-        s1 += "0";
-    }
-    s1 += std::to_string(current / 60);
-    s1 += ":";
-    if (current % 60 < 10) {
-        s1 += "0";
-    }
-    s1 += std::to_string(current % 60);
-    std::string s2;
-    if (duration / 60 < 10) {
-        s2 += "0";
-    }
-    s2 += std::to_string(duration / 60);
-    s2 += ":";
-    if (duration % 60 < 10) {
-        s2 += "0";
-    }
-    s2 += std::to_string(duration % 60);
-    sf::Text text(s1, FONT, 14);
+
+    sf::Text text(secondsToTimeString(current), FONT, 14);
     text.setPosition(x, y + 10);
     window.draw(text);
+
+    std::string s2 = secondsToTimeString(duration);
     sf::Text text2(s2, FONT, 14);
     text2.setPosition(x + SongDisplay::PIC - 8 * s2.size(), y + 10);
     window.draw(text2);

@@ -22,10 +22,12 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& s
     sh.setOutlineThickness(1.f);
     sf::Text title_text(s->title, BOLD_FONT, 16);
     sf::Text artist_text(s->artist, FONT, 14);
+    sf::Text time_text(secondsToTimeString(s->getDuration().asSeconds()), FONT, 14);
     sf::Text album_text(s->album, FONT, 14);
     title_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + 2);
     artist_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + 20);
-    album_text.setPosition(sh.getPosition().x - 4 - s->album.getSize() * 8 + sh.getSize().x,
+    time_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + Tile::H - 20);
+    album_text.setPosition(sh.getPosition().x + std::max(-4 - (int)s->album.getSize() * 8 + (int)sh.getSize().x, 90 + 8 * 5),
                            sh.getPosition().y + Tile::H - 20);
     if (!is_cur) {
         title_text.setFillColor(sf::Color(255, 255, 255, 180));
@@ -52,6 +54,7 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& s
     window.draw(title_text);
     window.draw(artist_text);
     window.draw(album_text);
+    window.draw(time_text);
 }
 
 int Tile::W;

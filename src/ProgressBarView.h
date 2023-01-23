@@ -11,8 +11,6 @@
 class ProgressBarView {
 public:
     double progress;
-    const int height = 3;
-    int width;
     bool holding = false;
     int current, duration;
     sf::RectangleShape cont;

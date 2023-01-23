@@ -25,8 +25,6 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-// TODO: folders support
-// TODO: song duration in song list
 // TODO: GUI for downloading songs from Internet (yt-dlp?)
 // TODO: shaders
 // TODO: somehow compile for windows (in distant future)
