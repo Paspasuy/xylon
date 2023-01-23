@@ -16,7 +16,6 @@
 #include "VolumeCircleSlider.h"
 
 class MainWindow : public sf::RenderWindow {
-    Settings settings;
     sw::Starfield starfield;
     Player p;
     SongDisplay songDisplay;

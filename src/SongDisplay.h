@@ -14,7 +14,7 @@ public:
     ProgressBarView bar;
     int margin_x, margin_y;
 
-    SongDisplay(Player* _p, Settings* _s);
+    SongDisplay(Player* _p);
 
     void render(sf::RenderWindow& window);
 };

@@ -12,10 +12,7 @@
 class Visualiser {
 public:
     bool display = true;
-    Settings* s;
     float fft[2048];
-
-    Visualiser(Settings* _s);
 
     void render(sf::RenderWindow& window);
 };

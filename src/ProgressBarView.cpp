@@ -10,7 +10,7 @@ void ProgressBarView::update(Player* pl) {
     progress = double(t1.asMicroseconds()) / t2.asMicroseconds();
 }
 
-void ProgressBarView::render(sf::RenderWindow& window, sf::Font& font, int x, int y) {
+void ProgressBarView::render(sf::RenderWindow& window, int x, int y) {
     sf::RectangleShape line(sf::Vector2f(SongDisplay::PIC, 3.f));
     line.setPosition(x, y + 5);
     line.setFillColor(sf::Color(127, 127, 127));
@@ -18,7 +18,7 @@ void ProgressBarView::render(sf::RenderWindow& window, sf::Font& font, int x, in
     cont = line;
     line.setSize(sf::Vector2f(int(SongDisplay::PIC * progress), 3.f));
     line.setPosition(x, y + 5);
-    line.setFillColor(s->c5);
+    line.setFillColor(settings.c5);
     window.draw(line);
     std::string s1;
     if (current / 60 < 10) {
@@ -40,10 +40,10 @@ void ProgressBarView::render(sf::RenderWindow& window, sf::Font& font, int x, in
         s2 += "0";
     }
     s2 += std::to_string(duration % 60);
-    sf::Text text(s1, font, 14);
+    sf::Text text(s1, FONT, 14);
     text.setPosition(x, y + 10);
     window.draw(text);
-    sf::Text text2(s2, font, 14);
+    sf::Text text2(s2, FONT, 14);
     text2.setPosition(x + SongDisplay::PIC - 8 * s2.size(), y + 10);
     window.draw(text2);
 }
@@ -68,5 +68,3 @@ void ProgressBarView::set_position(Player* p, int x) {
     progress = double(x) / cont.getSize().x;
     p->set_position(progress);
 }
-
-ProgressBarView::ProgressBarView(Settings* _s) { s = _s; }

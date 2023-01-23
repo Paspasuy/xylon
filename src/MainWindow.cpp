@@ -11,10 +11,8 @@ void stars_rot(sf::Vector2f& vec, float sin = 0.001) {
 MainWindow::MainWindow(sf::ContextSettings contextSettings)
     : sf::RenderWindow(sf::VideoMode(1024, 768), "xylon", sf::Style::Default, contextSettings),
       starfield(sf::Vector2f(1024, 768), 700),
-      songDisplay(&p, &settings),
+      songDisplay(&p),
       vol_slider(&p, clk.getElapsedTime()),
-      songs(&settings),
-      visualiser(&settings),
       stars_vec(0.4, -0.1) {
     setVerticalSyncEnabled(true);
 

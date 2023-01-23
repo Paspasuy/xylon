@@ -4,6 +4,7 @@
 
 sf::Font FONT, BOLD_FONT;
 sf::Clock clk;
+Settings settings;
 
 void loadFonts() {
     if (!FONT.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf")) {

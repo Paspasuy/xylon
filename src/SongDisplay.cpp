@@ -1,6 +1,6 @@
 #include "SongDisplay.h"
 
-SongDisplay::SongDisplay(Player* _p, Settings* _s) : bar(ProgressBarView(_s)) { p = _p; }
+SongDisplay::SongDisplay(Player* _p) { p = _p; }
 
 void SongDisplay::render(sf::RenderWindow& window) {
     Song& s = p->getSong();
@@ -27,5 +27,5 @@ void SongDisplay::render(sf::RenderWindow& window) {
     window.draw(artist_text);
 
     bar.update(p);
-    bar.render(window, FONT, margin_x, PIC + 57 + margin_y);
+    bar.render(window, margin_x, PIC + 57 + margin_y);
 }

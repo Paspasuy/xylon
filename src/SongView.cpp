@@ -19,8 +19,8 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Time 
     int up = get_up_tile(winsz.y);
     uint64_t cur_id = pl->current_id();
     bool touch = false;
-    sh.setOutlineColor(s->c1);
-    sh.setFillColor(s->c2);
+    sh.setOutlineColor(settings.c1);
+    sh.setFillColor(settings.c2);
     for (int i = low; i < up; ++i) {
         if (tiles[i].s->id == cur_id) {
             cur = i;
@@ -36,8 +36,8 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Time 
         tiles[i].render(window, pic_loader, sh, abs(vel) >= FAST, false);
     }
     if (touch) {
-        sh.setOutlineColor(s->c3);
-        sh.setFillColor(s->c4);
+        sh.setOutlineColor(settings.c3);
+        sh.setFillColor(settings.c4);
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
         tiles[cur].position =
             sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
@@ -46,7 +46,7 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader, sf::Time 
             //            int r = 7;
             sf::RectangleShape rep(sf::Vector2f(3, Tile::H));
             //            sf::CircleShape rep(r);
-            rep.setFillColor(s->c7);
+            rep.setFillColor(settings.c7);
             auto pos = tiles[cur].position;
             //            pos.y += Tile::H / 2 - r;
             pos.x += Tile::W + CUR_SHIFT - 3;
@@ -152,8 +152,6 @@ void SongView::pagedown() {
     shift -= 500;
     norm_shift();
 }
-
-SongView::SongView(Settings* _s) { s = _s; }
 
 size_t SongView::size() { return tiles.size(); }
 

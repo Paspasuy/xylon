@@ -6,22 +6,20 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "Player.h"
-#include "Settings.h"
+#include "Utils.h"
 
 class ProgressBarView {
 public:
     double progress;
     const int height = 3;
     int width;
-    bool holding = 0;
+    bool holding = false;
     int current, duration;
     sf::RectangleShape cont;
-    Settings* s;
-    ProgressBarView(Settings* _s);
 
     void update(Player* pl);
 
-    void render(sf::RenderWindow& window, sf::Font& font, int x, int y);
+    void render(sf::RenderWindow& window, int x, int y);
 
     bool in_bar(int x, int y);
 

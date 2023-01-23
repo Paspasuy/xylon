@@ -12,7 +12,6 @@
 
 class SongView {
     std::vector<Tile> tiles;
-    Settings* s;
     sf::Time t;
     int shift = 0;
     int vel = 0;
@@ -36,7 +35,6 @@ public:
     bool shift_pressed = false;
 
     sf::Vector2<unsigned int> winsz;
-    SongView(Settings* _s);
 
     void render(sf::RenderWindow& window, PicLoader& pl, sf::Time time);
 
