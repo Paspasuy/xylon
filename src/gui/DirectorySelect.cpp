@@ -10,7 +10,8 @@ DirectorySelect::DirectorySelect() : SelectView(), root("") {}
 
 void DirectorySelect::loadToPlayer() {
     player.reset();
-    player.add_folder(ltrim(items[ptr]));
+    currentPath = ltrim(items[ptr]);
+    player.add_folder(currentPath);
 }
 
 void DirectorySelect::init() {

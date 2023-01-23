@@ -10,7 +10,7 @@ extern sf::Font FONT, BOLD_FONT;
 extern sf::Clock clk;
 extern Settings settings;
 
-extern void loadFonts();
+extern void xylonInit();
 extern std::string secondsToTimeString(int time);
 
 #endif  // XYLON_UTILS_H

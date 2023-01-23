@@ -29,7 +29,7 @@ public:
     ~SongSearch() override;
 
 protected:
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 #endif  // XYLON_SONGSEARCH_H

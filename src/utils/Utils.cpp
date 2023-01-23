@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "../gui/DownloadView.h"
 
 #include <iostream>
 
@@ -6,7 +7,7 @@ sf::Font FONT, BOLD_FONT;
 sf::Clock clk;
 Settings settings;
 
-void loadFonts() {
+void xylonInit() {
     if (!FONT.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf")) {
         std::cerr << "FONTS BROKEN\n";
     }
@@ -14,6 +15,7 @@ void loadFonts() {
     if (!BOLD_FONT.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf")) {
         std::cerr << "FONTS BROKEN\n";
     }
+    DownloadView::last = clk.getElapsedTime() - sf::seconds(60);
 }
 
 std::string secondsToTimeString(int time) {

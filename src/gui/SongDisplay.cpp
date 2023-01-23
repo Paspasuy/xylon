@@ -2,11 +2,9 @@
 
 SongDisplay::SongDisplay(Player* _p) { p = _p; }
 
-SongDisplay::~SongDisplay() {
+SongDisplay::~SongDisplay() {}
 
-}
-
-void SongDisplay::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+void SongDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     Song& s = p->getSong();
     margin_x = std::max(0, int(target.getSize().x - Tile::W - PIC) / 2);
     margin_y = std::max(0, int(target.getSize().y / 2 - PIC) / 2);

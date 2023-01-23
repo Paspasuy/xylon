@@ -16,7 +16,6 @@ private:
     mutable sf::RectangleShape cont;
 
 public:
-
     bool holding = false;
 
     void update(Player* pl);
@@ -29,7 +28,7 @@ public:
 
     ~ProgressBarView() override;
 
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
 #endif  // XYLON_PROGRESSBARVIEW_H

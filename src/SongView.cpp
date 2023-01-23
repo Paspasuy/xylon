@@ -156,11 +156,19 @@ void SongView::pagedown() {
 size_t SongView::size() { return tiles.size(); }
 
 void SongView::play_prev() {
-    pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + tiles.size() - 1) % tiles.size())].s->id);
-    norm_shift_tile();
+    if (pl->loop) {
+        pl->play();
+    } else {
+        pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + tiles.size() - 1) % tiles.size())].s->id);
+        norm_shift_tile();
+    }
 }
 
 void SongView::play_next() {
-    pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + 1) % tiles.size())].s->id);
-    norm_shift_tile();
+    if (pl->loop) {
+        pl->play();
+    } else {
+        pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + 1) % tiles.size())].s->id);
+        norm_shift_tile();
+    }
 }

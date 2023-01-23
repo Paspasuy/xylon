@@ -13,7 +13,8 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
 add_executable(xylon src/main.cpp src/Player.cpp src/gui/SongSearch.cpp src/gui/ProgressBarView.cpp src/SongView.cpp src/Song.cpp src/Tile.cpp src/gui/SongDisplay.cpp src/gui/VolumeCircleSlider.cpp src/gui/VolumeShape.cpp src/gui/Visualiser.cpp src/utils/Settings.cpp src/gui/SortSelect.cpp src/utils/PicLoader.cpp src/MainWindow.cpp
-        src/utils/DirectoryNode.cpp src/gui/DirectorySelect.cpp src/gui/SelectView.cpp SelbaWard/Starfield.cpp src/utils/Utils.cpp)
+        src/utils/DirectoryNode.cpp src/gui/DirectorySelect.cpp src/gui/SelectView.cpp SelbaWard/Starfield.cpp src/utils/Utils.cpp
+        src/gui/DownloadView.cpp)
 
 target_link_libraries(xylon tag)
 target_link_libraries(xylon bass)

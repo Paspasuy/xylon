@@ -5,10 +5,10 @@
 #include <SFML/Window.hpp>
 
 #include "Player.h"
-#include "utils/Settings.h"
 #include "Tile.h"
-#include "utils/Utils.h"
 #include "gui/ProgressBarView.h"
+#include "utils/Settings.h"
+#include "utils/Utils.h"
 
 class SongView {
     std::vector<Tile> tiles;

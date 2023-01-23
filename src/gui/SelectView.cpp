@@ -1,7 +1,9 @@
 #include "SelectView.h"
-#include "../Tile.h"
+
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Text.hpp>
+
+#include "../Tile.h"
 
 SelectView::SelectView(std::initializer_list<std::string> lst) : items(lst) {}
 

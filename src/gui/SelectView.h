@@ -5,11 +5,13 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <string>
 #include <vector>
+
 #include "../utils/Utils.h"
 
 class SelectView : public sf::Drawable {
     const int PAGE = 10;
     const int H = 30;
+
 public:
     SelectView();
     SelectView(std::initializer_list<std::string>);
@@ -21,9 +23,9 @@ public:
     void pageUp();
     void pageDown();
     std::vector<std::string> items;
+
 protected:
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
-
-#endif //XYLON_SELECTVIEW_H
+#endif  // XYLON_SELECTVIEW_H

@@ -12,7 +12,7 @@ void ProgressBarView::update(Player* pl) {
 
 ProgressBarView::~ProgressBarView() {}
 
-void ProgressBarView::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+void ProgressBarView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::RectangleShape line(sf::Vector2f(SongDisplay::PIC, 3.f));
     line.setPosition(x, y + 5);
     line.setFillColor(sf::Color(127, 127, 127));
@@ -31,7 +31,6 @@ void ProgressBarView::draw(sf::RenderTarget &target, sf::RenderStates states) co
     sf::Text text2(s2, FONT, 14);
     text2.setPosition(x + SongDisplay::PIC - 8 * s2.size(), y + 10);
     target.draw(text2);
-
 }
 
 void ProgressBarView::setPosition(int _x, int _y) {

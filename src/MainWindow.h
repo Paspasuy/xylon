@@ -4,17 +4,19 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "../SelbaWard/Starfield.h"
-#include "gui/DirectorySelect.h"
-#include "utils/PicLoader.h"
 #include "Player.h"
-#include "utils/Settings.h"
+#include "SongView.h"
+#include "gui/DirectorySelect.h"
+#include "gui/DownloadView.h"
 #include "gui/SongDisplay.h"
 #include "gui/SongSearch.h"
-#include "SongView.h"
 #include "gui/SortSelect.h"
-#include "utils/Utils.h"
 #include "gui/Visualiser.h"
 #include "gui/VolumeCircleSlider.h"
+#include "utils/PicLoader.h"
+#include "utils/Settings.h"
+#include "utils/Utils.h"
+#include "gui/DownloadView.h"
 
 class MainWindow : public sf::RenderWindow {
     sw::Starfield starfield;
@@ -28,6 +30,7 @@ class MainWindow : public sf::RenderWindow {
     Visualiser visualiser;
     SortSelect sortSelect;
     sf::Vector2f stars_vec;
+    DownloadView download;
 
 public:
     MainWindow(sf::ContextSettings contextSettings);

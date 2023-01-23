@@ -11,10 +11,10 @@
 std::wstring DEFAULT_CONF_STR =
     L"# Visualiser type\n"
     "1\n"
-    "# Usual tile color\n"
+    "# Usual tile color (outline/background)\n"
     "200 100 0 0\n"
     "200 100 0 30\n"
-    "# Playing tile color\n"
+    "# Playing tile color (outline/background)\n"
     "0 0 200 0\n"
     "0 0 200 50\n"
     "# Progress bar color\n"

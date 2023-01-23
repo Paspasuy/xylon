@@ -21,7 +21,7 @@ void VolumeCircleSlider::touch(sf::Time _t) { t = _t; }
 
 VolumeCircleSlider::~VolumeCircleSlider() {}
 
-void VolumeCircleSlider::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+void VolumeCircleSlider::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::Time _t = clk.getElapsedTime();
     float time = (_t - t).asSeconds();
     if (time < 1.25) {

@@ -8,7 +8,7 @@
 
 Visualiser::~Visualiser() {}
 
-void Visualiser::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+void Visualiser::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     if (!display) return;
     int len = target.getSize().x - Tile::W;
     sf::RectangleShape sh;

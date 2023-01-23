@@ -192,6 +192,8 @@ void MainWindow::pollEvents() {
                 if (songSearch.empty() && !sortSelect.show) {
                     dirSelect.show ^= 1;
                 }
+            } else if (event.key.code == sf::Keyboard::D && event.key.control) {
+                DownloadView::download(sf::Clipboard::getString(), dirSelect.currentPath);
             }
         } else if (event.type == sf::Event::TextEntered && !sortSelect.show && !dirSelect.show) {
             int u = event.text.unicode;
@@ -236,11 +238,20 @@ void MainWindow::render() {
     draw(vol_slider);
     draw(sortSelect);
     draw(dirSelect);
+    draw(download);
     display();
 }
 
 void MainWindow::beforePolling() {
     if (clk.getElapsedTime() > p.expire && p.is_playing()) {
         songs.play_next();
+    }
+    if (download.need_update) {
+        download.need_update = false;
+        p.reset();
+        p.add_folder(dirSelect.currentPath);
+        p.sort_by_date();
+        songs.init(&p);
+        p.play();
     }
 }

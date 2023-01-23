@@ -16,8 +16,8 @@
 #include <SFML/System/String.hpp>
 #include <SFML/System/Time.hpp>
 
-#include "utils/Utils.h"
 #include "bass.h"
+#include "utils/Utils.h"
 
 class Song {
     HCHANNEL channel;

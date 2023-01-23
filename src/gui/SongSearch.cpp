@@ -41,7 +41,7 @@ void SongSearch::update_color(size_t len) {
 
 SongSearch::~SongSearch() {}
 
-void SongSearch::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+void SongSearch::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     if (!text.empty()) {
         sf::Text txt(L"search: " + text, FONT, 20);
         sf::RectangleShape back(sf::Vector2f((text.size() + 8) * 12 + 4, 26));

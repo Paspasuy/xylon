@@ -1,6 +1,6 @@
 #include "MainWindow.h"
-#include "utils/Utils.h"
 #include "bass.h"
+#include "utils/Utils.h"
 
 int main(int argc, char** argv) {
     srand(time(0));
@@ -9,7 +9,7 @@ int main(int argc, char** argv) {
     std::wcout.imbue(std::locale("ru_RU.utf-8"));
     BASS_Init(1, 44100, 0, 0, NULL);
 
-    loadFonts();
+    xylonInit();
 
     sf::ContextSettings contextSettings;
     contextSettings.antialiasingLevel = 8;
@@ -25,8 +25,8 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-// TODO: GUI for downloading songs from Internet (yt-dlp?)
-// TODO: shaders
-// TODO: somehow compile for windows (in distant future)
-// TODO: write help menu, write readme
-// TODO: add different file formats support (flac?)
+// fix all bugs in songs list
+// shaders
+// somehow compile for windows (in distant future)
+// write help menu, write readme
+// add different file formats support (flac?)
