@@ -4,15 +4,15 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "../SelbaWard/Starfield.h"
-#include "DirectorySelect.h"
-#include "PicLoader.h"
+#include "gui/DirectorySelect.h"
+#include "utils/PicLoader.h"
 #include "Player.h"
-#include "Settings.h"
+#include "utils/Settings.h"
 #include "SongDisplay.h"
 #include "SongSearch.h"
 #include "SongView.h"
-#include "SortSelect.h"
-#include "Utils.h"
+#include "gui/SortSelect.h"
+#include "utils/Utils.h"
 #include "gui/Visualiser.h"
 #include "gui/VolumeCircleSlider.h"
 

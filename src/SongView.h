@@ -5,9 +5,9 @@
 #include <SFML/Window.hpp>
 
 #include "Player.h"
-#include "Settings.h"
+#include "utils/Settings.h"
 #include "Tile.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 #include "gui/ProgressBarView.h"
 
 class SongView {

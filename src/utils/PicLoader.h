@@ -4,7 +4,7 @@
 #include <mutex>
 #include <queue>
 
-#include "Song.h"
+#include "../Song.h"
 #include "Utils.h"
 
 class PicLoader {

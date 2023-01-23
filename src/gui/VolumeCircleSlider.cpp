@@ -8,7 +8,7 @@
 #include <SFML/Graphics/Text.hpp>
 
 #include "../Tile.h"
-#include "../Utils.h"
+#include "../utils/Utils.h"
 
 VolumeCircleSlider::VolumeCircleSlider(Player* _p) : shape(VolumeShape(40.f)) {
     t = clk.getElapsedTime() - sf::seconds(2);

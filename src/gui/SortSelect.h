@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "Player.h"
-#include "gui/SelectView.h"
+#include "../Player.h"
+#include "SelectView.h"
 
 class SortSelect : public SelectView {
 public:

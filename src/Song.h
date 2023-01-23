@@ -16,7 +16,7 @@
 #include <SFML/System/String.hpp>
 #include <SFML/System/Time.hpp>
 
-#include "Utils.h"
+#include "utils/Utils.h"
 #include "bass.h"
 
 class Song {

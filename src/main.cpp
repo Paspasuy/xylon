@@ -1,5 +1,5 @@
 #include "MainWindow.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 #include "bass.h"
 
 int main(int argc, char** argv) {

@@ -4,7 +4,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 
-#include "../Settings.h"
+#include "../utils/Settings.h"
 
 class Visualiser : public sf::Drawable {
 protected:

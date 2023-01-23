@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "Song.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 
 class Player {
     bool playing;

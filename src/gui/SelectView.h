@@ -5,7 +5,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <string>
 #include <vector>
-#include "../Utils.h"
+#include "../utils/Utils.h"
 
 class SelectView : public sf::Drawable {
     const int PAGE = 10;

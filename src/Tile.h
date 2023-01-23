@@ -5,7 +5,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "PicLoader.h"
+#include "utils/PicLoader.h"
 #include "Song.h"
 
 class Tile {

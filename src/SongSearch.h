@@ -5,7 +5,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "Player.h"
-#include "Utils.h"
+#include "utils/Utils.h"
 
 class SongSearch {
 public:

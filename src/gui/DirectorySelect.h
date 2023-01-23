@@ -1,9 +1,9 @@
 #ifndef XYLON_DIRECTORYSELECT_H
 #define XYLON_DIRECTORYSELECT_H
 
-#include "DirectoryNode.h"
-#include "Player.h"
-#include "gui/SelectView.h"
+#include "../utils/DirectoryNode.h"
+#include "../Player.h"
+#include "SelectView.h"
 
 class DirectorySelect : public SelectView {
 public:
