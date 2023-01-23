@@ -8,7 +8,7 @@
 #include "utils/PicLoader.h"
 #include "Player.h"
 #include "utils/Settings.h"
-#include "SongDisplay.h"
+#include "gui/SongDisplay.h"
 #include "SongSearch.h"
 #include "SongView.h"
 #include "gui/SortSelect.h"

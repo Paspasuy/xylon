@@ -230,7 +230,7 @@ void MainWindow::render() {
     draw(visualiser);
     songs.render(*this, pl);
     songSearch.render(*this);
-    songDisplay.render(*this);
+    draw(songDisplay);
     draw(vol_slider);
     draw(sortSelect);
     draw(dirSelect);

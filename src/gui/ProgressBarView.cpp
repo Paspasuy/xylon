@@ -1,6 +1,6 @@
 #include "ProgressBarView.h"
 
-#include "../SongDisplay.h"
+#include "SongDisplay.h"
 
 void ProgressBarView::update(Player* pl) {
     sf::Time t1 = pl->getPlayingOffset();
