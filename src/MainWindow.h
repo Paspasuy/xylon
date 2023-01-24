@@ -16,6 +16,7 @@
 #include "utils/PicLoader.h"
 #include "utils/Settings.h"
 #include "utils/Utils.h"
+#include "gui/MouseTrace.h"
 
 class MainWindow : public sf::RenderWindow {
     sw::Starfield starfield;
@@ -30,6 +31,7 @@ class MainWindow : public sf::RenderWindow {
     SortSelect sortSelect;
     sf::Vector2f stars_vec;
     DownloadView download;
+    MouseTrace mouseTrace;
 
     bool processGeneralEvent(sf::Event& event);
     bool processMouseEvent(sf::Event& event);

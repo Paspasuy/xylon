@@ -116,4 +116,4 @@ std::wstring Song::lower(const std::wstring& s) {
     return result;
 }
 
-void Song::get_fft(float* fft) { BASS_ChannelGetData(channel, fft, (int)BASS_DATA_FFT4096); }
+void Song::get_fft(float* fft) { BASS_ChannelGetData(channel, fft, BASS_DATA_FFT4096); }

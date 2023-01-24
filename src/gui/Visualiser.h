@@ -14,7 +14,7 @@ public:
     ~Visualiser() override;
 
     bool display = true;
-    mutable float fft[2048];
+    mutable float fft[8192];
 };
 
 #endif  // XYLON_VISUALISER_H

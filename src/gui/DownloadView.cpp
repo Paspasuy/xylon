@@ -48,7 +48,7 @@ void DownloadView::draw(sf::RenderTarget& target, sf::RenderStates states) const
         state_text = sf::Text("Bad link", BOLD_FONT, 16);
         state_text.setFillColor(sf::Color::Magenta);
     }
-    state_text.setPosition(0, 0);
+    state_text.setPosition(2, 2);
     target.draw(state_text);
 }
 

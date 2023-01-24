@@ -16,7 +16,8 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
       songDisplay(&p),
       vol_slider(&p),
       stars_vec(0.4, -0.1) {
-    setVerticalSyncEnabled(true);
+    setVerticalSyncEnabled(false);
+    setFramerateLimit(120);
 
     for (std::string& s : settings.folders) {
         dirSelect.root.addChild(s);
@@ -31,6 +32,10 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
     p.play();
 
     stars_rot(stars_vec, (rand() % 100) / 100.f);
+
+    sf::Cursor cursor;
+    uint8_t cur[4]{};
+    if (cursor.loadFromPixels(cur, sf::Vector2u(1, 1), sf::Vector2u(0, 0))) setMouseCursor(cursor);
 }
 
 bool MainWindow::processGeneralEvent(sf::Event& event) {
@@ -262,6 +267,11 @@ void MainWindow::render() {
     draw(sortSelect);
     draw(dirSelect);
     draw(download);
+    if (hasFocus()) {
+        mouseTrace.setClicked(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
+        mouseTrace.push(sf::Mouse::getPosition(*this));
+    }
+    draw(mouseTrace);
     display();
 }
 
@@ -269,8 +279,8 @@ void MainWindow::beforePolling() {
     if (clk.getElapsedTime() > p.expire && p.is_playing()) {
         songs.play_next();
     }
-    if (download.need_update) {
-        download.need_update = false;
+    if (DownloadView::need_update) {
+        DownloadView::need_update = false;
         p.reset();
         p.add_folder(dirSelect.currentPath);
         p.sort_by_date();
