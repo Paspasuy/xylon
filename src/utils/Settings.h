@@ -23,6 +23,8 @@ public:
     static void init_col(sf::Color* c, const int* colors);
 
     void load();
+
+    void loadFonts();
 };
 
 #endif  // XYLON_SETTINGS_H

@@ -3,10 +3,10 @@
 //
 
 #include "Settings.h"
+#include "Utils.h"
 
 #include <filesystem>
 #include <iostream>
-#include <sstream>
 
 std::wstring DEFAULT_CONF_STR =
     L"# Locale\n"
@@ -32,6 +32,10 @@ std::wstring DEFAULT_CONF_STR =
     "# Folders\n";
 
 void Settings::load() {
+    pathToRegularFont.clear();
+    pathToBoldFont.clear();
+    locale.clear();
+
     std::wifstream conf;
     std::string str = getenv("HOME");
     str += "/.config/xylon/conf.txt";
@@ -45,6 +49,7 @@ void Settings::load() {
         cfg.close();
         conf.open(str);
     }
+
     std::wstring line;
     int colors[28];
     int* params[29];
@@ -52,6 +57,7 @@ void Settings::load() {
     for (size_t i = 0; i < 28; ++i) {
         params[i + 1] = colors + i;
     }
+
     int i = 0, tmp = 0;
     int line_ind = 0;
     if (conf.is_open()) {
@@ -86,6 +92,7 @@ void Settings::load() {
             }
         }
     }
+    conf.close();
     if (folders.empty()) {
         folders.emplace_back(std::string(getenv("HOME")) + "/Music/");
     }
@@ -96,7 +103,7 @@ void Settings::load() {
     init_col(&c5, colors + 16);
     init_col(&c6, colors + 20);
     init_col(&c7, colors + 24);
-    conf.close();
+    loadFonts();
 }
 
 void Settings::init_col(sf::Color* c, const int* colors) {
@@ -107,3 +114,17 @@ void Settings::init_col(sf::Color* c, const int* colors) {
 }
 
 Settings::Settings() { load(); }
+
+void Settings::loadFonts() {
+    sf::Font font, bold_font;
+    if (!font.loadFromFile(settings.pathToRegularFont)) {
+        std::wcerr << "font broken\n";
+    } else {
+        FONT = font;
+    }
+    if (!bold_font.loadFromFile(settings.pathToBoldFont)) {
+        std::wcerr << "bold font broken\n";
+    } else {
+        BOLD_FONT = bold_font;
+    }
+}
