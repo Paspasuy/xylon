@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+// search in folders
 // shaders
 // somehow compile for windows (in distant future)
 // write help menu, write readme

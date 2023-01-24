@@ -13,13 +13,6 @@ void xylonInit() {
     std::wcin.imbue(std::locale(settings.locale));
     std::wcout.imbue(std::locale(settings.locale));
 
-    if (!FONT.loadFromFile(settings.pathToRegularFont)) {
-        std::cerr << "FONTS BROKEN\n";
-    }
-    if (!BOLD_FONT.loadFromFile(settings.pathToBoldFont)) {
-        std::cerr << "FONTS BROKEN\n";
-    }
-
     DownloadView::last = clk.getElapsedTime() - sf::seconds(60);
 }
 
