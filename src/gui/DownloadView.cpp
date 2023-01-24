@@ -1,14 +1,18 @@
 #include "DownloadView.h"
-#include <thread>
+
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <thread>
 
-const std::string S1 = "\
+const std::string S1 =
+    "\
 #!/bin/bash\n\
 cd \"";
-const std::string S2 = "\"\n\
+const std::string S2 =
+    "\"\n\
 yt-dlp -o '%(title)s' \"";
-const std::string S3 = "\"\n\
+const std::string S3 =
+    "\"\n\
 name=$(ls -Art | grep .webm | tail -n 1)\n\
 echo $name\n\
 name_crop=${name%.*}\n\
@@ -19,9 +23,9 @@ ffmpeg -i \"$name\" \"$name_new\"\n\
 rm \"$name\"\n";
 
 bool valid_link(const std::string& link) {
-    return (link.find("youtube.com") != std::string::npos)
-        || (link.find("yt.be") != std::string::npos)
-        || (link.find("youtu.be") != std::string::npos);
+    return (link.find("youtube.com") != std::string::npos) ||
+           (link.find("yt.be") != std::string::npos) ||
+           (link.find("youtu.be") != std::string::npos);
 }
 
 DownloadView::~DownloadView() {}
@@ -58,7 +62,6 @@ void DownloadView::download(const std::string& link, const std::string& path) {
         thr.detach();
     }
 }
-
 
 DownloadView::DownloadView() {}
 

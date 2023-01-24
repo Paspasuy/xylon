@@ -1,20 +1,25 @@
 #include "Utils.h"
-#include "../gui/DownloadView.h"
 
 #include <iostream>
+
+#include "../gui/DownloadView.h"
 
 sf::Font FONT, BOLD_FONT;
 sf::Clock clk;
 Settings settings;
 
 void xylonInit() {
-    if (!FONT.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf")) {
+    std::locale::global(std::locale(settings.locale));
+    std::wcin.imbue(std::locale(settings.locale));
+    std::wcout.imbue(std::locale(settings.locale));
+
+    if (!FONT.loadFromFile(settings.pathToRegularFont)) {
+        std::cerr << "FONTS BROKEN\n";
+    }
+    if (!BOLD_FONT.loadFromFile(settings.pathToBoldFont)) {
         std::cerr << "FONTS BROKEN\n";
     }
 
-    if (!BOLD_FONT.loadFromFile("/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf")) {
-        std::cerr << "FONTS BROKEN\n";
-    }
     DownloadView::last = clk.getElapsedTime() - sf::seconds(60);
 }
 

@@ -159,3 +159,5 @@ void Player::reset() {
     ptr = 0;
     loop = false;
 }
+
+bool Player::empty() { return songs.empty(); }

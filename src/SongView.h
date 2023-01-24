@@ -68,9 +68,11 @@ public:
 
     size_t size();
 
-    void play_next();
+    void play_next(bool ignore_loop = false);
 
-    void play_prev();
+    void play_prev(bool ignore_loop = false);
+
+    void find_cur();
 };
 
 #endif  // XYLON_SONGVIEW_H

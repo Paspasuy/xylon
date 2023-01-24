@@ -2,13 +2,12 @@
 #define XYLON_DOWNLOADVIEW_H
 
 #include <SFML/Graphics/Drawable.hpp>
+
 #include "../utils/Utils.h"
 
 class DownloadView : public sf::Drawable {
 public:
-    enum class DownloadState {
-        SUCCESS, WAIT, FAIL, WRONG
-    };
+    enum class DownloadState { SUCCESS, WAIT, FAIL, WRONG };
 
     static DownloadState state;
     static sf::Time last;

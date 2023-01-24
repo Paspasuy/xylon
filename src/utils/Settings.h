@@ -14,10 +14,14 @@ class Settings {
 
 public:
     Settings();
+    std::string locale;
+    std::string pathToRegularFont;
+    std::string pathToBoldFont;
     std::vector<std::string> folders;
     int vis_type = 0;
     sf::Color c1, c2, c3, c4, c5, c6, c7;
     static void init_col(sf::Color* c, const int* colors);
+
     void load();
 };
 

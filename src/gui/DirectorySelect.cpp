@@ -12,6 +12,11 @@ void DirectorySelect::loadToPlayer() {
     player.reset();
     currentPath = ltrim(items[ptr]);
     player.add_folder(currentPath);
+    if (player.empty()) {
+        throw std::runtime_error("No songs in folder");
+    }
+    player.sort_by_date();
+    player.ptr = 0;
 }
 
 void DirectorySelect::init() {

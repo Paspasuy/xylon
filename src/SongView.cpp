@@ -64,6 +64,7 @@ void SongView::init(Player* p, const std::wstring& filter) {
     for (Song* it : p->get_songs(filter)) {
         tiles.emplace_back(Tile(it));
     }
+    find_cur();
     shift = (-pl->ptr + 1) * (Tile::H + TILE_GAP);
     norm_shift();
 }
@@ -155,8 +156,8 @@ void SongView::pagedown() {
 
 size_t SongView::size() { return tiles.size(); }
 
-void SongView::play_prev() {
-    if (pl->loop) {
+void SongView::play_prev(bool ignore_loop) {
+    if (pl->loop && !ignore_loop) {
         pl->play();
     } else {
         pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + tiles.size() - 1) % tiles.size())].s->id);
@@ -164,11 +165,23 @@ void SongView::play_prev() {
     }
 }
 
-void SongView::play_next() {
-    if (pl->loop) {
+void SongView::play_next(bool ignore_loop) {
+    if (pl->loop && !ignore_loop) {
         pl->play();
     } else {
         pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + 1) % tiles.size())].s->id);
         norm_shift_tile();
+    }
+}
+
+void SongView::find_cur() {
+    int current_id = pl->current_id();
+    int index = 0;
+    for (Tile& tile : tiles) {
+        if (tile.s->id == current_id) {
+            cur = index;
+            return;
+        }
+        ++index;
     }
 }

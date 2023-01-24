@@ -33,62 +33,77 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
     stars_rot(stars_vec, (rand() % 100) / 100.f);
 }
 
+bool MainWindow::processGeneralEvent(sf::Event& event) {
+    if (event.type == sf::Event::Closed) {
+        close();
+    } else if (event.type == sf::Event::Resized) {
+        Tile::W = std::min(int(getSize().x) / 2, Tile::MAX_W);
+        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+        setView(sf::View(visibleArea));
+        songs.winsz = getSize();
+        starfield.regenerate(sf::Vector2f(getSize().x, getSize().y));
+    } else {
+        return false;
+    }
+    return true;
+}
+
+bool MainWindow::processMouseEvent(sf::Event& event) {
+    if (event.type == sf::Event::MouseWheelScrolled) {
+        if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+            int delta = event.mouseWheelScroll.delta;
+            if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y).first !=
+                -1) {
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+                    delta *= 5;
+                }
+                songs.scroll(delta);
+            } else {
+                vol_slider.touch(clk.getElapsedTime());
+                if (delta == 1) {
+                    p.add_vol();
+                } else {
+                    p.dec_vol();
+                }
+            }
+        }
+    } else if (event.type == sf::Event::MouseButtonPressed) {
+        auto [id, idx] = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
+        if (id != -1) {
+            songs.grab(event.mouseButton.y);
+            if (id != p.get_id()) {
+                p.play_id(id);
+            }
+        } else if (songDisplay.bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
+            songDisplay.bar.holding = true;
+            p.pause();
+            songDisplay.bar.set_progress(&p, event.mouseButton.x);
+        }
+    } else if (event.type == sf::Event::MouseMoved) {
+        if (songDisplay.bar.holding) {
+            songDisplay.bar.set_progress(&p, event.mouseMove.x);
+        }
+    } else if (event.type == sf::Event::MouseButtonReleased) {
+        if (songs.holding) {
+            songs.release(event.mouseButton.y, clk.getElapsedTime());
+        }
+        if (songDisplay.bar.holding) {
+            songDisplay.bar.set_progress(&p, event.mouseButton.x);
+            songDisplay.bar.holding = false;
+            p.play();
+        }
+    } else {
+        return false;
+    }
+    return true;
+}
+
 void MainWindow::pollEvents() {
     sf::Event event;
     while (pollEvent(event)) {
-        if (event.type == sf::Event::Closed) {
-            close();
-        }
-        if (event.type == sf::Event::Resized) {
-            Tile::W = std::min(int(getSize().x) / 2, Tile::MAX_W);
-            sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-            setView(sf::View(visibleArea));
-            songs.winsz = getSize();
-            starfield.regenerate(sf::Vector2f(getSize().x, getSize().y));
-        } else if (event.type == sf::Event::MouseWheelScrolled) {
-            if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-                int delta = event.mouseWheelScroll.delta;
-                if (songs.get_click_id(event.mouseWheelScroll.x, event.mouseWheelScroll.y).first !=
-                    -1) {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-                        delta *= 5;
-                    }
-                    songs.scroll(delta);
-                } else {
-                    vol_slider.touch(clk.getElapsedTime());
-                    if (delta == 1) {
-                        p.add_vol();
-                    } else {
-                        p.dec_vol();
-                    }
-                }
-            }
-        } else if (event.type == sf::Event::MouseButtonPressed) {
-            auto [id, idx] = songs.get_click_id(event.mouseButton.x, event.mouseButton.y);
-            if (id != -1) {
-                songs.grab(event.mouseButton.y);
-                if (id != p.get_id()) {
-                    p.play_id(id);
-                }
-            } else if (songDisplay.bar.in_bar(event.mouseButton.x, event.mouseButton.y)) {
-                songDisplay.bar.holding = true;
-                p.pause();
-                songDisplay.bar.set_progress(&p, event.mouseButton.x);
-            }
-        } else if (event.type == sf::Event::MouseMoved) {
-            if (songDisplay.bar.holding) {
-                songDisplay.bar.set_progress(&p, event.mouseMove.x);
-            }
-        } else if (event.type == sf::Event::MouseButtonReleased) {
-            if (songs.holding) {
-                songs.release(event.mouseButton.y, clk.getElapsedTime());
-            }
-            if (songDisplay.bar.holding) {
-                songDisplay.bar.set_progress(&p, event.mouseButton.x);
-                songDisplay.bar.holding = false;
-                p.play();
-            }
-        } else if (event.type == sf::Event::KeyPressed) {
+        if (processGeneralEvent(event)) continue;
+        if (processMouseEvent(event)) continue;
+        if (event.type == sf::Event::KeyPressed) {
             if (event.key.code == sf::Keyboard::Space) {
                 if (songSearch.empty()) {
                     if (p.is_playing()) {
@@ -111,7 +126,7 @@ void MainWindow::pollEvents() {
                 } else if (dirSelect.show) {
                     dirSelect.up();
                 } else {
-                    songs.play_prev();
+                    songs.play_prev(true);
                 }
                 songs.norm_shift_tile();
             } else if (event.key.code == sf::Keyboard::Down) {
@@ -120,7 +135,7 @@ void MainWindow::pollEvents() {
                 } else if (dirSelect.show) {
                     dirSelect.down();
                 } else {
-                    songs.play_next();
+                    songs.play_next(true);
                 }
                 songs.norm_shift_tile();
             } else if (event.key.code == sf::Keyboard::Enter) {
@@ -129,11 +144,18 @@ void MainWindow::pollEvents() {
                     songs.init(&p);
                     sortSelect.show = false;
                 } else if (dirSelect.show) {
-                    dirSelect.loadToPlayer();
+                    try {
+                        dirSelect.loadToPlayer();
+                    } catch (std::runtime_error& err) {
+                        close();
+                    }
                     songs.init(&p);
                     dirSelect.show = false;
                 } else if (!songSearch.empty()) {
                     p.play_id(p.get_first_id(songSearch.get_filter()));
+                    songs.find_cur();
+                } else {
+                    songs.find_cur();
                 }
                 songs.norm_shift_tile();
             } else if (event.key.code == sf::Keyboard::R && event.key.control) {
@@ -198,7 +220,8 @@ void MainWindow::pollEvents() {
         } else if (event.type == sf::Event::TextEntered && !sortSelect.show && !dirSelect.show) {
             int u = event.text.unicode;
             if (u != 27 && u != 13 && u != 8 &&
-                !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)) {
+                !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
+                !sf::Keyboard::isKeyPressed(sf::Keyboard::RControl)) {
                 //                    std::wcout << L"ASCII character typed: " <<
                 //                    static_cast<wchar_t>(event.text.unicode) << ' '
                 //                              << event.text.unicode << std::endl;

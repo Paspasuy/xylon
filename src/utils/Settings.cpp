@@ -9,9 +9,15 @@
 #include <sstream>
 
 std::wstring DEFAULT_CONF_STR =
-    L"# Visualiser type\n"
+    L"# Locale\n"
+    "en_US.utf-8\n"
+    "# Path to regular font\n"
+    "/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Regular.otf\n"
+    "# Path to bold font\n"
+    "/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf\n"
+    "# Visualiser type (0/1)\n"
     "1\n"
-    "# Usual tile color (outline/background)\n"
+    "# Usual tile color (outline/background), all colors are in 'r g b a' format\n"
     "200 100 0 0\n"
     "200 100 0 30\n"
     "# Playing tile color (outline/background)\n"
@@ -38,8 +44,6 @@ void Settings::load() {
         cfg << DEFAULT_CONF_STR;
         cfg.close();
         conf.open(str);
-        //        std::filesystem::copy("/usr/share/xylon/sample_conf.txt", str);
-        //        conf.open(str + "/.config/xylon/conf.txt");
     }
     std::wstring line;
     int colors[28];
@@ -55,6 +59,19 @@ void Settings::load() {
             int idx = line.find('#');
             if (idx != std::string::npos) {
                 line = line.substr(0, idx);
+            }
+            if (line.empty()) continue;
+            if (locale.empty()) {
+                locale = std::string(line.begin(), line.end());
+                continue;
+            }
+            if (pathToRegularFont.empty()) {
+                pathToRegularFont = std::string(line.begin(), line.end());
+                continue;
+            }
+            if (pathToBoldFont.empty()) {
+                pathToBoldFont = std::string(line.begin(), line.end());
+                continue;
             }
             idx = line.find('/');
             if (idx == std::string::npos) {
@@ -87,7 +104,6 @@ void Settings::init_col(sf::Color* c, const int* colors) {
     c->g = colors[1];
     c->b = colors[2];
     c->a = colors[3];
-    //    std::cerr << int(c->r) << ' '<< int(c->g) << ' '<< int(c->b) << ' '<< int(c->a) << '\n';
 }
 
 Settings::Settings() { load(); }

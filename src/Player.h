@@ -78,6 +78,8 @@ public:
     size_t current_id();
 
     void reset();
+
+    bool empty();
 };
 
 #endif  // XYLON_PLAYER_H
