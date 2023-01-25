@@ -15,7 +15,8 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
       p(dirSelect.player),
       songDisplay(&p),
       vol_slider(&p),
-      stars_vec(0.4, -0.1) {
+      stars_vec(0.4, -0.1),
+      postProcessing({1024, 768}, contextSettings) {
     setVerticalSyncEnabled(false);
     setFramerateLimit(120);
 
@@ -47,6 +48,8 @@ bool MainWindow::processGeneralEvent(sf::Event& event) {
         setView(sf::View(visibleArea));
         songs.winsz = getSize();
         starfield.regenerate(sf::Vector2f(getSize().x, getSize().y));
+        postProcessing.create(sf::Vector2f(getSize().x, getSize().y));
+
     } else {
         return false;
     }
@@ -258,20 +261,22 @@ void MainWindow::beforeRender(uint64_t frame) {
 
 void MainWindow::render() {
     clear();
+    postProcessing.clear();
     draw(starfield);
-    draw(visualiser);
+    postProcessing.add(visualiser);
     songs.render(*this, pl);
     draw(songSearch);
     draw(songDisplay);
-    draw(vol_slider);
+    postProcessing.add(vol_slider);
     draw(sortSelect);
     draw(dirSelect);
     draw(download);
-    if (hasFocus()) {
+//    if (hasFocus()) {
         mouseTrace.setClicked(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
         mouseTrace.push(sf::Mouse::getPosition(*this));
-    }
-    draw(mouseTrace);
+//    }
+    postProcessing.add(mouseTrace);
+    draw(postProcessing);
     display();
 }
 

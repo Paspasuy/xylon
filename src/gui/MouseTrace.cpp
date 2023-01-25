@@ -29,8 +29,8 @@ void MouseTrace::push(sf::Vector2<int> position) {
 
 void MouseTrace::constructPolygon() const {
     sf::Color color(255, 255, 0, 255);
-    float decrease = (radius - 2) / (maxLength + 1);
-    float r = radius;
+    float decrease = (radius - 4) / (maxLength + 1);
+    float r = radius - 2;
     triangleStrip.clear();
     size = 0;
     sf::Vertex vertex;

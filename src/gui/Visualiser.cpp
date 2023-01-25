@@ -10,12 +10,13 @@ Visualiser::~Visualiser() {}
 
 void Visualiser::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     if (!display) return;
-    int len = target.getSize().x - Tile::W;
+    int len = target.getSize().x;// - Tile::W;
     sf::RectangleShape sh;
     const int w = 4;
     const int SPACE = 1;
     float down_c = 1.5;
     sh.setFillColor(settings.c6);
+    sh.setOutlineColor(settings.c6);
     int h;
     if (settings.vis_type == 0) {
         h = target.getSize().y;

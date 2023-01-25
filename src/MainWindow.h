@@ -8,15 +8,16 @@
 #include "SongView.h"
 #include "gui/DirectorySelect.h"
 #include "gui/DownloadView.h"
+#include "gui/MouseTrace.h"
 #include "gui/SongDisplay.h"
 #include "gui/SongSearch.h"
 #include "gui/SortSelect.h"
 #include "gui/Visualiser.h"
 #include "gui/VolumeCircleSlider.h"
+#include "shaders/PostProcessing.h"
 #include "utils/PicLoader.h"
 #include "utils/Settings.h"
 #include "utils/Utils.h"
-#include "gui/MouseTrace.h"
 
 class MainWindow : public sf::RenderWindow {
     sw::Starfield starfield;
@@ -32,6 +33,7 @@ class MainWindow : public sf::RenderWindow {
     sf::Vector2f stars_vec;
     DownloadView download;
     MouseTrace mouseTrace;
+    PostProcessing postProcessing;
 
     bool processGeneralEvent(sf::Event& event);
     bool processMouseEvent(sf::Event& event);
