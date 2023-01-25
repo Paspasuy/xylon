@@ -22,7 +22,6 @@ int main(int argc, char** argv) {
 }
 
 // search in folders
-// shaders
 // somehow compile for windows (in distant future)
 // write help menu, write readme
 // add different file formats support (flac?)

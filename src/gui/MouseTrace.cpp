@@ -4,6 +4,7 @@
 #include <SFML/Graphics/PrimitiveType.hpp>
 
 #include "../utils/geometry.cpp"
+#include "../utils/Utils.h"
 
 MouseTrace::MouseTrace() { triangleStrip = sf::VertexArray(sf::PrimitiveType::TriangleStrip); }
 
@@ -12,14 +13,14 @@ MouseTrace::~MouseTrace() = default;
 void MouseTrace::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     float r = clicked ? radius * 1.3 : radius;
     sf::CircleShape circle(r);
-    sf::Color color(255, 255, 128, 255);
-    circle.setFillColor(color);
+    circle.setFillColor(settings.cursorColor);
     circle.setPosition(positions[0].x - r, positions[0].y - r);
     target.draw(circle);
+    if (size > 4)
     target.draw(triangleStrip);
 }
 
-void MouseTrace::push(sf::Vector2<int> position) {
+void MouseTrace::push(sf::Vector2i position) {
     positions.push_front(position);
     if (positions.size() > maxLength) {
         positions.pop_back();
@@ -28,18 +29,22 @@ void MouseTrace::push(sf::Vector2<int> position) {
 }
 
 void MouseTrace::constructPolygon() const {
-    sf::Color color(255, 255, 0, 255);
+    sf::Color color(settings.cursorTraceColor);
     float decrease = (radius - 4) / (maxLength + 1);
     float r = radius - 2;
     triangleStrip.clear();
     size = 0;
     sf::Vertex vertex;
-    for (int i = 0; i < maxLength - 1; ++i) {
+    vertex.color = color;
+    for (int i = 0; i + 1 < positions.size(); ++i) {
         r -= decrease;
         if (r <= 0) break;
         geom::Point from(positions[i].x, positions[i].y);
         geom::Point to(positions[i + 1].x, positions[i + 1].y);
         geom::Point dir = to - from;
+        if (dir.len() < 1) {
+            continue;
+        }
         geom::Point rot = dir.norm().rotate({0, 0}, 90) * r;
         geom::Point p1 = from + rot;
         geom::Point p2 = to + rot;
@@ -65,3 +70,8 @@ void MouseTrace::constructPolygon() const {
 }
 
 void MouseTrace::setClicked(bool b) { clicked = b; }
+
+void MouseTrace::clear() {
+    positions.clear();
+    constructPolygon();
+}

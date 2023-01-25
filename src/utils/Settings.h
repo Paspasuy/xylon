@@ -18,13 +18,17 @@ public:
     std::string pathToRegularFont;
     std::string pathToBoldFont;
     std::vector<std::string> folders;
-    int vis_type = 0;
+    int vis_type;
+    int framerateLimit;
+    int enableGlow;
     sf::Color c1, c2, c3, c4, c5, c6, c7;
-    static void init_col(sf::Color* c, const int* colors);
+    sf::Color cursorColor, cursorTraceColor;
+    static void init_col(sf::Color& c, const int* colors);
 
     void load();
 
     void loadFonts();
+
 };
 
 #endif  // XYLON_SETTINGS_H

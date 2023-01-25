@@ -3,6 +3,8 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
+#include "../utils/Utils.h"
+
 const char* ASSEMBLE_FRAG = "uniform sampler2D texture;\n"
     "uniform sampler2D add_texture;\n"
     "uniform float sum;\n"
@@ -58,6 +60,10 @@ PostProcessing::~PostProcessing() = default;
 
 void PostProcessing::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     scene_render.display();
+    if (!settings.enableGlow) {
+        target.draw(sf::Sprite(scene_render.getTexture()), sf::BlendAdd);
+        return;
+    }
     shader_states.shader = &luminescence_shader;
     luminescence_render.clear(sf::Color(255, 255, 255, 0));
     luminescence_render.draw(sf::Sprite(scene_render.getTexture()), shader_states);

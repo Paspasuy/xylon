@@ -18,12 +18,14 @@ public:
     const int maxLength = 16;
     bool clicked = false;
 
-    void push(sf::Vector2<int> position);
+    void push(sf::Vector2i position);
 
     void setClicked(bool b);
 
     MouseTrace();
     ~MouseTrace() override;
+
+    void clear();
 
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

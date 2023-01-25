@@ -17,6 +17,10 @@ std::wstring DEFAULT_CONF_STR =
     "/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf\n"
     "# Visualiser type (0/1)\n"
     "1\n"
+    "# Framerate limit\n"
+    "120\n"
+    "# Enable glow\n"
+    "1\n"
     "# Usual tile color (outline/background), all colors are in 'r g b a' format\n"
     "200 100 0 0\n"
     "200 100 0 30\n"
@@ -29,6 +33,10 @@ std::wstring DEFAULT_CONF_STR =
     "109 0 133 255\n"
     "# Repeat indicator color\n"
     "255 0 0 255\n"
+    "# Cursor color\n"
+    "255 255 0 255\n"
+    "# Cursor trace color\n"
+    "255 255 0 255\n"
     "# Folders\n";
 
 void Settings::load() {
@@ -51,11 +59,14 @@ void Settings::load() {
     }
 
     std::wstring line;
-    int colors[28];
-    int* params[29];
+    int cc = 9, qq = 3;
+    int colors[cc * 4];
+    int* params[qq + cc * 4];
     params[0] = &vis_type;
-    for (size_t i = 0; i < 28; ++i) {
-        params[i + 1] = colors + i;
+    params[1] = &framerateLimit;
+    params[2] = &enableGlow;
+    for (size_t i = 0; i < cc * 4; ++i) {
+        params[i + qq] = colors + i;
     }
 
     int i = 0, tmp = 0;
@@ -96,21 +107,23 @@ void Settings::load() {
     if (folders.empty()) {
         folders.emplace_back(std::string(getenv("HOME")) + "/Music/");
     }
-    init_col(&c1, colors);
-    init_col(&c2, colors + 4);
-    init_col(&c3, colors + 8);
-    init_col(&c4, colors + 12);
-    init_col(&c5, colors + 16);
-    init_col(&c6, colors + 20);
-    init_col(&c7, colors + 24);
+    init_col(c1, colors);
+    init_col(c2, colors + 4);
+    init_col(c3, colors + 8);
+    init_col(c4, colors + 12);
+    init_col(c5, colors + 16);
+    init_col(c6, colors + 20);
+    init_col(c7, colors + 24);
+    init_col(cursorColor, colors + 28);
+    init_col(cursorTraceColor, colors + 32);
     loadFonts();
 }
 
-void Settings::init_col(sf::Color* c, const int* colors) {
-    c->r = colors[0];
-    c->g = colors[1];
-    c->b = colors[2];
-    c->a = colors[3];
+void Settings::init_col(sf::Color& c, const int* colors) {
+    c.r = colors[0];
+    c.g = colors[1];
+    c.b = colors[2];
+    c.a = colors[3];
 }
 
 Settings::Settings() { load(); }

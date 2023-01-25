@@ -18,7 +18,7 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
       stars_vec(0.4, -0.1),
       postProcessing({1024, 768}, contextSettings) {
     setVerticalSyncEnabled(false);
-    setFramerateLimit(120);
+    setFramerateLimit(settings.framerateLimit);
 
     for (std::string& s : settings.folders) {
         dirSelect.root.addChild(s);
@@ -271,10 +271,15 @@ void MainWindow::render() {
     draw(sortSelect);
     draw(dirSelect);
     draw(download);
-//    if (hasFocus()) {
+    {
         mouseTrace.setClicked(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-        mouseTrace.push(sf::Mouse::getPosition(*this));
-//    }
+        sf::Vector2i pos = sf::Mouse::getPosition(*this);
+        if (pos.x >= 0 && pos.y >= 0 && pos.x < getSize().x && pos.y < getSize().y) {
+            mouseTrace.push(pos);
+        } else {
+            mouseTrace.clear();
+        }
+    }
     postProcessing.add(mouseTrace);
     draw(postProcessing);
     display();
