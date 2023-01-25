@@ -107,13 +107,5 @@ void Song::load_pic() {
     }
 }
 
-std::wstring Song::lower(const std::wstring& s) {
-    std::wstring result;
-    std::locale loc = std::wcin.getloc();
-    for (std::wstring::const_iterator it = s.begin(); it != s.end(); ++it) {
-        result += std::use_facet<std::ctype<wchar_t>>(loc).tolower(*it);
-    }
-    return result;
-}
 
 void Song::get_fft(float* fft) { BASS_ChannelGetData(channel, fft, BASS_DATA_FFT4096); }

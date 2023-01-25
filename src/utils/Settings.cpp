@@ -16,7 +16,7 @@ std::wstring DEFAULT_CONF_STR =
     "# Path to bold font\n"
     "/usr/share/fonts/adobe-source-code-pro/SourceCodePro-Bold.otf\n"
     "# Visualiser type (0/1)\n"
-    "1\n"
+    "0\n"
     "# Framerate limit\n"
     "120\n"
     "# Enable glow\n"

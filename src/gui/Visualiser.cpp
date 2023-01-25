@@ -10,7 +10,7 @@ Visualiser::~Visualiser() {}
 
 void Visualiser::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     if (!display) return;
-    int len = target.getSize().x;// - Tile::W;
+    int len = target.getSize().x - Tile::W;
     sf::RectangleShape sh;
     const int w = 4;
     const int SPACE = 1;

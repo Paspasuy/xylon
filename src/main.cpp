@@ -12,16 +12,19 @@ int main(int argc, char** argv) {
     MainWindow window(contextSettings);
 
     for (uint64_t frame = 0; window.isOpen(); ++frame) {
+        sf::Time t = clk.getElapsedTime();
         window.beforePolling();
         window.pollEvents();
         window.beforeRender(frame);
         window.render();
+//        std::cerr << "Rendered in " << (clk.getElapsedTime() - t).asMilliseconds() << "ms" << std::endl;
     }
 
     return 0;
 }
 
-// search in folders
+// fix freezes when loading pictures
+// button resizing with bass
 // somehow compile for windows (in distant future)
 // write help menu, write readme
 // add different file formats support (flac?)

@@ -68,8 +68,6 @@ public:
 
     void load_pic();
 
-    static std::wstring lower(const std::wstring& s);
-
     void get_fft(float* fft);
 };
 

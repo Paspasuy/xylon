@@ -147,7 +147,22 @@ void MainWindow::pollEvents() {
                 }
                 songs.norm_shift_tile();
             } else if (event.key.code == sf::Keyboard::Enter) {
-                if (sortSelect.show) {
+                if (!songSearch.empty()) {
+                    if (!dirSelect.show) {
+                        p.play_id(p.get_first_id(songSearch.get_filter()));
+                        songs.find_cur();
+                    } else {
+                        try {
+                            dirSelect.loadToPlayer();
+                        } catch (std::runtime_error& err) {
+                            close();
+                        }
+                        songs.init(&p);
+                        songSearch.clear();
+                        dirSelect.filter("");
+                        dirSelect.show = false;
+                    }
+                } else if (sortSelect.show) {
                     sortSelect.applySort(&p);
                     songs.init(&p);
                     sortSelect.show = false;
@@ -159,9 +174,6 @@ void MainWindow::pollEvents() {
                     }
                     songs.init(&p);
                     dirSelect.show = false;
-                } else if (!songSearch.empty()) {
-                    p.play_id(p.get_first_id(songSearch.get_filter()));
-                    songs.find_cur();
                 } else {
                     songs.find_cur();
                 }
@@ -169,26 +181,29 @@ void MainWindow::pollEvents() {
             } else if (event.key.code == sf::Keyboard::R && event.key.control) {
                 p.loop ^= 1;
             } else if (event.key.code == sf::Keyboard::Escape) {
-                if (sortSelect.show) {
+                if (!songSearch.empty()) {
+                    songSearch.clear();
+                    if (!dirSelect.show) {
+                        songs.init(&p, L"");
+                    } else {
+                        dirSelect.filter("");
+                    }
+                } else if (sortSelect.show) {
                     sortSelect.show = false;
                 } else if (dirSelect.show) {
                     dirSelect.show = false;
-                } else if (!songSearch.empty()) {
-                    songSearch.clear();
-                    songs.init(&p, songSearch.get_filter());
-                    songSearch.update_color(songs.size());
                 }
             } else if (event.key.code == sf::Keyboard::BackSpace) {
                 if (!songSearch.empty()) {
-                    if (event.key.control) {
-                        songSearch.pop_word();
+                    if (!dirSelect.show) {
+                        event.key.control ? songSearch.pop_word() : songSearch.pop_char();
                         songs.init(&p, songSearch.get_filter());
                         songSearch.update_color(songs.size());
                     } else {
-                        songSearch.pop_char();
-                        songs.init(&p, songSearch.get_filter());
+                        event.key.control ? songSearch.pop_word() : songSearch.pop_char();
+                        dirSelect.filter(songSearch.get_filter());
+                        songSearch.update_color(dirSelect.size());
                     }
-                    songSearch.update_color(songs.size());
                 }
             } else if (event.key.code == sf::Keyboard::PageDown) {
                 if (sortSelect.show) {
@@ -225,7 +240,7 @@ void MainWindow::pollEvents() {
             } else if (event.key.code == sf::Keyboard::D && event.key.control) {
                 DownloadView::download(sf::Clipboard::getString(), dirSelect.currentPath);
             }
-        } else if (event.type == sf::Event::TextEntered && !sortSelect.show && !dirSelect.show) {
+        } else if (event.type == sf::Event::TextEntered && !sortSelect.show) {
             int u = event.text.unicode;
             if (u != 27 && u != 13 && u != 8 &&
                 !sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
@@ -235,8 +250,14 @@ void MainWindow::pollEvents() {
                 //                              << event.text.unicode << std::endl;
                 if (event.text.unicode != 32 || !songSearch.empty()) {
                     songSearch.add_char(event.text.unicode);
-                    songs.init(&p, songSearch.get_filter());
-                    songSearch.update_color(songs.size());
+                    if (!dirSelect.show) {
+                        songs.init(&p, songSearch.get_filter());
+                        songSearch.update_color(songs.size());
+                    } else {
+                        dirSelect.filter(songSearch.get_filter());
+                        std::cerr << songSearch.get_filter() << std::endl;
+                        songSearch.update_color(dirSelect.size());
+                    }
                 }
             }
         }
@@ -265,11 +286,11 @@ void MainWindow::render() {
     draw(starfield);
     postProcessing.add(visualiser);
     songs.render(*this, pl);
-    draw(songSearch);
     draw(songDisplay);
     postProcessing.add(vol_slider);
     draw(sortSelect);
     draw(dirSelect);
+    draw(songSearch);
     draw(download);
     {
         mouseTrace.setClicked(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));

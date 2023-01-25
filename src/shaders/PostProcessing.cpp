@@ -21,11 +21,11 @@ const char* BOXBLUR_FRAG = "uniform sampler2D texture;\n"
     "uniform vec2 blur_direction;\n"
     "void main(void){\n"
     "    vec4 sum = texture2D(texture, gl_TexCoord[0].xy);\n"
-    "    for (int i = 0; i < blur_radius; ++i){\n"
+    "    for (int i = 0; i < blur_radius; i += 2){\n"
     "        sum += texture2D(texture, gl_TexCoord[0].xy + (float(i) * texture_inverse) * blur_direction);\n"
     "        sum += texture2D(texture, gl_TexCoord[0].xy - (float(i) * texture_inverse) * blur_direction);\n"
     "    }\n"
-    "    gl_FragColor = sum / float(blur_radius * 2 + 1);\n"
+    "    gl_FragColor = sum / float(blur_radius + 1);\n"
     "}";
 
 const char* LUMINISCENCE_FRAG = "uniform sampler2D texture;\n"
@@ -33,7 +33,6 @@ const char* LUMINISCENCE_FRAG = "uniform sampler2D texture;\n"
     "void main(void){\n"
     "    vec3 current_color = texture2D(texture, gl_TexCoord[0].xy).rgb;\n"
     "    vec4 pixel =  vec4(1.0, 0.0, 1.0, 0.0);\n"
-    "    // float brightness = dot(current_color.rgb, vec3(0.2, 0.7, 0.05));\n"
     "    float brightness = dot(current_color.rgb, vec3(1.0, 1.0, 1.0));\n"
     "    if (brightness >= threshold){\n"
     "        pixel = texture2D(texture, gl_TexCoord[0].xy);\n"
@@ -70,7 +69,7 @@ void PostProcessing::draw(sf::RenderTarget& target, sf::RenderStates states) con
     luminescence_render.display();
 
     shader_states.shader = &blur_shader;
-    blur_shader.setUniform("blur_radius", 3);
+    blur_shader.setUniform("blur_radius", 16);
 
     blur_render.clear(sf::Color(0, 0, 0, 0));
     blur_render.draw(sf::Sprite(luminescence_render.getTexture()));
@@ -87,7 +86,7 @@ void PostProcessing::draw(sf::RenderTarget& target, sf::RenderStates states) con
 
     shader_states.shader = &assemble_shader;
     assemble_shader.setUniform("sum", 2.0f);
-    assemble_shader.setUniform("add_weight", 1.0f);
+    assemble_shader.setUniform("add_weight", 1.3f);
     assemble_shader.setUniform("add_texture", blur_render.getTexture());
     sf::Sprite tmp = sf::Sprite(scene_render.getTexture());
     scene_render.clear(sf::Color(0, 0, 0, 0));

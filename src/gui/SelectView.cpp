@@ -2,10 +2,11 @@
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <codecvt>
 
 #include "../Tile.h"
 
-SelectView::SelectView(std::initializer_list<std::string> lst) : items(lst) {}
+SelectView::SelectView(std::initializer_list<std::string> lst) : items(lst), visibleItems(lst) {}
 
 SelectView::~SelectView() {}
 
@@ -14,10 +15,9 @@ void SelectView::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::RectangleShape dim(sf::Vector2f(target.getSize()));
     dim.setFillColor(sf::Color(0, 0, 0, 180));
     target.draw(dim);
-    int cursh = std::max(10, std::min((int)target.getSize().y - 2 * H, 10 + ptr * H));
-    int sh = cursh - ptr * H;
+    int sh = shift = clamp(shift, 10 - ptr * H, target.getSize().y - 30 - ptr * H);
     int idx = 0;
-    for (auto& s : items) {
+    for (auto& s : visibleItems) {
         sf::Text text(s, FONT, 20);
         text.setPosition(10, sh);
         if (idx == ptr) {
@@ -38,7 +38,7 @@ void SelectView::up() {
 
 void SelectView::down() {
     ++ptr;
-    ptr = std::min((int)items.size() - 1, ptr);
+    ptr = std::min((int)visibleItems.size() - 1, ptr);
 }
 
 SelectView::SelectView() {}
@@ -50,5 +50,27 @@ void SelectView::pageUp() {
 
 void SelectView::pageDown() {
     ptr += PAGE;
-    ptr = std::min((int)items.size() - 1, ptr);
+    ptr = std::min((int)visibleItems.size() - 1, ptr);
 }
+
+void SelectView::filter(const std::string& str) {
+    ptr = 0;
+    if (str == "") {
+        visibleItems = items;
+    } else {
+        visibleItems.clear();
+        for (std::string& item: items) {
+            if (hasSubstr(item, str)) {
+                visibleItems.emplace_back(item);
+            }
+        }
+    }
+}
+
+void SelectView::filter(const std::wstring& str) {
+    using convert_type = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_type, wchar_t> converter;
+    filter(converter.to_bytes(str));
+}
+
+size_t SelectView::size() { return visibleItems.size(); }

@@ -12,6 +12,8 @@ public:
     Player player;
     void loadToPlayer();
     void init();
+    void filter(const std::string& str) override;
+    void filter(const std::wstring& str) override;
 
     DirectoryNode root;
 };
