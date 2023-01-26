@@ -47,7 +47,7 @@ void Player::prev() {
 }
 
 void Player::add_song(const std::string& s, const std::u8string& t, time_t time) {
-    songs.emplace_back(Song(s, t, time));
+    songs.emplace_back(s, t, time);
     songs.back().add_meta();
 }
 

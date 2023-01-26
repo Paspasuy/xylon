@@ -24,7 +24,6 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
         dirSelect.root.addChild(s);
     }
     dirSelect.init();
-    p.sort_by_date();
     p.ptr = 0;
 
     Tile::W = std::min(int(getSize().x) / 2, Tile::MAX_W);
@@ -76,6 +75,7 @@ bool MainWindow::processMouseEvent(sf::Event& event) {
             }
         }
     } else if (event.type == sf::Event::MouseButtonPressed) {
+        mouseTrace.setClicked(true);
         auto [id, idx] = songList.get_click_id(event.mouseButton.x, event.mouseButton.y);
         if (id != -1) {
             songList.grab(event.mouseButton.y);
@@ -88,10 +88,12 @@ bool MainWindow::processMouseEvent(sf::Event& event) {
             songDisplay.bar.set_progress(&p, event.mouseButton.x);
         }
     } else if (event.type == sf::Event::MouseMoved) {
+        mouseTrace.mousePosition = {event.mouseMove.x, event.mouseMove.y};
         if (songDisplay.bar.holding) {
             songDisplay.bar.set_progress(&p, event.mouseMove.x);
         }
     } else if (event.type == sf::Event::MouseButtonReleased) {
+        mouseTrace.setClicked(false);
         if (songList.holding) {
             songList.release(event.mouseButton.y, clk.getElapsedTime());
         }
@@ -100,6 +102,8 @@ bool MainWindow::processMouseEvent(sf::Event& event) {
             songDisplay.bar.holding = false;
             p.play();
         }
+    } else if (event.type == sf::Event::MouseLeft) {
+        mouseTrace.clear();
     } else {
         return false;
     }
@@ -268,7 +272,7 @@ void MainWindow::beforeRender(uint64_t frame) {
         p.get_fft(visualiser.fft);
     }
     if (songList.holding) {
-        songList.set_position(sf::Mouse::getPosition(*this).y);
+        songList.set_position(mouseTrace.mousePosition.y);
     }
     songList.shift_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
     if ((frame & 1) == 0) {
@@ -277,6 +281,8 @@ void MainWindow::beforeRender(uint64_t frame) {
 
     stars_rot(stars_vec);
     starfield.move(stars_vec);
+
+    mouseTrace.push(mouseTrace.mousePosition);
 }
 
 void MainWindow::render() {
@@ -291,7 +297,6 @@ void MainWindow::render() {
     draw(download);
     postProcessing.clear();
     postProcessing.add(vol_slider);
-    updateMouseTrace();
     postProcessing.add(mouseTrace);
     draw(postProcessing);
     display();
@@ -308,15 +313,5 @@ void MainWindow::beforePolling() {
         p.sort_by_date();
         songList.init(&p);
         p.play();
-    }
-}
-
-void MainWindow::updateMouseTrace() {
-    mouseTrace.setClicked(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left));
-    sf::Vector2i pos = sf::Mouse::getPosition(*this);
-    if (pos.x >= 0 && pos.y >= 0 && pos.x < getSize().x && pos.y < getSize().y) {
-        mouseTrace.push(pos);
-    } else {
-        mouseTrace.clear();
     }
 }

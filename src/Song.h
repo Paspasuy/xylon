@@ -23,9 +23,9 @@ class Song {
     HCHANNEL channel;
 
 public:
-    sf::String title = "Title";
-    sf::String artist = "John Doe";
-    sf::String album = "Default Album";
+    std::wstring title = L"Title";
+    std::wstring artist = L"John Doe";
+    std::wstring album = L"Default Album";
     uint track = 0;
     std::wstring ltitle = L"title";
     std::wstring lartist = L"john doe";
@@ -34,15 +34,24 @@ public:
     std::u8string filename;
     time_t cr_time;
 
-    sf::Sprite sprite, small_sprite;
-    sf::Texture texture;
-    sf::Time time_loaded;
+    sf::Sprite* sprite = nullptr;
+    sf::Sprite* small_sprite = nullptr;
+    sf::Texture* texture = nullptr;
+    int time_loaded;
     bool pic_loaded = false;
     bool pic_loading = false;
 
     uint64_t id;
 
+    Song() = delete;
+
     Song(const std::string& _path, const std::u8string& _filename, time_t _cr_time);
+
+    Song& operator=(const Song&) = delete;
+    Song(const Song&) = delete;
+
+    Song& operator=(Song&& other) noexcept;
+    Song(Song&& other) noexcept;
 
     void play();
 
@@ -69,6 +78,8 @@ public:
     void load_pic();
 
     void get_fft(float* fft);
+
+    ~Song();
 };
 
 #endif  // XYLON_SONG_H

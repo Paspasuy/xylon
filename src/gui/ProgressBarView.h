@@ -12,7 +12,7 @@
 class ProgressBarView : public sf::Drawable {
 private:
     int x, y;
-    int current, duration;
+    int current = -1, duration = -1;
     double progress;
     mutable sf::RectangleShape cont;
     mutable sf::Text currentText;

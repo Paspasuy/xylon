@@ -8,12 +8,10 @@
 
 class PostProcessing : public sf::Drawable {
     mutable sf::RenderStates shader_states;
-    mutable sf::Shader luminescence_shader;
     mutable sf::Shader blur_shader;
     mutable sf::Shader assemble_shader;
 
     mutable sf::RenderTexture scene_render;
-    mutable sf::RenderTexture luminescence_render;
     mutable sf::RenderTexture blur_render;
     mutable sf::ContextSettings ctx;
 public:

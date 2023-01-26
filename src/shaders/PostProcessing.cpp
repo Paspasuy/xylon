@@ -27,7 +27,7 @@ const char* BOXBLUR_FRAG = "uniform sampler2D texture;\n"
     "    }\n"
     "    gl_FragColor = sum / float(blur_radius + 1);\n"
     "}";
-
+/*
 const char* LUMINISCENCE_FRAG = "uniform sampler2D texture;\n"
     "uniform float threshold;\n"
     "void main(void){\n"
@@ -39,12 +39,9 @@ const char* LUMINISCENCE_FRAG = "uniform sampler2D texture;\n"
     "    }\n"
     "    gl_FragColor = pixel;\n"
     "}";
+*/
 
 PostProcessing::PostProcessing(const sf::Vector2f& size, sf::ContextSettings ctx) : ctx(ctx) {
-
-    luminescence_shader.loadFromMemory(LUMINISCENCE_FRAG, sf::Shader::Fragment);
-    luminescence_shader.setUniform("texture", sf::Shader::CurrentTexture);
-    luminescence_shader.setUniform("threshold", 0.25f);
 
     blur_shader.loadFromMemory(BOXBLUR_FRAG, sf::Shader::Fragment);
     blur_shader.setUniform("texture", sf::Shader::CurrentTexture);
@@ -63,16 +60,12 @@ void PostProcessing::draw(sf::RenderTarget& target, sf::RenderStates states) con
         target.draw(sf::Sprite(scene_render.getTexture()), sf::BlendAdd);
         return;
     }
-    shader_states.shader = &luminescence_shader;
-    luminescence_render.clear(sf::Color(255, 255, 255, 0));
-    luminescence_render.draw(sf::Sprite(scene_render.getTexture()), shader_states);
-    luminescence_render.display();
 
     shader_states.shader = &blur_shader;
     blur_shader.setUniform("blur_radius", 16);
 
     blur_render.clear(sf::Color(0, 0, 0, 0));
-    blur_render.draw(sf::Sprite(luminescence_render.getTexture()));
+    blur_render.draw(sf::Sprite(scene_render.getTexture()));
     blur_render.display();
     for (size_t it = 0; it < 3; ++it) {
         blur_shader.setUniform("blur_direction", sf::Glsl::Vec2(1.0, 0.0));
@@ -106,6 +99,5 @@ void PostProcessing::clear() {
 
 void PostProcessing::create(const sf::Vector2f& size) {
      scene_render.create(size.x, size.y, ctx);
-     luminescence_render.create(size.x, size.y, ctx);
      blur_render.create(size.x, size.y, ctx);
 }

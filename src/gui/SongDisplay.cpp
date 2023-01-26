@@ -13,17 +13,18 @@ void SongDisplay::draw(sf::RenderTarget& target, sf::RenderStates states) const 
     if (!song.pic_loaded) {
         song.load_pic();
     }
-
-    song.sprite.setPosition(margin_x, margin_y);
-    target.draw(song.sprite);
+    if (song.sprite != nullptr) {
+        song.sprite->setPosition(margin_x, margin_y);
+        target.draw(*song.sprite);
+    }
 
     int w = 10;
-    int sw = margin_x + (PIC - w * song.title.getSize()) / 2;
+    int sw = margin_x + (PIC - w * song.title.size()) / 2;
     title_text.setPosition(sw, PIC + margin_y + 12);
     target.draw(title_text);
 
     w = 8;
-    sw = margin_x + (PIC - w * song.artist.getSize()) / 2;
+    sw = margin_x + (PIC - w * song.artist.size()) / 2;
     artist_text.setPosition(sw, PIC + margin_y + 20 + 12);
     target.draw(artist_text);
 

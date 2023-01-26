@@ -66,25 +66,22 @@ bool Song::matches(std::wstring text) {
 
 void Song::add_meta() {
     TagLib::FileRef f(path.c_str());
-    std::wstring s1 = f.tag()->title().toWString();
-    std::wstring s2 = f.tag()->artist().toWString();
-    std::wstring s3 = f.tag()->album().toWString();
+    title = f.tag()->title().toWString();
+    artist = f.tag()->artist().toWString();
+    album = f.tag()->album().toWString();
     track = f.tag()->track();
-    if (s1.size() == 0) {
-        s1 = std::wstring(filename.begin(), filename.end());
+    if (title.size() == 0) {
+        title = std::wstring(filename.begin(), filename.end());
     }
-    title = s1;
-    artist = s2;
-    album = s3;
-    ltitle = lower(s1);
-    lalbum = lower(s2);
-    lartist = lower(s3);
+    ltitle = lower(title);
+    lartist = lower(artist);
+    lalbum = lower(album);
 }
 
 void Song::load_pic() {
     TagLib::MPEG::File ff(path.c_str());
     pic_loaded = true;
-    time_loaded = clk.getElapsedTime();
+    time_loaded = clk.getElapsedTime().asMilliseconds();
     if (ff.hasID3v2Tag()) {
         TagLib::ID3v2::Tag* id3V2Tag = ff.ID3v2Tag();
         auto l = id3V2Tag->frameList("APIC");
@@ -92,20 +89,85 @@ void Song::load_pic() {
             return;
         }
         auto* pic = dynamic_cast<TagLib::ID3v2::AttachedPictureFrame*>(l.front());
-//        int sz = static_cast<int>(std::sqrt(pic->picture().size() / 3));
-        texture.loadFromMemory((const u_char*)pic->picture().data(), pic->picture().size(),
+        //        int sz = static_cast<int>(std::sqrt(pic->picture().size() / 3));
+        texture = new sf::Texture();
+        texture->loadFromMemory((const u_char*)pic->picture().data(), pic->picture().size(),
                                sf::IntRect(0, 0, 1200, 1200));
         //            texture.loadFromFile("/home/pavel/Music/amonger.png");
-        texture.setSmooth(true);
-        sprite.setTexture(texture);
-        small_sprite.setTexture(texture);
-        int x = texture.getSize().x;
+        texture->setSmooth(true);
+        sprite = new sf::Sprite(*texture);
+        small_sprite = new sf::Sprite(*texture);
+        int x = texture->getSize().x;
         float scale = 300.f / x;
-        sprite.setScale({scale, scale});
+        sprite->setScale({scale, scale});
         scale *= 78.f / 300.f;
-        small_sprite.setScale({scale, scale});
+        small_sprite->setScale({scale, scale});
     }
 }
 
-
 void Song::get_fft(float* fft) { BASS_ChannelGetData(channel, fft, BASS_DATA_FFT4096); }
+
+Song::~Song() {
+    delete sprite;
+    delete small_sprite;
+    delete texture;
+    if (channel != 0) {
+        BASS_ChannelFree(channel);
+    }
+}
+
+Song::Song(Song&& other) noexcept
+    : channel(other.channel),
+      title(other.title),
+      artist(other.artist),
+      album(other.album),
+      track(other.track),
+      ltitle(other.ltitle),
+      lartist(other.lartist),
+      lalbum(other.lalbum),
+      path(other.path),
+      cr_time(other.cr_time),
+      filename(other.filename),
+      texture(other.texture),
+
+      sprite(other.sprite),
+      small_sprite(other.small_sprite),
+      time_loaded(other.time_loaded),
+      pic_loaded(other.pic_loaded),
+      pic_loading(other.pic_loading),
+      id(other.id) {
+    other.sprite = nullptr;
+    other.small_sprite = nullptr;
+    other.texture = nullptr;
+    other.channel = 0;
+}
+
+Song& Song::operator=(Song&& other) noexcept {
+    channel = other.channel;
+    title = other.title;
+    artist = other.artist;
+    album = other.album;
+    track = other.track;
+    ltitle = other.ltitle;
+    lartist = other.lartist;
+    lalbum = other.lalbum;
+    path = other.path;
+    cr_time = other.cr_time;
+    filename = other.filename;
+    texture = other.texture;
+
+    sprite = other.sprite;
+    small_sprite = other.small_sprite;
+    time_loaded = other.time_loaded;
+    pic_loaded = other.pic_loaded;
+    pic_loading = other.pic_loading;
+    id = other.id;
+
+    other.sprite = nullptr;
+    other.small_sprite = nullptr;
+    other.texture = nullptr;
+    other.channel = 0;
+
+    return *this;
+
+}

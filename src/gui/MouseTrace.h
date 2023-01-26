@@ -17,6 +17,7 @@ public:
     float radius = 6;
     const int maxLength = 16;
     bool clicked = false;
+    mutable sf::Vector2i mousePosition;
 
     void push(sf::Vector2i position);
 

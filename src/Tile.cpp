@@ -30,30 +30,31 @@ void Tile::render(sf::RenderTarget& target, PicLoader& pl, sf::RectangleShape& s
     time_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + Tile::H - 20);
     album_text.setPosition(
         sh.getPosition().x +
-            std::max(-4 - (int)s->album.getSize() * 8 + (int)sh.getSize().x, 90 + 8 * 6),
+            std::max(-4 - (int)s->album.size() * 8 + (int)sh.getSize().x, 90 + 8 * 6),
         sh.getPosition().y + Tile::H - 20);
-    if (!is_cur) {
-        title_text.setFillColor(sf::Color(255, 255, 255, 180));
-        artist_text.setFillColor(sf::Color(255, 255, 255, 180));
-        album_text.setFillColor(sf::Color(255, 255, 255, 180));
-    }
-    if (s->pic_loaded) {
-        s->small_sprite.setPosition(position.x, position.y);
+    int alpha = is_cur ? 255 : 180;
+    title_text.setFillColor(sf::Color(255, 255, 255, alpha));
+    artist_text.setFillColor(sf::Color(255, 255, 255, alpha));
+    album_text.setFillColor(sf::Color(255, 255, 255, alpha));
+    if (s->pic_loaded && s->small_sprite != nullptr) {
+        s->small_sprite->setPosition(position.x, position.y);
         float transition = std::min(
-            1.f, static_cast<float>((clk.getElapsedTime() - s->time_loaded).asMilliseconds()) /
+            1.f, static_cast<float>(clk.getElapsedTime().asMilliseconds() - s->time_loaded) /
                      FADE_TIME);
         if (!is_cur && !pic_transparent) {
-            s->small_sprite.setColor(
+            s->small_sprite->setColor(
                 sf::Color(255, 255, 255, static_cast<int>(IMG_ALPHA * transition)));
             if (transition == 1.f) pic_transparent = true;
         }
         if (is_cur && pic_transparent) {
-            s->small_sprite.setColor(sf::Color(255, 255, 255, static_cast<int>(255 * transition)));
+            s->small_sprite->setColor(sf::Color(255, 255, 255, static_cast<int>(255 * transition)));
             if (transition == 1.f) pic_transparent = false;
         }
     }
     target.draw(sh);
-    target.draw(s->small_sprite);
+    if (s->small_sprite) {
+        target.draw(*s->small_sprite);
+    }
     target.draw(title_text);
     target.draw(artist_text);
     target.draw(album_text);

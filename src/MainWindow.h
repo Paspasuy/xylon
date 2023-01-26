@@ -37,10 +37,9 @@ class MainWindow : public sf::RenderWindow {
 
     bool processGeneralEvent(sf::Event& event);
     bool processMouseEvent(sf::Event& event);
-    void updateMouseTrace();
 
 public:
-    MainWindow(sf::ContextSettings contextSettings);
+    explicit MainWindow(sf::ContextSettings contextSettings);
     void pollEvents();
     void beforeRender(uint64_t frame);
     void render();
