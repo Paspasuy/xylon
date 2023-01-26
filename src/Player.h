@@ -37,7 +37,7 @@ public:
 
     void prev();
 
-    void add_song(const std::string& s, const std::u8string& t, time_t time);
+    void add_song(const std::string& s, const std::string& t, time_t time);
 
     bool is_playing();
 

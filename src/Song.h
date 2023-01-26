@@ -30,8 +30,9 @@ public:
     std::wstring ltitle = L"title";
     std::wstring lartist = L"john doe";
     std::wstring lalbum = L"default album";
+
     std::string path;
-    std::u8string filename;
+    std::string filename;
     time_t cr_time;
 
     sf::Sprite* sprite = nullptr;
@@ -45,7 +46,7 @@ public:
 
     Song() = delete;
 
-    Song(const std::string& _path, const std::u8string& _filename, time_t _cr_time);
+    Song(const std::string& _path, const std::string& _filename, time_t _cr_time);
 
     Song& operator=(const Song&) = delete;
     Song(const Song&) = delete;

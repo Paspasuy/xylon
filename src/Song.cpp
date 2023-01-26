@@ -1,12 +1,11 @@
 #include "Song.h"
 
 #include <cmath>
+#include <codecvt>
 
-Song::Song(const std::string& _path, const std::u8string& _filename, time_t _cr_time) {
-    cr_time = _cr_time;
+Song::Song(const std::string& path, const std::string& filename, time_t cr_time)
+    : filename(filename), cr_time(cr_time), path(path) {
     id = rand();
-    path = _path;
-    filename = _filename;
     channel = BASS_StreamCreateFile(FALSE, path.c_str(), 0, 0, BASS_SAMPLE_FLOAT);
     int err = BASS_ErrorGetCode();
     if (err != 0) {
@@ -71,7 +70,7 @@ void Song::add_meta() {
     album = f.tag()->album().toWString();
     track = f.tag()->track();
     if (title.size() == 0) {
-        title = std::wstring(filename.begin(), filename.end());
+        title = std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(filename);
     }
     ltitle = lower(title);
     lartist = lower(artist);
@@ -92,8 +91,7 @@ void Song::load_pic() {
         //        int sz = static_cast<int>(std::sqrt(pic->picture().size() / 3));
         texture = new sf::Texture();
         texture->loadFromMemory((const u_char*)pic->picture().data(), pic->picture().size(),
-                               sf::IntRect(0, 0, 1200, 1200));
-        //            texture.loadFromFile("/home/pavel/Music/amonger.png");
+                                sf::IntRect(0, 0, 1200, 1200));
         texture->setSmooth(true);
         sprite = new sf::Sprite(*texture);
         small_sprite = new sf::Sprite(*texture);
@@ -169,5 +167,4 @@ Song& Song::operator=(Song&& other) noexcept {
     other.channel = 0;
 
     return *this;
-
 }

@@ -46,7 +46,7 @@ void Player::prev() {
     play();
 }
 
-void Player::add_song(const std::string& s, const std::u8string& t, time_t time) {
+void Player::add_song(const std::string& s, const std::string& t, time_t time) {
     songs.emplace_back(s, t, time);
     songs.back().add_meta();
 }
@@ -59,7 +59,7 @@ void Player::add_folder(const std::string& path) {
         if (dirEntry.path().extension() == ".mp3") {
             time_t time = std::chrono::system_clock::to_time_t(
                 std::chrono::file_clock::to_sys(dirEntry.last_write_time()));
-            add_song(dirEntry.path().string(), dirEntry.path().filename().u8string(), time);
+            add_song(dirEntry.path().string(), dirEntry.path().filename().generic_string(), time);
         }
     }
 }

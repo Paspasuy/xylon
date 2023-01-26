@@ -28,3 +28,4 @@ int main(int argc, char** argv) {
 // somehow compile for windows (in distant future)
 // write help menu, write readme
 // add different file formats support (webm/wav/flac)
+// minimalistic view
