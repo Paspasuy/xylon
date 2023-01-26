@@ -25,8 +25,9 @@ void Visualiser::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
     for (int i = 1; i < len / (w + SPACE); i += 1) {
         fft[i] /= down_c;
-        fft[i] = std::abs(fft[i]);
-        float mid = (fft[i - 1] + fft[i] + fft[i + 1]) / 3;
+//        fft[i] = std::abs(fft[i]);
+//        float mid = fft[i];
+        float mid = fft[i - 1] * 0.25 + fft[i] * 0.5 + fft[i + 1] * 0.25;
 //        float mid = (fft[i - 2] + fft[i - 1] + fft[i] + fft[i + 1] + fft[i + 2]) / 5;
         sh.setSize(sf::Vector2f(w, std::min(1000 * mid, 1500.f)));
         if (settings.vis_type == 0) {

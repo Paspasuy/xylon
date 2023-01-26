@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "../Player.h"
 #include "../utils/Utils.h"
@@ -14,6 +15,8 @@ private:
     int current, duration;
     double progress;
     mutable sf::RectangleShape cont;
+    mutable sf::Text currentText;
+    mutable sf::Text durationText;
 
 public:
     bool holding = false;

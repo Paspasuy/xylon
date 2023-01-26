@@ -8,10 +8,16 @@
 #include "ProgressBarView.h"
 
 class SongDisplay : public sf::Drawable {
+    mutable sf::Text title_text;
+    mutable sf::Text artist_text;
+    mutable uint64_t previousId = -1;
+    void update(Song& song) const;
+
 public:
     static const int PIC = 300;
-    Player* p;
+    Player* player;
     mutable ProgressBarView bar;
+
     mutable int margin_x, margin_y;
 
     explicit SongDisplay(Player* _p);

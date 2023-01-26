@@ -18,4 +18,6 @@ extern bool hasSubstr(const std::string& item, const std::string& str);
 std::wstring lower(const std::wstring& s);
 std::string lower(const std::string& s);
 
+void dbgTime(const std::string& what, sf::Time start, sf::Time threshold, bool millis = false);
+
 #endif  // XYLON_UTILS_H

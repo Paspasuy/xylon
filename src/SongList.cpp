@@ -1,24 +1,24 @@
-#include "SongView.h"
+#include "SongList.h"
 
 #include <cmath>
 
-int SongView::get_low_tile() { return std::max(0, (-shift) / (Tile::H + TILE_GAP)); }
+int SongList::get_low_tile() const { return std::max(0, (-shift) / (Tile::H + TILE_GAP)); }
 
-int SongView::get_up_tile(int winh) {
+int SongList::get_up_tile(int winh) const {
     return std::min(int(tiles.size()), (-shift + winh) / (Tile::H + TILE_GAP) + 1);
 }
 
-void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader) {
+void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     sf::Time time = clk.getElapsedTime();
-    update_vel(time - t);
-    update_shift(time - t);
+    update_vel(sf::seconds(1.f/settings.framerateLimit));
+    update_shift();
     t = time;
     sf::RectangleShape sh;
-    winsz = window.getSize();
+    winsz = target.getSize();
     sh.setSize(sf::Vector2f(Tile::W, Tile::H - 2));
     int low = get_low_tile();
     int up = get_up_tile(winsz.y);
-    uint64_t cur_id = pl->current_id();
+    uint64_t cur_id = player->current_id();
     bool touch = false;
     sh.setOutlineColor(settings.c1);
     sh.setFillColor(settings.c2);
@@ -34,7 +34,7 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader) {
         int xs = 0;  // int(CUR_SHIFT / dist);
         tiles[i].position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
         sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
-        tiles[i].render(window, pic_loader, sh, abs(vel) >= FAST, false);
+        tiles[i].render(target, picLoader, sh, abs(vel) >= FAST, false);
     }
     if (touch) {
         sh.setOutlineColor(settings.c3);
@@ -42,8 +42,8 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader) {
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
         tiles[cur].position =
             sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
-        tiles[cur].render(window, pic_loader, sh, abs(vel) >= FAST, true);
-        if (pl->loop) {
+        tiles[cur].render(target, picLoader, sh, abs(vel) >= FAST, true);
+        if (player->loop) {
             //            int r = 7;
             sf::RectangleShape rep(sf::Vector2f(3, Tile::H));
             //            sf::CircleShape rep(r);
@@ -53,50 +53,50 @@ void SongView::render(sf::RenderWindow& window, PicLoader& pic_loader) {
             pos.x += Tile::W + CUR_SHIFT - 3;
 
             rep.setPosition(sf::Vector2f(pos));
-            window.draw(rep);
+            target.draw(rep);
         }
     }
 }
 
-void SongView::init(Player* p, const std::wstring& filter) {
-    pl = p;
+void SongList::init(Player* p, const std::wstring& filter) {
+    player = p;
     tiles.clear();
     for (Song* it : p->get_songs(filter)) {
         tiles.emplace_back(Tile(it));
     }
     find_cur();
-    shift = (-pl->ptr + 1) * (Tile::H + TILE_GAP);
+    shift = (-player->ptr + 1) * (Tile::H + TILE_GAP);
     norm_shift();
 }
 
-void SongView::norm_shift() {
+void SongList::norm_shift() const {
     shift = std::max(shift, -int(tiles.size() * (Tile::H + TILE_GAP)) - 30 + int(winsz.y));
     shift = std::min(shift, 30);
 }
 
-void SongView::norm_shift_tile() {
+void SongList::norm_shift_tile() const {
     vel = 0;
     norm_shift_up();
     norm_shift_down();
     norm_shift();
 }
 
-void SongView::norm_shift_up() {
+void SongList::norm_shift_up() const {
     int up_bound = -(cur - 1) * (Tile::H + TILE_GAP);
     shift = std::max(shift, up_bound);
 }
 
-void SongView::norm_shift_down() {
+void SongList::norm_shift_down() const {
     int down_bound = -(cur + 2) * (Tile::H + TILE_GAP) + winsz.y;
     shift = std::min(shift, down_bound);
 }
 
-void SongView::scroll(int delta) {
+void SongList::scroll(int delta) const {
     vel += delta * 250;
     norm_shift();
 }
 
-std::pair<int, int> SongView::get_click_id(int x, int y) {
+std::pair<int, int> SongList::get_click_id(int x, int y) const {
     for (int i = get_low_tile(); i < get_up_tile(winsz.y); ++i) {
         if (tiles[i].position.x - TILE_GAP <= x) {
             if (tiles[i].position.y - TILE_GAP / 2 <= y &&
@@ -108,7 +108,7 @@ std::pair<int, int> SongView::get_click_id(int x, int y) {
     return {-1, -1};
 }
 
-void SongView::update_vel(sf::Time t) {
+void SongList::update_vel(sf::Time t) const {
     int mx = shift_pressed ? MAX_VEL_WITH_SHIFT : MAX_VEL;
     if (vel > 0) {
         vel -= t.asSeconds() * accel;
@@ -121,61 +121,61 @@ void SongView::update_vel(sf::Time t) {
     }
 }
 
-void SongView::update_shift(sf::Time t) {
+void SongList::update_shift() const {
     if (!holding) {
-        shift += vel * t.asSeconds();
+        shift += vel / settings.framerateLimit;;
         norm_shift();
     }
 }
 
-void SongView::grab(int y) {
+void SongList::grab(int y) {
     holding = 1;
     last_y = y;
     vel = 0;
 }
 
-void SongView::release(int y, sf::Time time) {
+void SongList::release(int y, sf::Time time) {
     vel = (y - last_y) / (time - t).asSeconds();
     holding = 0;
 }
 
-void SongView::set_position(int y) {
+void SongList::set_position(int y) {
     shift += y - last_y;
     last_y = y;
 }
 
-void SongView::pageup() {
+void SongList::pageup() {
     shift += 500;
     norm_shift();
 }
 
-void SongView::pagedown() {
+void SongList::pagedown() {
     shift -= 500;
     norm_shift();
 }
 
-size_t SongView::size() { return tiles.size(); }
+size_t SongList::size() { return tiles.size(); }
 
-void SongView::play_prev(bool ignore_loop) {
-    if (pl->loop && !ignore_loop) {
-        pl->play();
+void SongList::play_prev(bool ignore_loop) {
+    if (player->loop && !ignore_loop) {
+        player->play();
     } else {
-        pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + tiles.size() - 1) % tiles.size())].s->id);
+        player->play_id(tiles[cur = (cur == -1 ? 0 : (cur + tiles.size() - 1) % tiles.size())].s->id);
         norm_shift_tile();
     }
 }
 
-void SongView::play_next(bool ignore_loop) {
-    if (pl->loop && !ignore_loop) {
-        pl->play();
+void SongList::play_next(bool ignore_loop) {
+    if (player->loop && !ignore_loop) {
+        player->play();
     } else {
-        pl->play_id(tiles[cur = (cur == -1 ? 0 : (cur + 1) % tiles.size())].s->id);
+        player->play_id(tiles[cur = (cur == -1 ? 0 : (cur + 1) % tiles.size())].s->id);
         norm_shift_tile();
     }
 }
 
-void SongView::find_cur() {
-    int current_id = pl->current_id();
+void SongList::find_cur() {
+    int current_id = player->current_id();
     int index = 0;
     for (Tile& tile : tiles) {
         if (tile.s->id == current_id) {
@@ -185,3 +185,5 @@ void SongView::find_cur() {
         ++index;
     }
 }
+
+SongList::SongList(PicLoader& picLoader) : picLoader(picLoader) {}

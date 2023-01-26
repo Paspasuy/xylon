@@ -5,8 +5,17 @@
 void ProgressBarView::update(Player* pl) {
     sf::Time t1 = pl->getPlayingOffset();
     sf::Time t2 = pl->getDuration();
-    current = int(t1.asSeconds());
-    duration = int(t2.asSeconds());
+    int new_current = int(t1.asSeconds());
+    int new_duration = int(t2.asSeconds());
+    if (new_current != current) {
+        current = new_current;
+        currentText = sf::Text(secondsToTimeString(current), FONT, 14);
+    }
+    if (new_duration != duration) {
+        duration = new_duration;
+        std::string s2 = secondsToTimeString(duration);
+        durationText = sf::Text(s2, FONT, 14);
+    }
     progress = double(t1.asMicroseconds()) / t2.asMicroseconds();
 }
 
@@ -23,14 +32,12 @@ void ProgressBarView::draw(sf::RenderTarget& target, sf::RenderStates states) co
     line.setFillColor(settings.c5);
     target.draw(line);
 
-    sf::Text text(secondsToTimeString(current), FONT, 14);
-    text.setPosition(x, y + 10);
-    target.draw(text);
+    currentText.setPosition(x, y + 10);
+    target.draw(currentText);
 
-    std::string s2 = secondsToTimeString(duration);
-    sf::Text text2(s2, FONT, 14);
-    text2.setPosition(x + SongDisplay::PIC - 8 * s2.size(), y + 10);
-    target.draw(text2);
+//    std::string s2 = secondsToTimeString(duration);
+    durationText.setPosition(x + SongDisplay::PIC - 8 * 5, y + 10);
+    target.draw(durationText);
 }
 
 void ProgressBarView::setPosition(int _x, int _y) {

@@ -17,14 +17,14 @@ int main(int argc, char** argv) {
         window.pollEvents();
         window.beforeRender(frame);
         window.render();
-//        std::cerr << "Rendered in " << (clk.getElapsedTime() - t).asMilliseconds() << "ms" << std::endl;
+//        dbgTime("everything", t, sf::milliseconds(9), true);
     }
 
     return 0;
 }
 
-// fix freezes when loading pictures
+// make thread pool for loading pictures
 // button resizing with bass
 // somehow compile for windows (in distant future)
 // write help menu, write readme
-// add different file formats support (flac?)
+// add different file formats support (webm/wav/flac)

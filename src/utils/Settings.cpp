@@ -30,7 +30,7 @@ std::wstring DEFAULT_CONF_STR =
     "# Progress bar color\n"
     "0 200 0 225\n"
     "# Visualiser color\n"
-    "109 0 133 255\n"
+    "160 0 190 255\n"
     "# Repeat indicator color\n"
     "255 0 0 255\n"
     "# Cursor color\n"

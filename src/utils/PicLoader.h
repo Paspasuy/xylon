@@ -10,8 +10,9 @@
 class PicLoader {
     std::mutex mutex;
     std::queue<Song*> to_load;
-    static void load_ptr(Song* cur);
+    static bool loading;
 
+    static void load_ptr(Song* cur);
 public:
     bool should_load = true;
     void load(Song* pSong);

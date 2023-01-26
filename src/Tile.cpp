@@ -4,14 +4,19 @@
 
 #include "utils/Utils.h"
 
-Tile::Tile(Song* s) : s(s) {
+Tile::Tile(Song* s)
+    : s(s),
+      title_text(s->title, BOLD_FONT, 16),
+      artist_text(s->artist, FONT, 14),
+      time_text(secondsToTimeString(s->getDuration().asSeconds()), FONT, 14),
+      album_text(s->album, FONT, 14) {
     //        TagLib::MP4::Tag* tag = ff.tag();
     //        auto itemsListMap = tag->itemListMap();
     //        TagLib::MP4::Item coverItem = itemsListMap["covr"];
     //        TagLib::MP4::CoverArtList coverArtList = coverItem.toCoverArtList();
 }
 
-void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& sh, bool too_fast,
+void Tile::render(sf::RenderTarget& target, PicLoader& pl, sf::RectangleShape& sh, bool too_fast,
                   bool is_cur) {
     if (pl.should_load && !too_fast) {
         if (!s->pic_loaded && !s->pic_loading) {
@@ -20,10 +25,6 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& s
     }
     sh.setPosition(position.x, position.y);
     sh.setOutlineThickness(1.f);
-    sf::Text title_text(s->title, BOLD_FONT, 16);
-    sf::Text artist_text(s->artist, FONT, 14);
-    sf::Text time_text(secondsToTimeString(s->getDuration().asSeconds()), FONT, 14);
-    sf::Text album_text(s->album, FONT, 14);
     title_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + 2);
     artist_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + 20);
     time_text.setPosition(sh.getPosition().x + 2 + 85, sh.getPosition().y + Tile::H - 20);
@@ -51,12 +52,12 @@ void Tile::render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& s
             if (transition == 1.f) pic_transparent = false;
         }
     }
-    window.draw(sh);
-    window.draw(s->small_sprite);
-    window.draw(title_text);
-    window.draw(artist_text);
-    window.draw(album_text);
-    window.draw(time_text);
+    target.draw(sh);
+    target.draw(s->small_sprite);
+    target.draw(title_text);
+    target.draw(artist_text);
+    target.draw(album_text);
+    target.draw(time_text);
 }
 
 int Tile::W;

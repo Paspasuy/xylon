@@ -10,6 +10,7 @@ void PicLoader::load(Song* pSong) {
 }
 
 void PicLoader::update() {
+    if (loading) return;
     mutex.lock();
     if (!to_load.empty()) {
         while (to_load.size() > MAX_QUEUE) {
@@ -27,4 +28,6 @@ void PicLoader::update() {
     }
 }
 
-void PicLoader::load_ptr(Song* cur) { cur->load_pic(); }
+void PicLoader::load_ptr(Song* cur) { loading = true; cur->load_pic(); loading = false; }
+
+bool PicLoader::loading = false;

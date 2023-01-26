@@ -5,7 +5,7 @@
 
 #include "../SelbaWard/Starfield.h"
 #include "Player.h"
-#include "SongView.h"
+#include "SongList.h"
 #include "gui/DirectorySelect.h"
 #include "gui/DownloadView.h"
 #include "gui/MouseTrace.h"
@@ -25,8 +25,8 @@ class MainWindow : public sf::RenderWindow {
     Player& p;
     SongDisplay songDisplay;
     VolumeCircleSlider vol_slider;
-    SongView songs;
-    PicLoader pl;
+    SongList songList;
+    PicLoader picLoader;
     SongSearch songSearch;
     Visualiser visualiser;
     SortSelect sortSelect;
@@ -37,6 +37,7 @@ class MainWindow : public sf::RenderWindow {
 
     bool processGeneralEvent(sf::Event& event);
     bool processMouseEvent(sf::Event& event);
+    void updateMouseTrace();
 
 public:
     MainWindow(sf::ContextSettings contextSettings);

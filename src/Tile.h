@@ -4,11 +4,16 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "Song.h"
 #include "utils/PicLoader.h"
 
 class Tile {
+    sf::Text title_text;
+    sf::Text artist_text;
+    sf::Text time_text;
+    sf::Text album_text;
 public:
     static int MAX_W;
     static int W;
@@ -19,9 +24,9 @@ public:
     Song* s;
     bool pic_transparent = false;
 
-    Tile(Song* _s);
+    explicit Tile(Song* _s);
 
-    void render(sf::RenderWindow& window, PicLoader& pl, sf::RectangleShape& sh, bool too_fast,
+    void render(sf::RenderTarget& target, PicLoader& pl, sf::RectangleShape& sh, bool too_fast,
                 bool is_cur);
 };
 

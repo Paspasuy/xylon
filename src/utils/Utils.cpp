@@ -59,3 +59,15 @@ bool hasSubstr(const std::wstring& item, const std::wstring& str) {
 bool hasSubstr(const std::string& item, const std::string& str) {
     return lower(item).find(lower(str)) != std::string::npos;
 }
+
+void dbgTime(const std::string& what, sf::Time start, sf::Time threshold, bool millis) {
+    sf::Time t = clk.getElapsedTime() - start;
+    if (t >= threshold) {
+        std::cerr << "Time to render " << what << ": ";
+        if (millis) {
+            std::cerr << t.asMilliseconds()<< "ms" << std::endl;
+        } else {
+            std::cerr << t.asMicroseconds() << "μs" << std::endl;
+        }
+    }
+}
