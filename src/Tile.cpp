@@ -16,8 +16,8 @@ Tile::Tile(Song* s)
     //        TagLib::MP4::CoverArtList coverArtList = coverItem.toCoverArtList();
 }
 
-void Tile::render(sf::RenderTarget& target, PicLoader& pl, sf::RectangleShape& sh, bool too_fast,
-                  bool is_cur) {
+void Tile::render(sf::RenderTarget& target, PicLoader& pl, sf::RectangleShape& sh, int elapsed,
+                  bool too_fast, bool is_cur) {
     if (pl.should_load && !too_fast) {
         if (!s->pic_loaded && !s->pic_loading) {
             pl.load(s);
@@ -39,7 +39,7 @@ void Tile::render(sf::RenderTarget& target, PicLoader& pl, sf::RectangleShape& s
     if (s->pic_loaded && s->small_sprite != nullptr) {
         s->small_sprite->setPosition(position.x, position.y);
         float transition = std::min(
-            1.f, static_cast<float>(clk.getElapsedTime().asMilliseconds() - s->time_loaded) /
+            1.f, static_cast<float>(elapsed - s->time_loaded) /
                      FADE_TIME);
         if (!is_cur && !pic_transparent) {
             s->small_sprite->setColor(

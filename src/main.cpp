@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-// make thread pool for loading pictures
+// filter by album
 // refactor settings
 // button resizing with bass
 // somehow compile for windows (in distant future)

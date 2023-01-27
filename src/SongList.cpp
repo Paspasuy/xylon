@@ -22,6 +22,7 @@ void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     bool touch = false;
     sh.setOutlineColor(settings.c1);
     sh.setFillColor(settings.c2);
+    int elapsed = clk.getElapsedTime().asMilliseconds();
     for (int i = low; i < up; ++i) {
         if (tiles[i].s->id == cur_id) {
             cur = i;
@@ -34,7 +35,7 @@ void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         int xs = 0;  // int(CUR_SHIFT / dist);
         tiles[i].position = sf::Vector2i(winsz.x - Tile::W - xs, tile_h);
         sh.setSize(sf::Vector2f(Tile::W + xs, Tile::H - 2));
-        tiles[i].render(target, picLoader, sh, abs(vel) >= FAST, false);
+        tiles[i].render(target, picLoader, sh, elapsed, abs(vel) >= FAST, false);
     }
     if (touch) {
         sh.setOutlineColor(settings.c3);
@@ -42,7 +43,7 @@ void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
         tiles[cur].position =
             sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
-        tiles[cur].render(target, picLoader, sh, abs(vel) >= FAST, true);
+        tiles[cur].render(target, picLoader, sh, elapsed, abs(vel) >= FAST, true);
         if (player->loop) {
             //            int r = 7;
             sf::RectangleShape rep(sf::Vector2f(3, Tile::H));
