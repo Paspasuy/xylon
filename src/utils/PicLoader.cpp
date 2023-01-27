@@ -3,31 +3,32 @@
 #include <thread>
 
 void PicLoader::load(Song* pSong) {
+    threadPool.queueJob(PicLoader::load_from_queue, 0);
     pSong->pic_loading = true;
-    mutex.lock();
+    std::unique_lock<std::mutex> lock(mutex);
     to_load.emplace(pSong);
-    mutex.unlock();
 }
 
 void PicLoader::update() {
-    if (loading) return;
-    mutex.lock();
-    if (!to_load.empty()) {
-        while (to_load.size() > MAX_QUEUE) {
-            Song* cur = to_load.front();
-            to_load.pop();
-            cur->pic_loading = false;
-        }
+    std::unique_lock<std::mutex> lock(mutex);
+    while (to_load.size() > MAX_QUEUE) {
         Song* cur = to_load.front();
         to_load.pop();
-        mutex.unlock();
-        std::thread thr(load_ptr, cur);
-        thr.detach();
-    } else {
-        mutex.unlock();
+        cur->pic_loading = false;
     }
 }
 
-void PicLoader::load_ptr(Song* cur) { loading = true; cur->load_pic(); loading = false; }
+void PicLoader::load_from_queue() {
+    Song* cur;
+    {
+        std::unique_lock<std::mutex> lock(mutex);
+        if (to_load.empty()) return;
+        cur = to_load.front();
+        to_load.pop();
+    }
+    cur->load_pic();
+}
 
-bool PicLoader::loading = false;
+
+std::mutex PicLoader::mutex;
+std::queue<Song*> PicLoader::to_load;

@@ -8,11 +8,10 @@
 #include "Utils.h"
 
 class PicLoader {
-    std::mutex mutex;
-    std::queue<Song*> to_load;
-    static bool loading;
+    static std::mutex mutex;
+    static std::queue<Song*> to_load;
 
-    static void load_ptr(Song* cur);
+    static void load_from_queue();
 public:
     bool should_load = true;
     void load(Song* pSong);

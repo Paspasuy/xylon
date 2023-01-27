@@ -1,10 +1,10 @@
 #ifndef XYLON_POSTPROCESSING_H
 #define XYLON_POSTPROCESSING_H
 
+#include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Shader.hpp>
-#include <SFML/Graphics/Drawable.hpp>
 
 class PostProcessing : public sf::Drawable {
     mutable sf::RenderStates shader_states;
@@ -14,6 +14,7 @@ class PostProcessing : public sf::Drawable {
     mutable sf::RenderTexture scene_render;
     mutable sf::RenderTexture blur_render;
     mutable sf::ContextSettings ctx;
+
 public:
     PostProcessing(const sf::Vector2f& size, sf::ContextSettings ctx);
     void add(sf::Drawable& drawable);
@@ -21,6 +22,7 @@ public:
 
     ~PostProcessing() override;
     void create(const sf::Vector2f& size);
+    void render() const;
 
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

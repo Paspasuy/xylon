@@ -7,6 +7,7 @@
 sf::Font FONT, BOLD_FONT;
 sf::Clock clk;
 Settings settings;
+ThreadPool threadPool;
 
 void xylonInit() {
     std::locale::global(std::locale(settings.locale));
@@ -14,6 +15,8 @@ void xylonInit() {
     std::wcout.imbue(std::locale(settings.locale));
 
     DownloadView::last = clk.getElapsedTime() - sf::seconds(60);
+
+    threadPool.start();
 }
 
 std::string secondsToTimeString(int time) {

@@ -5,10 +5,12 @@
 #include <SFML/System/Clock.hpp>
 
 #include "Settings.h"
+#include "ThreadPool.h"
 
 extern sf::Font FONT, BOLD_FONT;
 extern sf::Clock clk;
 extern Settings settings;
+extern ThreadPool threadPool;
 
 extern void xylonInit();
 extern std::string secondsToTimeString(int time);

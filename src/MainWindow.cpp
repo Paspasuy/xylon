@@ -48,7 +48,6 @@ bool MainWindow::processGeneralEvent(sf::Event& event) {
         songList.winsz = getSize();
         starfield.regenerate(sf::Vector2f(getSize().x, getSize().y));
         postProcessing.create(sf::Vector2f(getSize().x, getSize().y));
-
     } else {
         return false;
     }
@@ -275,9 +274,7 @@ void MainWindow::beforeRender(uint64_t frame) {
         songList.set_position(mouseTrace.mousePosition.y);
     }
     songList.shift_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift);
-    if ((frame & 1) == 0) {
-        picLoader.update();
-    }
+    picLoader.update();
 
     stars_rot(stars_vec);
     starfield.move(stars_vec);
@@ -295,10 +292,12 @@ void MainWindow::render() {
     draw(dirSelect);
     draw(songSearch);
     draw(download);
+
     postProcessing.clear();
     postProcessing.add(vol_slider);
     postProcessing.add(mouseTrace);
     draw(postProcessing);
+
     display();
 }
 

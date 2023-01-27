@@ -5,7 +5,8 @@
 
 #include "../utils/Utils.h"
 
-const char* ASSEMBLE_FRAG = "uniform sampler2D texture;\n"
+const char* ASSEMBLE_FRAG =
+    "uniform sampler2D texture;\n"
     "uniform sampler2D add_texture;\n"
     "uniform float sum;\n"
     "uniform float add_weight;\n"
@@ -15,7 +16,8 @@ const char* ASSEMBLE_FRAG = "uniform sampler2D texture;\n"
     "    gl_FragColor = tex_color + add_color;\n"
     "}";
 
-const char* BOXBLUR_FRAG = "uniform sampler2D texture;\n"
+const char* BOXBLUR_FRAG =
+    "uniform sampler2D texture;\n"
     "uniform float texture_inverse;\n"
     "uniform int blur_radius;\n"
     "uniform vec2 blur_direction;\n"
@@ -27,6 +29,7 @@ const char* BOXBLUR_FRAG = "uniform sampler2D texture;\n"
     "    }\n"
     "    gl_FragColor = sum / float(blur_radius + 1);\n"
     "}";
+
 /*
 const char* LUMINISCENCE_FRAG = "uniform sampler2D texture;\n"
     "uniform float threshold;\n"
@@ -42,7 +45,6 @@ const char* LUMINISCENCE_FRAG = "uniform sampler2D texture;\n"
 */
 
 PostProcessing::PostProcessing(const sf::Vector2f& size, sf::ContextSettings ctx) : ctx(ctx) {
-
     blur_shader.loadFromMemory(BOXBLUR_FRAG, sf::Shader::Fragment);
     blur_shader.setUniform("texture", sf::Shader::CurrentTexture);
     blur_shader.setUniform("texture_inverse", 1.0f / size.x);
@@ -55,14 +57,27 @@ PostProcessing::PostProcessing(const sf::Vector2f& size, sf::ContextSettings ctx
 PostProcessing::~PostProcessing() = default;
 
 void PostProcessing::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    render();
+    target.draw(sf::Sprite(scene_render.getTexture()), sf::BlendAdd);
+}
+
+void PostProcessing::add(sf::Drawable& drawable) { scene_render.draw(drawable); }
+
+void PostProcessing::clear() { scene_render.clear(sf::Color(0, 0, 0, 0)); }
+
+void PostProcessing::create(const sf::Vector2f& size) {
+    scene_render.create(size.x, size.y, ctx);
+    blur_render.create(size.x, size.y, ctx);
+}
+
+void PostProcessing::render() const {
     scene_render.display();
     if (!settings.enableGlow) {
-        target.draw(sf::Sprite(scene_render.getTexture()), sf::BlendAdd);
         return;
     }
 
     shader_states.shader = &blur_shader;
-    blur_shader.setUniform("blur_radius", 16);
+    blur_shader.setUniform("blur_radius", 8);
 
     blur_render.clear(sf::Color(0, 0, 0, 0));
     blur_render.draw(sf::Sprite(scene_render.getTexture()));
@@ -85,19 +100,4 @@ void PostProcessing::draw(sf::RenderTarget& target, sf::RenderStates states) con
     scene_render.clear(sf::Color(0, 0, 0, 0));
     scene_render.draw(tmp, shader_states);
     scene_render.display();
-
-    target.draw(sf::Sprite(scene_render.getTexture()), sf::BlendAdd);
-}
-
-void PostProcessing::add(sf::Drawable& drawable) {
-     scene_render.draw(drawable);
-}
-
-void PostProcessing::clear() {
-     scene_render.clear(sf::Color(0, 0, 0, 0));
-}
-
-void PostProcessing::create(const sf::Vector2f& size) {
-     scene_render.create(size.x, size.y, ctx);
-     blur_render.create(size.x, size.y, ctx);
 }

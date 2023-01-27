@@ -11,19 +11,24 @@ int main(int argc, char** argv) {
     contextSettings.antialiasingLevel = 8;
     MainWindow window(contextSettings);
 
+//    int mid = 0;
+
     for (uint64_t frame = 0; window.isOpen(); ++frame) {
         sf::Time t = clk.getElapsedTime();
         window.beforePolling();
         window.pollEvents();
         window.beforeRender(frame);
         window.render();
-//        dbgTime("everything", t, sf::milliseconds(9), true);
+//        mid += (clk.getElapsedTime() - t).asMicroseconds();
+//        std::cerr << "frame time: " << mid / float(frame + 1) << std::endl;
+//        dbgTime("everything", t, sf::milliseconds(0), true);
     }
 
     return 0;
 }
 
 // make thread pool for loading pictures
+// refactor settings
 // button resizing with bass
 // somehow compile for windows (in distant future)
 // write help menu, write readme
