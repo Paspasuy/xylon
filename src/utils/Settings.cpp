@@ -1,12 +1,9 @@
-//
-// Created by pavel on 11/19/21.
-//
-
 #include "Settings.h"
-#include "Utils.h"
 
 #include <filesystem>
 #include <iostream>
+
+#include "Utils.h"
 
 std::wstring DEFAULT_CONF_STR =
     L"# Locale\n"
@@ -21,10 +18,10 @@ std::wstring DEFAULT_CONF_STR =
     "120\n"
     "# Enable glow\n"
     "1\n"
-    "# Usual tile color (outline/background), all colors are in 'r g b a' format\n"
+    "# Inactive tile color (outline/background), all colors are in 'r g b a' format\n"
     "200 100 0 0\n"
     "200 100 0 30\n"
-    "# Playing tile color (outline/background)\n"
+    "# Active tile color (outline/background)\n"
     "0 0 200 0\n"
     "0 0 200 50\n"
     "# Progress bar color\n"
@@ -58,72 +55,33 @@ void Settings::load() {
         conf.open(str);
     }
 
-    std::wstring line;
-    int cc = 9, qq = 3;
-    int colors[cc * 4];
-    int* params[qq + cc * 4];
-    params[0] = &vis_type;
-    params[1] = &framerateLimit;
-    params[2] = &enableGlow;
-    for (size_t i = 0; i < cc * 4; ++i) {
-        params[i + qq] = colors + i;
-    }
+    std::string line;
 
-    int i = 0, tmp = 0;
-    int line_ind = 0;
     if (conf.is_open()) {
-        while (getline(conf, line)) {
-            int idx = line.find('#');
-            if (idx != std::string::npos) {
-                line = line.substr(0, idx);
-            }
-            if (line.empty()) continue;
-            if (locale.empty()) {
-                locale = std::string(line.begin(), line.end());
-                continue;
-            }
-            if (pathToRegularFont.empty()) {
-                pathToRegularFont = std::string(line.begin(), line.end());
-                continue;
-            }
-            if (pathToBoldFont.empty()) {
-                pathToBoldFont = std::string(line.begin(), line.end());
-                continue;
-            }
-            idx = line.find('/');
-            if (idx == std::string::npos) {
-                std::wstringstream ss(line);
-                while (ss >> tmp) {
-                    *params[i++] = tmp;
-                }
-                ++line_ind;
-            } else {
-                std::string str(line.begin(), line.end());
-                folders.push_back(str);
-            }
+        locale = readString(conf);
+        pathToRegularFont = readString(conf);
+        pathToBoldFont = readString(conf);
+        vis_type = readInt(conf);
+        framerateLimit = readInt(conf);
+        enableGlow = readInt(conf);
+        inactiveTileOutline = readColor(conf);
+        inactiveTileBackground = readColor(conf);
+        activeTileOutline = readColor(conf);
+        activeTileBackground = readColor(conf);
+        progressBarColor = readColor(conf);
+        visualiserColor = readColor(conf);
+        repeatColor = readColor(conf);
+        cursorColor = readColor(conf);
+        cursorTraceColor = readColor(conf);
+        while (!(line = readString(conf)).empty()) {
+            folders.emplace_back(line);
         }
     }
     conf.close();
     if (folders.empty()) {
         folders.emplace_back(std::string(getenv("HOME")) + "/Music/");
     }
-    init_col(c1, colors);
-    init_col(c2, colors + 4);
-    init_col(c3, colors + 8);
-    init_col(c4, colors + 12);
-    init_col(c5, colors + 16);
-    init_col(c6, colors + 20);
-    init_col(c7, colors + 24);
-    init_col(cursorColor, colors + 28);
-    init_col(cursorTraceColor, colors + 32);
     loadFonts();
-}
-
-void Settings::init_col(sf::Color& c, const int* colors) {
-    c.r = colors[0];
-    c.g = colors[1];
-    c.b = colors[2];
-    c.a = colors[3];
 }
 
 Settings::Settings() { load(); }
@@ -140,4 +98,52 @@ void Settings::loadFonts() {
     } else {
         BOLD_FONT = bold_font;
     }
+}
+
+void removeComment(std::wstring& line) {
+    int idx = line.find('#');
+    if (idx != std::string::npos) {
+        line = line.substr(0, idx);
+    }
+}
+
+int Settings::readInt(std::wifstream& file) {
+    std::wstring line;
+    while (getline(file, line)) {
+        removeComment(line);
+        if (line.empty()) continue;
+        int x;
+        std::wstringstream ss(line);
+        ss >> x;
+        return x;
+    }
+    throw std::runtime_error("Reading integer from config failed");
+}
+
+sf::Color Settings::readColor(std::wifstream& file) {
+    std::wstring line;
+    while (getline(file, line)) {
+        removeComment(line);
+        if (line.empty()) continue;
+        int r, g, b, a;
+        std::wstringstream ss(line);
+        ss >> r >> g >> b >> a;
+        return sf::Color(r, g, b, a);
+    }
+    throw std::runtime_error("Reading color from config failed");
+}
+
+std::wstring Settings::readWstring(std::wifstream& file) {
+    std::wstring line;
+    while (getline(file, line)) {
+        removeComment(line);
+        if (line.empty()) continue;
+        return line;
+    }
+    return L"";
+}
+
+std::string Settings::readString(std::wifstream& file) {
+    std::wstring res = readWstring(file);
+    return std::string(res.begin(), res.end());
 }

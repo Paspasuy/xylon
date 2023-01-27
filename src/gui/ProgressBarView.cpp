@@ -29,7 +29,7 @@ void ProgressBarView::draw(sf::RenderTarget& target, sf::RenderStates states) co
     cont = line;
     line.setSize(sf::Vector2f(int(SongDisplay::PIC * progress), 3.f));
     line.setPosition(x, y + 5);
-    line.setFillColor(settings.c5);
+    line.setFillColor(settings.progressBarColor);
     target.draw(line);
 
     currentText.setPosition(x, y + 10);

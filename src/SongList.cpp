@@ -20,8 +20,8 @@ void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     int up = get_up_tile(winsz.y);
     uint64_t cur_id = player->current_id();
     bool touch = false;
-    sh.setOutlineColor(settings.c1);
-    sh.setFillColor(settings.c2);
+    sh.setOutlineColor(settings.inactiveTileOutline);
+    sh.setFillColor(settings.inactiveTileBackground);
     int elapsed = clk.getElapsedTime().asMilliseconds();
     for (int i = low; i < up; ++i) {
         if (tiles[i].s->id == cur_id) {
@@ -38,8 +38,8 @@ void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         tiles[i].render(target, picLoader, sh, elapsed, abs(vel) >= FAST, false);
     }
     if (touch) {
-        sh.setOutlineColor(settings.c3);
-        sh.setFillColor(settings.c4);
+        sh.setOutlineColor(settings.activeTileOutline);
+        sh.setFillColor(settings.activeTileBackground);
         sh.setSize(sf::Vector2f(Tile::W + CUR_SHIFT, Tile::H - 2));
         tiles[cur].position =
             sf::Vector2i(winsz.x - Tile::W - CUR_SHIFT, shift + cur * (Tile::H + TILE_GAP));
@@ -48,7 +48,7 @@ void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
             //            int r = 7;
             sf::RectangleShape rep(sf::Vector2f(3, Tile::H));
             //            sf::CircleShape rep(r);
-            rep.setFillColor(settings.c7);
+            rep.setFillColor(settings.repeatColor);
             auto pos = tiles[cur].position;
             //            pos.y += Tile::H / 2 - r;
             pos.x += Tile::W + CUR_SHIFT - 3;

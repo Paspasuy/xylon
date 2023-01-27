@@ -15,8 +15,8 @@ void Visualiser::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     const int w = 4;
     const int SPACE = 1;
     float down_c = 1.5;
-    sh.setFillColor(settings.c6);
-    sh.setOutlineColor(settings.c6);
+    sh.setFillColor(settings.visualiserColor);
+    sh.setOutlineColor(settings.visualiserColor);
     int h;
     if (settings.vis_type == 0) {
         h = target.getSize().y;

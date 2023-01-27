@@ -1,7 +1,3 @@
-//
-// Created by pavel on 11/19/21.
-//
-
 #ifndef XYLON_SETTINGS_H
 #define XYLON_SETTINGS_H
 
@@ -12,6 +8,11 @@
 class Settings {
     std::string path;
 
+    int readInt(std::wifstream& file);
+    sf::Color readColor(std::wifstream& file);
+    std::wstring readWstring(std::wifstream& file);
+    std::string readString(std::wifstream& file);
+
 public:
     Settings();
     std::string locale;
@@ -21,14 +22,14 @@ public:
     int vis_type;
     int framerateLimit;
     int enableGlow;
-    sf::Color c1, c2, c3, c4, c5, c6, c7;
+    sf::Color inactiveTileOutline, inactiveTileBackground;
+    sf::Color activeTileOutline, activeTileBackground;
+    sf::Color progressBarColor, visualiserColor, repeatColor;
     sf::Color cursorColor, cursorTraceColor;
-    static void init_col(sf::Color& c, const int* colors);
 
     void load();
 
     void loadFonts();
-
 };
 
 #endif  // XYLON_SETTINGS_H
