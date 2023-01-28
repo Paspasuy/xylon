@@ -22,6 +22,9 @@ class SongList : public sf::Drawable {
     const int MAX_VEL = 3000;
     const int MAX_VEL_WITH_SHIFT = 30000;
     mutable int last_y = 0;
+
+
+
     mutable Player* player;
     PicLoader& picLoader;
 
@@ -39,7 +42,7 @@ public:
 
     explicit SongList(PicLoader&);
 
-    void init(Player* p, const std::wstring& filter = L"");
+    void init(Player* p, const std::wstring& filter = L"", const std::wstring& album = L"");
 
     void norm_shift() const;
 

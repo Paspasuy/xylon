@@ -6,6 +6,7 @@
 #include "../SelbaWard/Starfield.h"
 #include "Player.h"
 #include "SongList.h"
+#include "gui/AlbumSelect.h"
 #include "gui/DirectorySelect.h"
 #include "gui/DownloadView.h"
 #include "gui/MouseTrace.h"
@@ -34,6 +35,7 @@ class MainWindow : public sf::RenderWindow {
     DownloadView download;
     MouseTrace mouseTrace;
     PostProcessing postProcessing;
+    AlbumSelect albumSelect;
 
     bool processGeneralEvent(sf::Event& event);
     bool processMouseEvent(sf::Event& event);

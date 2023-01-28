@@ -59,10 +59,10 @@ void SongList::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
 }
 
-void SongList::init(Player* p, const std::wstring& filter) {
+void SongList::init(Player* p, const std::wstring& filter, const std::wstring& album) {
     player = p;
     tiles.clear();
-    for (Song* it : p->get_songs(filter)) {
+    for (Song* it : p->get_songs(filter, album)) {
         tiles.emplace_back(Tile(it));
     }
     find_cur();

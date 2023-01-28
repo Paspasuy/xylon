@@ -10,4 +10,4 @@ void SortSelect::applySort(Player* p) {
     }
 }
 
-SortSelect::SortSelect() : SelectView({"Date", "Album", "Random"}) {}
+SortSelect::SortSelect() : SelectView({L"Date", L"Album", L"Random"}) {}

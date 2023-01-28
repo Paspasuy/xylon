@@ -2,13 +2,14 @@
 
 #include <filesystem>
 
-void DirectoryNode::collectNames(std::vector<std::string>& result, int level) {
+void DirectoryNode::collectNames(std::vector<std::wstring>& result, int level) {
     if (level >= 0) {
         std::string tab;
         for (int i = 0; i < level; ++i) {
             tab += "    ";
         }
-        result.emplace_back(tab + name);
+        result.emplace_back(
+            std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(tab + name));
     }
     for (DirectoryNode* child : children) {
         child->collectNames(result, level + 1);

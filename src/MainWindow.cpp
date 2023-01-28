@@ -29,6 +29,7 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
     Tile::W = std::min(int(getSize().x) / 2, Tile::MAX_W);
 
     songList.init(&p);
+    albumSelect.init(p.get_albums());
     p.play();
 
     stars_rot(stars_vec, (rand() % 100) / 100.f);
@@ -136,6 +137,8 @@ void MainWindow::pollEvents() {
                     sortSelect.up();
                 } else if (dirSelect.show) {
                     dirSelect.up();
+                } else if (albumSelect.show) {
+                    albumSelect.up();
                 } else {
                     songList.play_prev(true);
                 }
@@ -145,6 +148,8 @@ void MainWindow::pollEvents() {
                     sortSelect.down();
                 } else if (dirSelect.show) {
                     dirSelect.down();
+                } else if (albumSelect.show) {
+                    albumSelect.down();
                 } else {
                     songList.play_next(true);
                 }
@@ -161,14 +166,19 @@ void MainWindow::pollEvents() {
                             close();
                         }
                         songList.init(&p);
+                        albumSelect.init(p.get_albums());
                         songSearch.clear();
                         dirSelect.filter("");
                         dirSelect.show = false;
                     }
                 } else if (sortSelect.show) {
                     sortSelect.applySort(&p);
-                    songList.init(&p);
+                    songList.init(&p, L"", albumSelect.album);
                     sortSelect.show = false;
+                } else if (albumSelect.show) {
+                    albumSelect.album = albumSelect.visibleItems[albumSelect.ptr];
+                    songList.init(&p, L"", albumSelect.album);
+                    albumSelect.show = false;
                 } else if (dirSelect.show) {
                     try {
                         dirSelect.loadToPlayer();
@@ -176,6 +186,7 @@ void MainWindow::pollEvents() {
                         close();
                     }
                     songList.init(&p);
+                    albumSelect.init(p.get_albums());
                     dirSelect.show = false;
                 } else {
                     songList.find_cur();
@@ -187,7 +198,7 @@ void MainWindow::pollEvents() {
                 if (!songSearch.empty()) {
                     songSearch.clear();
                     if (!dirSelect.show) {
-                        songList.init(&p, L"");
+                        songList.init(&p, L"", albumSelect.album);
                     } else {
                         dirSelect.filter("");
                     }
@@ -195,12 +206,14 @@ void MainWindow::pollEvents() {
                     sortSelect.show = false;
                 } else if (dirSelect.show) {
                     dirSelect.show = false;
+                } else if (albumSelect.show) {
+                    albumSelect.show = false;
                 }
             } else if (event.key.code == sf::Keyboard::BackSpace) {
                 if (!songSearch.empty()) {
                     if (!dirSelect.show) {
                         event.key.control ? songSearch.pop_word() : songSearch.pop_char();
-                        songList.init(&p, songSearch.get_filter());
+                        songList.init(&p, songSearch.get_filter(), albumSelect.album);
                         songSearch.update_color(songList.size());
                     } else {
                         event.key.control ? songSearch.pop_word() : songSearch.pop_char();
@@ -213,6 +226,8 @@ void MainWindow::pollEvents() {
                     sortSelect.pageDown();
                 } else if (dirSelect.show) {
                     dirSelect.pageDown();
+                } else if (albumSelect.show) {
+                    albumSelect.pageDown();
                 } else {
                     songList.pagedown();
                 }
@@ -221,6 +236,8 @@ void MainWindow::pollEvents() {
                     sortSelect.pageUp();
                 } else if (dirSelect.show) {
                     dirSelect.pageUp();
+                } else if (albumSelect.show) {
+                    albumSelect.pageUp();
                 } else {
                     songList.pageup();
                 }
@@ -233,12 +250,16 @@ void MainWindow::pollEvents() {
             } else if (event.key.code == sf::Keyboard::Q && event.key.control) {
                 close();
             } else if (event.key.code == sf::Keyboard::S && event.key.control) {
-                if (songSearch.empty() && !dirSelect.show) {
+                if (songSearch.empty() && !dirSelect.show && !albumSelect.show) {
                     sortSelect.show ^= 1;
                 }
             } else if (event.key.code == sf::Keyboard::O && event.key.control) {
-                if (songSearch.empty() && !sortSelect.show) {
+                if (songSearch.empty() && !sortSelect.show && !albumSelect.show) {
                     dirSelect.show ^= 1;
+                }
+            } else if (event.key.code == sf::Keyboard::A && event.key.control) {
+                if (songSearch.empty() && !sortSelect.show && !dirSelect.show) {
+                    albumSelect.show ^= 1;
                 }
             } else if (event.key.code == sf::Keyboard::D && event.key.control) {
                 DownloadView::download(sf::Clipboard::getString(), dirSelect.currentPath);
@@ -254,7 +275,7 @@ void MainWindow::pollEvents() {
                 if (event.text.unicode != 32 || !songSearch.empty()) {
                     songSearch.add_char(event.text.unicode);
                     if (!dirSelect.show) {
-                        songList.init(&p, songSearch.get_filter());
+                        songList.init(&p, songSearch.get_filter(), albumSelect.album);
                         songSearch.update_color(songList.size());
                     } else {
                         dirSelect.filter(songSearch.get_filter());
@@ -290,6 +311,7 @@ void MainWindow::render() {
     draw(songDisplay);
     draw(sortSelect);
     draw(dirSelect);
+    draw(albumSelect);
     draw(songSearch);
     draw(download);
 

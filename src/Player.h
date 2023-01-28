@@ -71,7 +71,11 @@ public:
 
     void sort_by_random();
 
-    std::vector<Song*> get_songs(const std::wstring& filter = L"");
+    std::vector<Song*> get_songs(const std::wstring& filter, const std::wstring& album);
+
+    std::vector<Song*> filter_by_album(const std::wstring& album);
+
+    std::vector<std::wstring> get_albums();
 
     int get_first_id(const std::wstring& filter);
 

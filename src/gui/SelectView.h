@@ -13,15 +13,19 @@ class SelectView : public sf::Drawable {
     const int H = 30;
     mutable int shift = 0;
 
+protected:
+    std::vector<std::wstring> items;
+
 public:
     bool show = false;
     int ptr = 0;
-    std::vector<std::string> items;
-    mutable std::vector<std::string> visibleItems;
+    mutable std::vector<std::wstring> visibleItems;
 
     SelectView();
-    SelectView(std::initializer_list<std::string>);
+    explicit SelectView(const std::vector<std::wstring>& items);
+    SelectView(std::initializer_list<std::wstring>);
     ~SelectView() override;
+    void init(const std::vector<std::wstring>&);
 
     void up();
     void down();

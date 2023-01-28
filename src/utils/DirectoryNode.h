@@ -9,7 +9,7 @@ struct DirectoryNode {
     std::string name;
     DirectoryNode(const std::string& name);
     void addChild(const std::string& path);
-    void collectNames(std::vector<std::string>& result, int level = -1);
+    void collectNames(std::vector<std::wstring>& result, int level = -1);
     ~DirectoryNode();
 };
 

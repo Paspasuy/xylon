@@ -10,7 +10,8 @@ DirectorySelect::DirectorySelect() : SelectView(), root("") {}
 
 void DirectorySelect::loadToPlayer() {
     player.reset();
-    currentPath = ltrim(visibleItems[ptr]);
+    currentPath =
+        ltrim(std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(visibleItems[ptr]));
     player.add_folder(currentPath);
     if (player.empty()) {
         throw std::runtime_error("No songs in folder");
@@ -26,21 +27,19 @@ void DirectorySelect::init() {
 }
 
 void DirectorySelect::filter(const std::string& str) {
+    filter(std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(str));
+}
+
+void DirectorySelect::filter(const std::wstring& str) {
     ptr = 0;
     if (str.empty()) {
         visibleItems = items;
     } else {
         visibleItems.clear();
-        for (std::string& item: items) {
-            if (hasSubstr(std::string(item.rfind('/') + item.begin(), item.end()), str)) {
+        for (std::wstring& item : items) {
+            if (hasSubstr(std::wstring(item.rfind('/') + item.begin(), item.end()), str)) {
                 visibleItems.emplace_back(item);
             }
         }
     }
-}
-
-void DirectorySelect::filter(const std::wstring& str) {
-    using convert_type = std::codecvt_utf8<wchar_t>;
-    std::wstring_convert<convert_type, wchar_t> converter;
-    filter(converter.to_bytes(str));
 }

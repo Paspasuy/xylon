@@ -131,11 +131,11 @@ int Player::index_by_id(int id) {
     return 0;
 }
 
-std::vector<Song*> Player::get_songs(const std::wstring& filter) {
+std::vector<Song*> Player::get_songs(const std::wstring& filter, const std::wstring& album) {
     std::vector<Song*> res;
-    for (auto& song : songs) {
-        if (song.matches(filter)) {
-            res.emplace_back(&song);
+    for (Song* song : filter_by_album(album)) {
+        if (song->matches(filter)) {
+            res.emplace_back(song);
         }
     }
     return res;
@@ -161,3 +161,23 @@ void Player::reset() {
 }
 
 bool Player::empty() { return songs.empty(); }
+
+std::vector<Song*> Player::filter_by_album(const std::wstring& album) {
+    std::vector<Song*> res;
+    for (auto& song : songs) {
+        if (song.album == album || album.empty()) {
+            res.emplace_back(&song);
+        }
+    }
+    return res;
+}
+
+std::vector<std::wstring> Player::get_albums() {
+    std::vector<std::wstring> res;
+    for (Song& song : songs) {
+        res.emplace_back(song.album);
+    }
+    std::sort(res.begin(), res.end());
+    res.resize(std::unique(res.begin(), res.end()) - res.begin());
+    return res;
+}
