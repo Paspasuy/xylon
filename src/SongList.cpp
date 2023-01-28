@@ -66,7 +66,7 @@ void SongList::init(Player* p, const std::wstring& filter, const std::wstring& a
         tiles.emplace_back(Tile(it));
     }
     find_cur();
-    shift = (-player->ptr + 1) * (Tile::H + TILE_GAP);
+    shift = (-cur + 1) * (Tile::H + TILE_GAP);
     norm_shift();
 }
 
@@ -84,12 +84,12 @@ void SongList::norm_shift_tile() const {
 
 void SongList::norm_shift_up() const {
     int up_bound = -(cur - 1) * (Tile::H + TILE_GAP);
-    shift = std::max(shift, up_bound);
+    shift = std::min(shift, up_bound);
 }
 
 void SongList::norm_shift_down() const {
     int down_bound = -(cur + 2) * (Tile::H + TILE_GAP) + winsz.y;
-    shift = std::min(shift, down_bound);
+    shift = std::max(shift, down_bound);
 }
 
 void SongList::scroll(int delta) const {
@@ -177,6 +177,7 @@ void SongList::play_next(bool ignore_loop) {
 
 void SongList::find_cur() {
     int current_id = player->current_id();
+    if (cur >= 0 && cur < tiles.size() && tiles[cur].s->id == current_id) return;
     int index = 0;
     for (Tile& tile : tiles) {
         if (tile.s->id == current_id) {
@@ -188,3 +189,8 @@ void SongList::find_cur() {
 }
 
 SongList::SongList(PicLoader& picLoader) : picLoader(picLoader) {}
+
+void SongList::playFirst() {
+    if (tiles.empty()) return;
+    player->play_id(tiles[0].s->id);
+}

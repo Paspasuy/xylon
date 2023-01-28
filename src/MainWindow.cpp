@@ -30,7 +30,7 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
 
     songList.init(&p);
     albumSelect.init(p.get_albums());
-    p.play();
+    songList.playFirst();
 
     stars_rot(stars_vec, (rand() % 100) / 100.f);
 
@@ -141,8 +141,8 @@ void MainWindow::pollEvents() {
                     albumSelect.up();
                 } else {
                     songList.play_prev(true);
+                    songList.norm_shift_tile();
                 }
-                songList.norm_shift_tile();
             } else if (event.key.code == sf::Keyboard::Down) {
                 if (sortSelect.show) {
                     sortSelect.down();
@@ -152,14 +152,11 @@ void MainWindow::pollEvents() {
                     albumSelect.down();
                 } else {
                     songList.play_next(true);
+                    songList.norm_shift_tile();
                 }
-                songList.norm_shift_tile();
             } else if (event.key.code == sf::Keyboard::Enter) {
                 if (!songSearch.empty()) {
-                    if (!dirSelect.show) {
-                        p.play_id(p.get_first_id(songSearch.get_filter()));
-                        songList.find_cur();
-                    } else {
+                    if (dirSelect.show) {
                         try {
                             dirSelect.loadToPlayer();
                         } catch (std::runtime_error& err) {
@@ -167,10 +164,16 @@ void MainWindow::pollEvents() {
                         }
                         songList.init(&p);
                         albumSelect.init(p.get_albums());
-                        songSearch.clear();
                         dirSelect.filter("");
                         dirSelect.show = false;
+                    } else if (albumSelect.show) {
+                        albumSelect.album = albumSelect.visibleItems[albumSelect.ptr];
+                        songList.init(&p, L"", albumSelect.album);
+                        albumSelect.filter("");
+                        albumSelect.show = false;
                     }
+                    songSearch.clear();
+                    songList.playFirst();
                 } else if (sortSelect.show) {
                     sortSelect.applySort(&p);
                     songList.init(&p, L"", albumSelect.album);
@@ -179,6 +182,7 @@ void MainWindow::pollEvents() {
                     albumSelect.album = albumSelect.visibleItems[albumSelect.ptr];
                     songList.init(&p, L"", albumSelect.album);
                     albumSelect.show = false;
+                    songList.playFirst();
                 } else if (dirSelect.show) {
                     try {
                         dirSelect.loadToPlayer();
@@ -188,9 +192,9 @@ void MainWindow::pollEvents() {
                     songList.init(&p);
                     albumSelect.init(p.get_albums());
                     dirSelect.show = false;
-                } else {
-                    songList.find_cur();
+                    songList.playFirst();
                 }
+                songList.find_cur();
                 songList.norm_shift_tile();
             } else if (event.key.code == sf::Keyboard::R && event.key.control) {
                 p.loop ^= 1;
@@ -211,14 +215,16 @@ void MainWindow::pollEvents() {
                 }
             } else if (event.key.code == sf::Keyboard::BackSpace) {
                 if (!songSearch.empty()) {
-                    if (!dirSelect.show) {
-                        event.key.control ? songSearch.pop_word() : songSearch.pop_char();
-                        songList.init(&p, songSearch.get_filter(), albumSelect.album);
-                        songSearch.update_color(songList.size());
-                    } else {
-                        event.key.control ? songSearch.pop_word() : songSearch.pop_char();
+                    event.key.control ? songSearch.pop_word() : songSearch.pop_char();
+                    if (dirSelect.show) {
                         dirSelect.filter(songSearch.get_filter());
                         songSearch.update_color(dirSelect.size());
+                    } else if (albumSelect.show) {
+                        albumSelect.filter(songSearch.get_filter());
+                        songSearch.update_color(albumSelect.size());
+                    } else {
+                        songList.init(&p, songSearch.get_filter(), albumSelect.album);
+                        songSearch.update_color(songList.size());
                     }
                 }
             } else if (event.key.code == sf::Keyboard::PageDown) {
@@ -274,12 +280,15 @@ void MainWindow::pollEvents() {
                 //                              << event.text.unicode << std::endl;
                 if (event.text.unicode != 32 || !songSearch.empty()) {
                     songSearch.add_char(event.text.unicode);
-                    if (!dirSelect.show) {
-                        songList.init(&p, songSearch.get_filter(), albumSelect.album);
-                        songSearch.update_color(songList.size());
-                    } else {
+                    if (dirSelect.show) {
                         dirSelect.filter(songSearch.get_filter());
                         songSearch.update_color(dirSelect.size());
+                    } else if (albumSelect.show) {
+                        albumSelect.filter(songSearch.get_filter());
+                        songSearch.update_color(albumSelect.size());
+                    } else {
+                        songList.init(&p, songSearch.get_filter(), albumSelect.album);
+                        songSearch.update_color(songList.size());
                     }
                 }
             }

@@ -12,7 +12,7 @@ class Player {
     bool playing;
     std::vector<Song> songs;
 
-    int index_by_id(int id);
+    int index_by_id(uint64_t id);
 
 public:
     double vol = 0.5;
@@ -33,7 +33,7 @@ public:
 
     void play_ind(int ind);
 
-    void play_id(int id);
+    void play_id(uint64_t id);
 
     void prev();
 
@@ -77,7 +77,7 @@ public:
 
     std::vector<std::wstring> get_albums();
 
-    int get_first_id(const std::wstring& filter);
+    int get_first_id(const std::wstring& filter, const std::wstring& album);
 
     size_t current_id();
 

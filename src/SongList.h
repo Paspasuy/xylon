@@ -78,6 +78,8 @@ public:
 
     void find_cur();
 
+    void playFirst();
+
 protected:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

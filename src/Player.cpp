@@ -38,7 +38,7 @@ void Player::play_ind(int ind) {
     play();
 }
 
-void Player::play_id(int id) { play_ind(index_by_id(id)); }
+void Player::play_id(uint64_t id) { play_ind(index_by_id(id)); }
 
 void Player::prev() {
     stop();
@@ -122,7 +122,7 @@ void Player::sort_by_random() {
     ptr = index_by_id(id);
 }
 
-int Player::index_by_id(int id) {
+int Player::index_by_id(uint64_t id) {
     for (int i = 0; i < songs.size(); ++i) {
         if (songs[i].id == id) {
             return i;
@@ -141,10 +141,10 @@ std::vector<Song*> Player::get_songs(const std::wstring& filter, const std::wstr
     return res;
 }
 
-int Player::get_first_id(const std::wstring& filter) {
-    for (auto& song : songs) {
-        if (song.matches(filter)) {
-            return song.id;
+int Player::get_first_id(const std::wstring& filter, const std::wstring& album) {
+    for (Song* song : filter_by_album(album)) {
+        if (song->matches(filter)) {
+            return song->id;
         }
     }
     return -1;
