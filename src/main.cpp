@@ -28,7 +28,6 @@ int main(int argc, char** argv) {
 }
 
 // fix empty
-// filter by album
 // button resizing with bass
 // somehow compile for windows (in distant future)
 // write help menu, write readme

@@ -84,12 +84,12 @@ void SongList::norm_shift_tile() const {
 
 void SongList::norm_shift_up() const {
     int up_bound = -(cur - 1) * (Tile::H + TILE_GAP);
-    shift = std::min(shift, up_bound);
+    shift = std::max(shift, up_bound);
 }
 
 void SongList::norm_shift_down() const {
     int down_bound = -(cur + 2) * (Tile::H + TILE_GAP) + winsz.y;
-    shift = std::max(shift, down_bound);
+    shift = std::min(shift, down_bound);
 }
 
 void SongList::scroll(int delta) const {

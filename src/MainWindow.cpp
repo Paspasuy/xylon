@@ -28,6 +28,7 @@ MainWindow::MainWindow(sf::ContextSettings contextSettings)
 
     Tile::W = std::min(int(getSize().x) / 2, Tile::MAX_W);
 
+    songList.winsz = getSize();
     songList.init(&p);
     albumSelect.init(p.get_albums());
     songList.playFirst();
