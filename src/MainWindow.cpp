@@ -167,14 +167,18 @@ void MainWindow::pollEvents() {
                         albumSelect.init(p.get_albums());
                         dirSelect.filter("");
                         dirSelect.show = false;
+                        songList.playFirst();
                     } else if (albumSelect.show) {
                         albumSelect.album = albumSelect.visibleItems[albumSelect.ptr];
                         songList.init(&p, L"", albumSelect.album);
                         albumSelect.filter("");
                         albumSelect.show = false;
+                        songList.playFirst();
+                    } else {
+                        songList.playFirst();
+                        songList.init(&p);
                     }
                     songSearch.clear();
-                    songList.playFirst();
                 } else if (sortSelect.show) {
                     sortSelect.applySort(&p);
                     songList.init(&p, L"", albumSelect.album);
@@ -202,10 +206,12 @@ void MainWindow::pollEvents() {
             } else if (event.key.code == sf::Keyboard::Escape) {
                 if (!songSearch.empty()) {
                     songSearch.clear();
-                    if (!dirSelect.show) {
-                        songList.init(&p, L"", albumSelect.album);
-                    } else {
+                    if (dirSelect.show) {
                         dirSelect.filter("");
+                    } else if (albumSelect.show) {
+                        albumSelect.filter("");
+                    } else {
+                        songList.init(&p, L"", albumSelect.album);
                     }
                 } else if (sortSelect.show) {
                     sortSelect.show = false;
