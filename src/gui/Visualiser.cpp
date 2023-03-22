@@ -23,7 +23,9 @@ void Visualiser::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     } else if (settings.vis_type == 1) {
         h = target.getSize().y * 3 / 4;
     }
-    for (int i = 1; i < len / (w + SPACE); i += 1) {
+    fft[0] /= down_c;
+    int i = 1;
+    for (; i < len / (w + SPACE); i += 1) {
         fft[i] /= down_c;
 //        fft[i] = std::abs(fft[i]);
 //        float mid = fft[i];
@@ -37,4 +39,5 @@ void Visualiser::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         }
         target.draw(sh);
     }
+    fft[i] /= down_c;
 }
