@@ -4,7 +4,7 @@ project(xylon)
 set(CMAKE_CXX_STANDARD 20)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g -O2")
 
-find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+find_package(SFML 2.6 COMPONENTS graphics audio REQUIRED)
 
 # Your-external "mylib", add GLOBAL if the imported library is located in directories above the current.
 add_library(libbass SHARED IMPORTED)
