@@ -1,4 +1,5 @@
 #include "Song.h"
+#inlcude <pulse/pulseaudio.h>
 
 #include <cmath>
 #include <codecvt>

@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8)
 project(xylon)
 
 set(CMAKE_CXX_STANDARD 20)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g -O2")
 
-find_package(SFML 2.6 COMPONENTS graphics audio REQUIRED)
+find_package(SFML 3.0.1 COMPONENTS Graphics Audio REQUIRED)
 
 # Your-external "mylib", add GLOBAL if the imported library is located in directories above the current.
 add_library(libbass SHARED IMPORTED)
@@ -20,6 +20,6 @@ add_executable(xylon src/main.cpp src/Player.cpp src/gui/SongSearch.cpp src/gui/
 
 target_link_libraries(xylon tag)
 target_link_libraries(xylon bass)
-target_link_libraries(xylon sfml-graphics sfml-audio)
+target_link_libraries(xylon SFML::Graphics SFML::Audio)
 target_link_libraries(xylon Threads::Threads)
 install(TARGETS xylon RUNTIME ${CMAKE_INSTALL_BINDIR})
